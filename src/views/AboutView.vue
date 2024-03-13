@@ -1,7 +1,9 @@
 <template>
-  <div class="text-3xl underline bg-yellow-500">你好</div>
-  <button
-  class="inline-block cursor-pointer rounded-md bg-gray-800 px-4 py-3 text-center text-sm font-semibold uppercase text-white transition duration-200 ease-in-out hover:bg-gray-900">
-    Button
-  </button>
+  <button data-set-theme="dark" data-act-class="ACTIVECLASS" class="btn">dark</button>
+  <button data-set-theme="light" data-act-class="ACTIVECLASS" class="btn">light</button>
+  <theme-test></theme-test>
 </template>
+
+<script setup lang="ts">
+import { themeTest } from '@/components';
+</script>
