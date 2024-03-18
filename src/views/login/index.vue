@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import router from "@/router";
 import {ref} from "vue";
-import useRequest from "@/apis/useRequest";
+import useRequest from '@/apis/useRequest'
 const info = ref(
     {
       user_name: '',
