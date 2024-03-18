@@ -11,7 +11,7 @@
         </ul>
       </div>
     </div>
-    <div class="hero  bg-base-200 h-500 my-100">
+    <div class="hero  bg-base-200 h-520 my-100">
       <div class="hero-content flex-col lg:flex-row-reverse">
         <div class="text-center lg:text-left mx-50">
           <h1 class="text-5xl font-bold">Register now!</h1>
@@ -29,19 +29,31 @@
               <label class="label">
                 <span class="label-text">Password</span>
               </label>
-              <input v-model="info.password" placeholder="password" class="input input-bordered h-35" required />
+              <input v-model="info.password" placeholder="password" type="password" class="input input-bordered h-35" required />
             </div>
             <div class="form-control">
               <label class="label">
                 <span class="label-text">E-mail</span>
               </label>
-              <input v-model="info.user_name" placeholder="e-mail" class="input input-bordered h-35" required />
+              <input v-model="info.email" placeholder="e-mail" class="input input-bordered h-35" required />
+              <button class="btn btn-warning btn-sm" @click='sendCode' :disabled='isSendingCode || countdown>0'>
+                {{ countdown > 0 ? `重新发送(${countdown})` : '发送验证码' }}
+              </button>
+              <div v-if='visible' class='relative top-[3px]'>
+                <slide-verify
+                  ref = 'block'
+                  :slider-text = 'text'
+                  :imgs = 'images'
+                  @success = 'onSuccess'
+                  @fail = 'onFail'
+                ></slide-verify>
+              </div>
             </div>
             <div class="form-control">
               <label class="label">
                 <span class="label-text">Verification code</span>
               </label>
-              <input  v-model="info.password" type="password" placeholder="password" class="input input-bordered h-35" required />
+              <input  v-model="info.code" placeholder="verification code" class="input input-bordered h-35" required />
               <label class="label">
                 <a href="#" class="label-text-alt link link-hover">我是老板</a>
               </label>
@@ -59,13 +71,98 @@
 <script setup lang="ts">
 
 import router from "@/router";
-import {ref} from "vue";
+import { ref,reactive } from "vue";
 import useRequest from "@/apis/useRequest";
+import SlideVerify, { SlideVerifyInstance } from 'vue3-slide-verify'
+import "vue3-slide-verify/dist/style.css";
+import number = CSS.number
+
 const info = ref({
-
+  user_name:"",
+  password:"",
+  email:"",
+  code:null,
+  type:1,
 })
+// 发送验证码按钮参数
+const isSendingCode = ref(false);
+const countdown = ref(0);
+
+const sendCode = () => {
+  if(info.value.user_name==="" || info.value.password==="" || info.value.email===""){
+    alert("先填写信息");
+  }else{
+    visible.value = true;
+  }
+}
+
+const sendVerificationCode = () => {
+  useRequest({
+    data: {"email":info.value.email},
+    method: "post",
+    url: "/api/email",
+    headers:{"Content-Type":"application/json",},
+    manual: false,
+    onSuccess(res){
+      if(res.data.code === 200){
+        alert("发送成功！");
+      }else{
+        alert(res.data.msg);
+      }
+    },
+    onError(err){
+      alert(err);
+    }
+  })
+
+  isSendingCode.value = true;
+  countdown.value = 10;
+
+  const countInterval = setInterval(()=>{
+    countdown.value--;
+    if(countdown.value <= 0){
+      clearInterval(countInterval);
+      isSendingCode.value = false;
+    }
+  },1000)
+}
+
+// 拼图参数
+const block = ref<SlideVerifyInstance>();
+const visible = ref(false);
+const text = "向右滑动滑块";
+const images = reactive([
+  'https://t7.baidu.com/it/u=2609096218,1652764947&fm=193&f=GIF',
+  'https://t7.baidu.com/it/u=2541348729,1193227634&fm=193&f=GIF',
+  'https://t7.baidu.com/it/u=2673836711,2234057813&fm=193&f=GIF',
+])
+
+const onSuccess = (time:number) => {
+  visible.value = false;
+  sendVerificationCode();
+}
 
 
+const register = () => {
+  useRequest({
+    data : info.value,
+    method: "post",
+    url : "/api/register",
+    headers: {"Content-Type":"application/json",},
+    manual : false,
+    onSuccess(res){
+      if(res.data.code === 200){
+        alert("注册成功");
+        console.log(res.data);
+      }else{
+        alert(res.data.msg);
+      }
+    },
+    onError(err){
+      alert(err);
+    }
+  })
+}
 </script>
 <style scoped>
 
