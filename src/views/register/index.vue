@@ -29,16 +29,18 @@
               <label class="label">
                 <span class="label-text">Password</span>
               </label>
-              <input v-model="info.password" placeholder="password" type="password" class="input input-bordered h-35" required />
+              <input v-model="info.password" placeholder="password(至少八位数)" type="password" class="input input-bordered h-35" required />
             </div>
             <div class="form-control">
               <label class="label">
                 <span class="label-text">E-mail</span>
               </label>
+              <div class="inline">
               <input v-model="info.email" placeholder="e-mail" class="input input-bordered h-35" required />
-              <button class="btn btn-warning btn-sm" @click='sendCode' :disabled='isSendingCode || countdown>0'>
+              <button type="button"  class="btn btn-warning btn-sm ml-11" @click='sendCode' :disabled='isSendingCode || countdown>0'>
                 {{ countdown > 0 ? `重新发送(${countdown})` : '发送验证码' }}
               </button>
+              </div>
               <div v-if='visible' class='relative top-[3px]'>
                 <slide-verify
                   ref = 'block'
@@ -55,7 +57,6 @@
               </label>
               <input  v-model="info.code" placeholder="verification code" class="input input-bordered h-35" required />
               <label class="label">
-                <a href="#" class="label-text-alt link link-hover">我是老板</a>
               </label>
             </div>
             <div class="form-control">
@@ -75,7 +76,7 @@ import { ref,reactive } from "vue";
 import useRequest from "@/apis/useRequest";
 import SlideVerify, { SlideVerifyInstance } from 'vue3-slide-verify'
 import "vue3-slide-verify/dist/style.css";
-import number = CSS.number
+import {ElNotification} from "element-plus";
 
 const info = ref({
   user_name:"",
@@ -90,7 +91,7 @@ const countdown = ref(0);
 
 const sendCode = () => {
   if(info.value.user_name==="" || info.value.password==="" || info.value.email===""){
-    alert("先填写信息");
+    ElNotification.warning("先填写信息");
   }else{
     visible.value = true;
   }
@@ -98,20 +99,20 @@ const sendCode = () => {
 
 const sendVerificationCode = () => {
   useRequest({
-    data: {"email":info.value.email},
-    method: "post",
+    data: {"email": info.value.email},
+    method: "POST",
     url: "/api/email",
-    headers:{"Content-Type":"application/json",},
+    headers: {"Content-Type": "application/json",},
     manual: false,
-    onSuccess(res){
-      if(res.data.code === 200){
-        alert("发送成功！");
-      }else{
-        alert(res.data.msg);
+    onSuccess(res) {
+      if (res.data.code === 200) {
+        ElNotification.success("发送成功！");
+      } else {
+        ElNotification.error(res.data.msg);
       }
     },
-    onError(err){
-      alert(err);
+    onError(err) {
+      ElNotification.error(err)
     }
   })
 
@@ -145,20 +146,20 @@ const onSuccess = (time:number) => {
 
 const register = () => {
   useRequest({
-    data : info.value,
+    data: info.value,
     method: "post",
-    url : "/api/register",
-    headers: {"Content-Type":"application/json",},
-    manual : false,
-    onSuccess(res){
-      if(res.data.code === 200){
-        alert("注册成功");
+    url: "/api/register",
+    headers: {"Content-Type": "application/json",},
+    manual: false,
+    onSuccess(res) {
+      if (res.data.code === 200) {
+        ElNotification.success("注册成功");
         console.log(res.data);
-      }else{
-        alert(res.data.msg);
+      } else {
+        ElNotification.error(res.data.msg);
       }
     },
-    onError(err){
+    onError(err) {
       alert(err);
     }
   })

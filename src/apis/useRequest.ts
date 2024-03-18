@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ref } from "vue";
+import {ref} from "vue";
 
 interface requestConfigType{
   data?: object;
@@ -30,7 +30,15 @@ interface requestConfigType{
   onFinally?: () => void;
 }
 
-const useRequest = (config:requestConfigType) => {
+const useRequest = (config: {
+  headers: { "Content-Type": string };
+  onError(err): void;
+  data: { email: string };
+  method: string;
+  manual: boolean;
+  url: string;
+  onSuccess(res): void
+}) => {
   const loading = ref(false);
   const data = ref<object>();
   const error = ref<Error | { errMsg:string }>();
