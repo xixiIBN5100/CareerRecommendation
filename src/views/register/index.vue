@@ -1,23 +1,12 @@
 <template>
-  <div class="bg-base-300 h-screen">
-    <div class="navbar bg-base-100 shadow-lg my-3">
-      <div class="flex-1">
-        <a class="btn btn-ghost text-xl">大学生就业推荐平台</a>
-      </div>
-      <div class="flex-none">
-        <ul class="menu menu-horizontal px-1">
-          <li><a @click="router.push('/login')">登录</a></li>
-          <li><a @click="router.push('/register')">注册</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="hero  bg-base-200 h-520 my-100">
+  <div class="bg-base-300 h-700 py-100">
+    <div class="hero  bg-base-200 h-500 ">
       <div class="hero-content flex-col lg:flex-row-reverse">
         <div class="text-center lg:text-left mx-50">
           <h1 class="text-5xl font-bold">Register now!</h1>
-          <p class="py-6">还在为本科毕业找工作而苦恼?&ensp;注册立即享受大学生就业推荐服务,准备好你的简历了吗</p>
+          <p class="py-6">还在为本科毕业找工作而苦恼?<br>注册立即享受大学生就业推荐服务,准备好你的简历了吗</p>
         </div>
-        <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+        <div class="card shrink-0 w-400 max-w-sm shadow-2xl bg-base-100">
           <form class="card-body">
             <div class="form-control">
               <label class="label">
@@ -139,7 +128,14 @@ const register = () => {
   useRequest(() => registerAPI(info.value as any), {
     onSuccess(res:any){
       console.log(res);
-      ElNotification(res.msg);
+      if(res.code === 200 ) {
+        ElNotification.success('注册成功');
+      }else{
+        ElNotification.error(res.msg)
+      }
+    },
+    onError(e){
+      ElNotification.error("注册失败" + e)
     }
   })
 }

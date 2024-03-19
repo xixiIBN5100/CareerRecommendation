@@ -1,18 +1,7 @@
 <template>
-  <div class="bg-base-300 h-screen">
-  <div class="navbar bg-base-100 shadow-lg my-3">
-    <div class="flex-1">
-      <a class="btn btn-ghost text-xl">大学生就业推荐平台</a>
-    </div>
-    <div class="flex-none">
-      <ul class="menu menu-horizontal px-1">
-        <li><a @click="router.push('/login')">登录</a></li>
-        <li><a @click="router.push('/register')">注册</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="hero  bg-base-200 h-500 my-100">
-    <div class="hero-content flex-col lg:flex-row-reverse">
+  <div class="bg-base-300 h-700 py-100">
+  <div class="hero  bg-base-200 h-500 ">
+    <div class="hero-content flex-col lg:flex-row-reverse ">
       <div class="text-center lg:text-left mx-50">
         <h1 class="text-5xl font-bold">Login now!</h1>
         <p class="py-6">还在为本科毕业找工作而苦恼?<br>登陆立即享受大学生就业推荐服务,准备好你的简历了吗</p>
@@ -71,11 +60,18 @@ import { ElNotification } from "element-plus";
 import { useRequest } from "vue-hooks-plus";
 import { passwordLoginAPI, emailLoginAPI, sendEmailCodeAPI } from "@/apis";
 
-const loginWay = ref("password")
+const loginWay = ref("  ")
 // 发送验证码按钮参数
 const isSendingCode = ref(false);
 const countdown = ref(0);
-loginWay.value = "password";
+if(localStorage.getItem("way") !== null){
+  loginWay.value = localStorage.getItem("way")
+  console.log(localStorage.getItem("way"))
+  console.log(loginWay.value)
+}else{
+  loginWay.value = 'password'
+  console.log(loginWay.value)
+}
 const info = ref(
   {
     user_name: '',
@@ -92,7 +88,14 @@ const loginPassword = () => {
   }), {
     onSuccess(res:any){
       console.log(res);
-      ElNotification(res.msg);
+      if(res.code === 200) {
+        ElNotification.success('登陆成功');
+      }else{
+        ElNotification.error(res.msg)
+      }
+    },
+    onError(e){
+      ElNotification.error('登录失败，请重试' + e);
     }
   })
 }
@@ -104,7 +107,14 @@ const loginEmail = () => {
   }), {
     onSuccess(res:any){
       console.log(res);
-      ElNotification(res.msg);
+      if(res.code === 200) {
+        ElNotification.success('登陆成功');
+      }else{
+        ElNotification.error(res.msg)
+      }
+    },
+    onError(e){
+      ElNotification.error('登录失败，请重试' + e);
     }
   })
 }
@@ -131,8 +141,15 @@ const sendCode = () => {
       email: info.value.email
     }), {
       onSuccess(res:any){
-      console.log(res);
-      ElNotification(res.msg);
+        console.log(res);
+        if(res.code === 200 && res.msg ==="OK") {
+          ElNotification.success('发送成功');
+        }else{
+          ElNotification.error(res.msg)
+        }
+      },
+      onError(e){
+        ElNotification.error('发送失败，请重试' + e);
       }
     })
 
