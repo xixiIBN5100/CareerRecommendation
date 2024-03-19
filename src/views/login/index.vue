@@ -15,7 +15,7 @@
     <div class="hero-content flex-col lg:flex-row-reverse">
       <div class="text-center lg:text-left mx-50">
         <h1 class="text-5xl font-bold">Login now!</h1>
-        <p class="py-6">还在为本科毕业找工作而苦恼?&ensp;登陆立即享受大学生就业推荐服务,准备好你的简历了吗</p>
+        <p class="py-6">还在为本科毕业找工作而苦恼?<br>登陆立即享受大学生就业推荐服务,准备好你的简历了吗</p>
       </div>
       <div class="card shrink-0  max-w-sm shadow-2xl bg-base-100 w-400">
         <form class="card-body">
@@ -66,64 +66,47 @@
 
 <script setup lang="ts">
 import router from "@/router";
-import {ref, watch} from "vue";
-import useRequest from '@/apis/useRequest'
-import {ElNotification} from "element-plus";
+import { ref } from "vue";
+import { ElNotification } from "element-plus";
+import { useRequest } from "vue-hooks-plus";
+import { passwordLoginAPI, emailLoginAPI, sendEmailCodeAPI } from "@/apis";
+
 const loginWay = ref("password")
 // 发送验证码按钮参数
 const isSendingCode = ref(false);
 const countdown = ref(0);
-loginWay.value = localStorage.getItem("way")
-watch(loginWay, (newValue, oldValue) => {
-  loginWay.value = newValue
-  console.log(loginWay.value)
-});
+loginWay.value = "password";
 const info = ref(
-    {
-      user_name: '',
-      password: '',
-      email: '',
-      code: ''
-    }
+  {
+    user_name: '',
+    password: '',
+    email: '',
+    code: ''
+  }
 );
+
 const loginPassword = () => {
-  useRequest({
-    data: {user_name: info.value.user_name, password: info.value.password},
-    method: "POST",
-    url: "/api/login/password",
-    manual: false,
-    onSuccess(res) {
-      if (res.data.code === 200) {
-        console.log(res.data)
-        ElNotification.success("登陆成功")
-      }else{
-        ElNotification.error(res.data.msg)
-      }
-    },
-    onError(error) {
-      ElNotification.error(res.data.msg)
-    },
-  });
+  useRequest(() => passwordLoginAPI({
+    user_name: info.value.user_name,
+    password: info.value.password
+  }), {
+    onSuccess(res:any){
+      console.log(res);
+      ElNotification(res.msg);
+    }
+  })
 }
 
 const loginEmail = () => {
-  useRequest({
-    data: {email: info.value.email, code: info.value.code},
-    method: "POST",
-    url: "/api/login/code",
-    manual: false,
-    onSuccess(res) {
-      if (res.data.code === 200) {
-        console.log(res.data)
-        ElNotification.success("登陆成功")
-      }else{
-        ElNotification.error(res.data.msg)
-      }
-    },
-    onError(error) {
-      ElNotification.error(res.data.msg)
-    },
-  });
+  useRequest(() => emailLoginAPI({
+    email: info.value.email,
+    code: info.value.code
+  }), {
+    onSuccess(res:any){
+      console.log(res);
+      ElNotification(res.msg);
+    }
+  })
 }
 
 const setWayEmail = () => {
@@ -132,25 +115,24 @@ const setWayEmail = () => {
 const setWayPassword = () => {
   loginWay.value = 'password';
 }
+
+const IsEmail = (str: string) => {
+  const reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+  return  reg.test(str);
+}
+
 const sendCode = () => {
-  if(info.value.email===""){
+  if(info.value.email==="") {
     ElNotification.warning("先填写信息");
-  }else{
-    useRequest({
-      data: {"email": info.value.email},
-      method: "POST",
-      url: "/api/email",
-      headers: {"Content-Type": "application/json",},
-      manual: false,
-      onSuccess(res) {
-        if (res.data.code === 200) {
-          ElNotification.success("发送成功！");
-        } else {
-          ElNotification.error(res.data.msg);
-        }
-      },
-      onError(err) {
-        ElNotification.error(err)
+  } else if(!IsEmail(info.value.email)) {
+    ElNotification.warning("请确认邮箱地址格式");
+  } else {
+    useRequest(() => sendEmailCodeAPI({
+      email: info.value.email
+    }), {
+      onSuccess(res:any){
+      console.log(res);
+      ElNotification(res.msg);
       }
     })
 
@@ -165,12 +147,5 @@ const sendCode = () => {
       }
     },1000)
   }
-
-
 }
-
-
 </script>
-<style scoped>
-
-</style>

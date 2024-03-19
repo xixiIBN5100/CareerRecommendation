@@ -70,13 +70,13 @@
 </template>
 
 <script setup lang="ts">
-
 import router from "@/router";
 import { ref,reactive } from "vue";
-import useRequest from "@/apis/useRequest";
-import SlideVerify, { SlideVerifyInstance } from 'vue3-slide-verify'
+import SlideVerify, { type SlideVerifyInstance } from 'vue3-slide-verify'
 import "vue3-slide-verify/dist/style.css";
-import {ElNotification} from "element-plus";
+import { ElNotification } from "element-plus";
+import { useRequest } from "vue-hooks-plus";
+import { sendEmailCodeAPI, registerAPI } from "@/apis";
 
 const info = ref({
   user_name:"",
@@ -85,6 +85,7 @@ const info = ref({
   code:null,
   type:1,
 })
+
 // 发送验证码按钮参数
 const isSendingCode = ref(false);
 const countdown = ref(0);
@@ -98,21 +99,12 @@ const sendCode = () => {
 }
 
 const sendVerificationCode = () => {
-  useRequest({
-    data: {"email": info.value.email},
-    method: "POST",
-    url: "/api/email",
-    headers: {"Content-Type": "application/json",},
-    manual: false,
-    onSuccess(res) {
-      if (res.data.code === 200) {
-        ElNotification.success("发送成功！");
-      } else {
-        ElNotification.error(res.data.msg);
-      }
-    },
-    onError(err) {
-      ElNotification.error(err)
+  useRequest(() => sendEmailCodeAPI({
+    email: info.value.email
+  }), {
+    onSuccess(res:any){
+      console.log(res);
+      ElNotification(res.msg);
     }
   })
 
@@ -143,28 +135,12 @@ const onSuccess = (time:number) => {
   sendVerificationCode();
 }
 
-
 const register = () => {
-  useRequest({
-    data: info.value,
-    method: "post",
-    url: "/api/register",
-    headers: {"Content-Type": "application/json",},
-    manual: false,
-    onSuccess(res) {
-      if (res.data.code === 200) {
-        ElNotification.success("注册成功");
-        console.log(res.data);
-      } else {
-        ElNotification.error(res.data.msg);
-      }
-    },
-    onError(err) {
-      alert(err);
+  useRequest(() => registerAPI(info.value as any), {
+    onSuccess(res:any){
+      console.log(res);
+      ElNotification(res.msg);
     }
   })
 }
 </script>
-<style scoped>
-
-</style>

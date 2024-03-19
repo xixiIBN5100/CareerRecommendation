@@ -17,8 +17,10 @@
     "axios": "^1.6.8",
     "element-plus": "^2.6.1",
     "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "theme-change": "^2.5.0",
     "vue": "^3.4.21",
+    "vue-hooks-plus": "^1.8.9",
     "vue-router": "^4.3.0",
     "vue3-slide-verify": "^1.1.5"
   },
