@@ -36,19 +36,13 @@
                 <span class="label-text">E-mail</span>
               </label>
               <div class="inline">
-              <input v-model="info.email" placeholder="e-mail" class="input input-bordered h-35" required />
-              <button type="button"  class="btn btn-warning btn-sm ml-11" @click='sendCode' :disabled='isSendingCode || countdown>0'>
+              <input v-model="info.email" placeholder="e-mail" class="input input-bordered h-35 w-[190px]" required />
+              <button type="button" onclick="my_modal.showModal()" class="btn btn-warning btn-sm ml-11" :disabled='isSendingCode || countdown>0 || info.user_name==="" || info.password==="" || info.email===""'>
                 {{ countdown > 0 ? `重新发送(${countdown})` : '发送验证码' }}
               </button>
               </div>
               <div v-if='visible' class='relative top-[3px]'>
-                <slide-verify
-                  ref = 'block'
-                  :slider-text = 'text'
-                  :imgs = 'images'
-                  @success = 'onSuccess'
-                  @fail = 'onFail'
-                ></slide-verify>
+
               </div>
             </div>
             <div class="form-control">
@@ -63,6 +57,21 @@
             <button type="button" class="btn btn-primary" @click="register" >Register</button>
             </div>
           </form>
+          <dialog id="my_modal" class="modal">
+            <div class="modal-box w-[360px]">
+              <slide-verify
+                id='slide'
+                ref = 'block'
+                :slider-text = 'text'
+                :imgs = 'images'
+                @success = '()=>{onSuccess();my_modal.close()}'
+                @fail = 'onFail'
+              ></slide-verify>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+              <button id='Modaldrop'>close</button>
+            </form>
+          </dialog>
         </div>
       </div>
     </div>
@@ -90,14 +99,6 @@ const info = ref({
 const isSendingCode = ref(false);
 const countdown = ref(0);
 
-const sendCode = () => {
-  if(info.value.user_name==="" || info.value.password==="" || info.value.email===""){
-    ElNotification.warning("先填写信息");
-  }else{
-    visible.value = true;
-  }
-}
-
 const sendVerificationCode = () => {
   useRequest(() => sendEmailCodeAPI({
     email: info.value.email
@@ -122,7 +123,6 @@ const sendVerificationCode = () => {
 
 // 拼图参数
 const block = ref<SlideVerifyInstance>();
-const visible = ref(false);
 const text = "向右滑动滑块";
 const images = reactive([
   'https://t7.baidu.com/it/u=2609096218,1652764947&fm=193&f=GIF',
@@ -131,8 +131,9 @@ const images = reactive([
 ])
 
 const onSuccess = (time:number) => {
-  visible.value = false;
   sendVerificationCode();
+  document.getElementById("Modaldrop").click();
+  block.value.refresh();
 }
 
 const register = () => {
