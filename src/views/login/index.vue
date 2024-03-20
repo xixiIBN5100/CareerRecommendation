@@ -59,11 +59,14 @@ import { ref } from "vue";
 import { ElNotification } from "element-plus";
 import { useRequest } from "vue-hooks-plus";
 import { passwordLoginAPI, emailLoginAPI, sendEmailCodeAPI } from "@/apis";
-
+import useLoginStore from "@/stores/service/loginStore";
+import {c} from "vite/dist/node/types.d-FdqQ54oU";
+const loginstore = useLoginStore()
 const loginWay = ref("  ")
 // 发送验证码按钮参数
 const isSendingCode = ref(false);
 const countdown = ref(0);
+
 if(localStorage.getItem("way") !== null){
   loginWay.value = localStorage.getItem("way")
   console.log(localStorage.getItem("way"))
@@ -81,6 +84,10 @@ const info = ref(
   }
 );
 
+const cleanForm = () => {
+  info.value = '';
+}
+
 const loginPassword = () => {
   useRequest(() => passwordLoginAPI({
     user_name: info.value.user_name,
@@ -90,6 +97,10 @@ const loginPassword = () => {
       console.log(res);
       if(res.code === 200) {
         ElNotification.success('登陆成功');
+        loginstore.setLogin(true)
+        loginstore.setToken(res.data.token)
+        cleanForm()
+        router.push('/home')
       }else{
         ElNotification.error(res.msg)
       }
@@ -111,6 +122,10 @@ const loginEmail = () => {
         ElNotification.success('登陆成功');
       }else{
         ElNotification.error(res.msg)
+        loginstore.setLogin(true)
+        loginstore.setToken(res.data.token)
+        cleanForm()
+        router.push('/home')
       }
     },
     onError(e){

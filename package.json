@@ -37,6 +37,7 @@
     "daisyui": "^4.7.3",
     "eslint": "^8.49.0",
     "eslint-plugin-vue": "^9.17.0",
+    "eslint-plugin-vuefix": "^0.2.1",
     "npm-run-all2": "^6.1.2",
     "postcss": "^8.4.35",
     "prettier": "^3.0.3",

@@ -1,30 +1,35 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import {FindPassword, Login, Register} from "@/views";
+import { createRouter, createWebHistory } from "vue-router";
+import {FindPassword, Home, Login, Register} from "@/views";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'Login',
+      path: "/",
+      name: "Login",
       component: Login
     },
     {
-      path: '/login',
-      name: 'login',
+      path: "/login",
+      name: "login",
       component: Login
     },
     {
-      path: '/register',
-      name: 'register',
+      path: "/register",
+      name: "register",
       component: Register
     },
     {
-      path: '/findPassword',
-      name: 'findPassword',
+      path: "/findPassword",
+      name: "findPassword",
       component: FindPassword
     },
+    {
+      path: "/home",
+      name: "home",
+      component: Home
+    },
   ]
-})
+});
 
-export default router
+export default router;
