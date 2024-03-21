@@ -26,6 +26,13 @@ const logout = () => {
         <li><a @click="router.push('/register')" v-if="loginStore.loginSession === true">编辑简历</a></li>
         <li><a @click="router.push('/register')" v-if="loginStore.loginSession === true">分析简历</a></li>
       </ul>
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-ghost rounded-btn">主题</div>
+        <ul tabindex="0" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box">
+          <li><a data-set-theme="dark" data-act-class="ACTIVECLASS">dark mode</a></li> 
+          <li><a data-set-theme="light" data-act-class="ACTIVECLASS">light mode</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 <!--  <button data-set-theme="dark" data-act-class="ACTIVECLASS" class="btn">dark</button>-->
