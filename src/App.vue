@@ -1,6 +1,16 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import router from "@/router";
+import useLoginStore from "@/stores/service/loginStore";
+import {ElNotification} from "element-plus";
+
+const loginStore = useLoginStore()
+const logout = () => {
+  router.push('/login')
+  loginStore.setLogin(false)
+  loginStore.setToken("")
+  ElNotification.success("登出成功")
+}
 </script>
 
 <template>
@@ -10,8 +20,11 @@ import router from "@/router";
     </div>
     <div class="flex-none">
       <ul class="menu menu-horizontal px-1">
-        <li><a @click="router.push('/login')">登录</a></li>
-        <li><a @click="router.push('/register')">注册</a></li>
+        <li><a @click="router.push('/login')" v-if="loginStore.loginSession === false">登录</a></li>
+        <li><a @click="router.push('/register')" v-if="loginStore.loginSession === false">注册</a></li>
+        <li><a @click="logout" v-if="loginStore.loginSession === true">注销</a></li>
+        <li><a @click="router.push('/register')" v-if="loginStore.loginSession === true">编辑简历</a></li>
+        <li><a @click="router.push('/register')" v-if="loginStore.loginSession === true">分析简历</a></li>
       </ul>
       <div class="dropdown dropdown-end">
         <div tabindex="0" role="button" class="btn btn-ghost rounded-btn">主题</div>
