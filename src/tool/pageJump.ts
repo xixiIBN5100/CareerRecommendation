@@ -1,9 +1,9 @@
 import router from "@/router";
-import { ref } from "vue";
+// import { ref } from "vue";
 
-const isFadingOut = ref(false);
+// const isFadingOut = ref(false);
 const jumpPage = (url: string) => {
-  isFadingOut.value = true;
+  // isFadingOut.value = true;
   setTimeout(() => {
     router.push(url);
   },1000);
@@ -22,6 +22,6 @@ isFadingOut.value = false;
 */
 
 export {
-  isFadingOut,
+  // isFadingOut,
   jumpPage
 };
