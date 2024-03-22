@@ -6,23 +6,23 @@
       </div>
       <ul class="menu bg-base-200 rounded-box">
         <li>
-          <a>添加简历</a>
+          <a :class="pageId === 1 ? 'active' : undefined" @click="() => switchPage(1)">添加简历</a>
         </li>
         <li>
-          <a>简历修改</a>
+          <a :class="pageId === 2 ? 'active' : undefined" @click="() => switchPage(2)">简历修改</a>
         </li>
         <li>
-          <a>简历查看</a>
+          <a :class="pageId === 3 ? 'active' : undefined" @click="() => switchPage(3)">简历查看</a>
         </li>
       </ul>
     </div>
-    <!-- <div class="h-90hv w-0 border-2 border-slate-500"></div> -->
-    <div class="bg-primary-content basis-3/4 mx-50 my-20 p-30 rounded-box">
+    <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box" v-if="pageId === 1">
       <div class="text-2xl mb-30">
         添加简历
-        <div class="underline text-sm text-stone-500 float-right cursor-pointer">上传简历文档?</div>
+        <div class="underline text-sm text-stone-500 float-right cursor-pointer" v-if="uploadFile === 0" @click="uploadFile = 1">上传简历文档?</div>
+        <div class="underline text-sm text-stone-500 float-right cursor-pointer" v-if="uploadFile === 1" @click="uploadFile = 0">手动输入简历?</div>
       </div>
-      <div class="flex flex-col gap-10">
+      <div class="flex flex-col gap-10" v-if="uploadFile === 0">
         <label class="input input-bordered flex items-center gap-2">
           <el-icon><User/></el-icon>
           <input type="text" class="grow" placeholder="姓名" v-model="resumeInfo.name" />
@@ -61,6 +61,15 @@
         <textarea class="textarea textarea-bordered" v-model="resumeInfo.self_evaluation"></textarea>
         <div :class="['btn','btn-primary', unableSub ? 'btn-disabled' : undefined]" @click="addResume">确认提交</div>
       </div>
+      <div v-if="uploadFile === 1">
+        <label>
+          <input type="file" class="block text-sm text-slate-500 file:mr-15 file:btn file:btn-primary">
+        </label>
+        <div :class="['btn','btn-primary', 'w-full', 'mt-40', false ? 'btn-disabled' : undefined]" @click="addResumeFile">确认提交</div>
+      </div>
+    </div>
+    <div v-if="pageId === 2">
+      简历修改
     </div>
   </div>
 </template>
@@ -74,6 +83,8 @@ import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
 
 const loginStore = useMainStore().useLoginStore();
+const pageId = ref(1);
+const uploadFile = ref(0);
 
 const resumeInfo = ref({
   name: "",
@@ -95,8 +106,9 @@ const age = ref("");
 const addResume = () => {
   resumeInfo.value.age = parseInt(age.value, 10);
   useRequest(() => addResumeAPI(resumeInfo.value, loginStore.token as string), {
-    onSuccess(res){
+    onSuccess(res:any){
       console.log(res);
+      ElNotification(res.msg);
     },
     onError(e){
       console.log(e);
@@ -116,5 +128,13 @@ const unableSub = computed(() => {
         resumeInfo.value.self_evaluation === "" ||
         age.value === ""
 })
+
+const switchPage = (id: number) => {
+  pageId.value = id;
+}
+
+const addResumeFile = () => {
+  ElNotification("上传了文件");
+}
 
 </script>
