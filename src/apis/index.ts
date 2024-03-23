@@ -9,6 +9,8 @@ import getInfoApi from '@/apis/Server/enterprise/getInfoApi';
 import getResumeListAPI from './Server/resume/getResumeListAPI';
 import setDefaultResumeAPI from "./Server/resume/setDefaultResumeAPI";
 import deleteResumeAPI from "./Server/resume/deleteResumeAPI";
+import getResumeInfoAPI from "./Server/resume/getResumeInfoAPI";
+import editResumeAPI from "./Server/resume/editResumeAPI";
 
 export {
   passwordLoginAPI,
@@ -22,4 +24,6 @@ export {
   getResumeListAPI,
   setDefaultResumeAPI,
   deleteResumeAPI,
+  getResumeInfoAPI,
+  editResumeAPI,
 };
