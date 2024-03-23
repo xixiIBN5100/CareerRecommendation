@@ -53,6 +53,7 @@ export type resumeData = {
    * 工作经历
    */
   work_experience: string;
+  remark: string;
 }
 
 const addResumeAPI = (data: resumeData, token: string) => {
