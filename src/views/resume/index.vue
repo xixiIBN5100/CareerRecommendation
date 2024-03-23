@@ -79,6 +79,7 @@
     <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box" v-if="pageId === 3">
       <div class="text-2xl mb-30">
         简历查看
+        <div class="btn btn-sm btn-accent float-end" @click="updataResumeList">刷新列表</div>
       </div>
       <div class="overflow-x-auto">
         <table class="table">
@@ -96,9 +97,20 @@
               <td>{{ res.remark }}</td>
               <td class="flex flex-row gap-4">
                 <div class="btn btn-sm btn-neutral">编辑</div>
+                <div class="btn btn-sm btn-neutral" @click="() => showModal('delete_modal')">删除</div>
                 <div class="btn btn-sm btn-neutral" v-if="!res.default" @click="() => setDefaultResume(res.resume_id)">设为默认简历</div>
               </td>
               <td v-if="res.default">默认简历 √</td>
+              <dialog id="delete_modal" class="modal">
+                <div class="modal-box">
+                  <h3 class="font-bold text-lg">删除</h3>
+                  <p class="py-4">你确认要删除你的简历信息吗?</p>
+                  <div class="modal-action">
+                    <button class="btn" @click="deleteResume(res.resume_id)">删除</button>
+                    <button class="btn" @click="showModal('delete_modal', true)">取消</button>
+                  </div>
+                </div>
+              </dialog>
             </tr>
           </tbody>
         </table>
@@ -111,7 +123,7 @@
 import { Star } from '@element-plus/icons-vue';
 import { computed, ref } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
-import { addResumeAPI, getResumeListAPI, setDefaultResumeAPI } from '@/apis';
+import { addResumeAPI, getResumeListAPI, setDefaultResumeAPI, deleteResumeAPI } from '@/apis';
 import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
 
@@ -158,8 +170,14 @@ const addResume = () => {
   console.log(resumeInfo.value);
   useRequest(() => addResumeAPI(resumeInfo.value, loginStore.token as string), {
     onSuccess(res:any){
-      console.log(res);
-      ElNotification(res.msg);
+      if(res.code === 200) {
+        ElNotification("新简历创建成功");
+        switchPage(3);
+        resumeInfo.value = {name: "",sex: 1,age: 0,address: "",id_no: "",phone: "",email: "",job_intention: "",education: "",ability: "",work_experience: "",honor: "",self_evaluation: "",remark: ""};
+        age.value = "";
+      } else {
+        ElNotification("新简历创建失败");
+      }
     },
     onError(e){
       console.log(e);
@@ -182,6 +200,7 @@ const unableSub = computed(() => {
 
 const switchPage = (id: number) => {
   pageId.value = id;
+  updataResumeList();
 }
 
 const addResumeFile = () => {
@@ -196,12 +215,36 @@ const setDefaultResume = (id: number) => {
     onSuccess(res: any) {
       if(res.code === 200) {
         ElNotification("默认简历设置成功");
-        updataResumeList();
+        updataResumeList();        
       } else {
         ElNotification(res.msg);
       }
     }
   });
+}
+
+const showModal = (id: string, unshow:boolean = false) => {
+  if(unshow){
+    (document.getElementById(id) as any).close();
+  } else {
+    (document.getElementById(id) as any).showModal();
+  }
+}
+
+const deleteResume = (id: number) => {
+  console.log("即将删除");
+  console.log(id);
+  useRequest(() => deleteResumeAPI({
+    resume_id: id
+  }, loginStore.token as string), {
+    onSuccess(res: any) {
+      ElNotification(res.msg);
+      if(res.code === 200) {
+        showModal('delete_modal', true);
+      }
+      updataResumeList();
+    }
+  })
 }
 
 </script>
