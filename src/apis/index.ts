@@ -4,6 +4,8 @@ import sendEmailCodeAPI from "./Server/account/sendEmailCodeAPI";
 import registerAPI from "./Server/account/registerAPI";
 import findPasswordAPI from "@/apis/Server/account/findPassword";
 import addResumeAPI from "./Server/resume/addResumeAPI";
+import submitInfoApi from '@/apis/Server/enterprise/submitInfoApi'
+import getInfoApi from '@/apis/Server/enterprise/getInfoApi'
 
 export {
   passwordLoginAPI,
@@ -11,5 +13,7 @@ export {
   sendEmailCodeAPI,
   registerAPI,
   findPasswordAPI,
-  addResumeAPI
+  addResumeAPI,
+  submitInfoApi,
+  getInfoApi,
 };
