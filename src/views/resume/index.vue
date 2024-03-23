@@ -9,11 +9,12 @@
           <a :class="pageId === 1 ? 'active' : undefined" @click="() => switchPage(1)">添加简历</a>
         </li>
         <li>
-          <a :class="pageId === 2 ? 'active' : undefined" @click="() => switchPage(2)">简历修改</a>
-        </li>
-        <li>
           <a :class="pageId === 3 ? 'active' : undefined" @click="() => switchPage(3)">简历查看</a>
         </li>
+        <li>
+          <a :class="pageId === 2 ? 'active' : undefined" @click="() => switchPage(2)">简历修改</a>
+        </li>
+
       </ul>
     </div>
     <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box" v-if="pageId === 1">
@@ -59,6 +60,10 @@
         <textarea class="textarea textarea-bordered" v-model="resumeInfo.honor"></textarea>
         自我评价
         <textarea class="textarea textarea-bordered" v-model="resumeInfo.self_evaluation"></textarea>
+        <label class="input input-bordered flex items-center gap-2">
+          <el-icon><Promotion /></el-icon>
+          <input type="text" class="grow" placeholder="简历简介(仅用于用户端区分简历)" v-model="resumeInfo.remark"/>
+        </label>
         <div :class="['btn','btn-primary', unableSub ? 'btn-disabled' : undefined]" @click="addResume">确认提交</div>
       </div>
       <div v-if="uploadFile === 1">
@@ -71,6 +76,34 @@
     <div v-if="pageId === 2">
       简历修改
     </div>
+    <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box" v-if="pageId === 3">
+      <div class="text-2xl mb-30">
+        简历查看
+      </div>
+      <div class="overflow-x-auto">
+        <table class="table">
+          <!-- head -->
+          <thead>
+            <tr>
+              <th></th>
+              <th>简介</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="res in resumeList" :class="res.default ? 'bg-base-300' : undefined">
+              <th>{{ res.id }}</th>
+              <td>{{ res.remark }}</td>
+              <td class="flex flex-row gap-4">
+                <div class="btn btn-sm btn-neutral">编辑</div>
+                <div class="btn btn-sm btn-neutral" v-if="!res.default" @click="() => setDefaultResume(res.resume_id)">设为默认简历</div>
+              </td>
+              <td v-if="res.default">默认简历 √</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -78,7 +111,7 @@
 import { Star } from '@element-plus/icons-vue';
 import { computed, ref } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
-import { addResumeAPI } from '@/apis';
+import { addResumeAPI, getResumeListAPI, setDefaultResumeAPI } from '@/apis';
 import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
 
@@ -99,12 +132,30 @@ const resumeInfo = ref({
   ability: "",
   work_experience: "",
   honor: "",
-  self_evaluation: ""
+  self_evaluation: "",
+  remark: ""
 })
 const age = ref("");
+const resumeList = ref();
+
+const updataResumeList = () => {
+  useRequest(() => getResumeListAPI(loginStore.token as string), {
+    onSuccess(res:any){
+      console.log(res);
+      if(res.code === 200) {
+        resumeList.value = res.data;
+        console.log(resumeList.value);
+      } else {
+        ElNotification("系统数据获取失败 检查网络设置或联系管理员");
+      }
+    }
+  })
+}
+updataResumeList();
 
 const addResume = () => {
   resumeInfo.value.age = parseInt(age.value, 10);
+  console.log(resumeInfo.value);
   useRequest(() => addResumeAPI(resumeInfo.value, loginStore.token as string), {
     onSuccess(res:any){
       console.log(res);
@@ -135,6 +186,22 @@ const switchPage = (id: number) => {
 
 const addResumeFile = () => {
   ElNotification("上传了文件");
+  //文件api待完成
+}
+
+const setDefaultResume = (id: number) => {
+  useRequest(() => setDefaultResumeAPI({
+    resume_id: id
+  }, loginStore.token as string), {
+    onSuccess(res: any) {
+      if(res.code === 200) {
+        ElNotification("默认简历设置成功");
+        updataResumeList();
+      } else {
+        ElNotification(res.msg);
+      }
+    }
+  });
 }
 
 </script>
