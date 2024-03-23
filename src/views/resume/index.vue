@@ -145,8 +145,9 @@
                 <div class="btn btn-sm btn-neutral" @click="() => editResume(res.resume_id)">编辑</div>
                 <div class="btn btn-sm btn-neutral" @click="() => showModal('delete_modal')">删除</div>
                 <div class="btn btn-sm btn-neutral" v-if="!res.default" @click="() => setDefaultResume(res.resume_id)">设为默认简历</div>
+                <div class="btn btn-sm btn-neutral" v-if="res.default" @click="() => setPublicResume(res.open_public)">{{ res.open_public === 1 ? "取消公开" : "公开简历" }}</div>
               </td>
-              <td v-if="res.default">默认简历 √</td>
+              <td v-if="res.default" class="flex flex-row"><div class="leading-9 mr-8">默认简历 √</div><div class="rounded bg-base-100 p-6 leading-6">{{ res.open_public === 1 ? "公开" : "非公开" }}</div></td>
               <dialog id="delete_modal" class="modal">
                 <div class="modal-box">
                   <h3 class="font-bold text-lg">删除</h3>
@@ -169,7 +170,7 @@
 import { Star } from '@element-plus/icons-vue';
 import { computed, ref, watch } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
-import { addResumeAPI, getResumeListAPI, setDefaultResumeAPI, deleteResumeAPI, getResumeInfoAPI, editResumeAPI } from '@/apis';
+import { addResumeAPI, getResumeListAPI, setDefaultResumeAPI, deleteResumeAPI, getResumeInfoAPI, editResumeAPI, setPublicResumeAPI } from '@/apis';
 import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
 
@@ -358,6 +359,24 @@ const submitEdit = () => {
       console.log(e);
     }
   })
+}
+
+const setPublicResume = (state: number) => {
+  const setPublic = ref<number>()
+  if(state === 1) setPublic.value = 2;
+  else setPublic.value = 1;
+  useRequest(() => setPublicResumeAPI({
+    open_public: setPublic.value as number
+  }, loginStore.token as string), {
+    onSuccess(res: any) {
+      if(res.code === 200)
+        ElNotification("状态更改成功");
+      else
+        ElNotification("状态更改失败");
+    }
+  })
+  setTimeout(() => updataResumeList(), 500);
+  
 }
 
 </script>
