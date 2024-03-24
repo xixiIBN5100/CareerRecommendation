@@ -14,7 +14,6 @@
         <li>
           <a :class="pageId === 2 ? 'active' : undefined" @click="() => switchPage(2)">简历修改</a>
         </li>
-
       </ul>
     </div>
     <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box" v-if="pageId === 1">
