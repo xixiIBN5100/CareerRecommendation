@@ -5,7 +5,8 @@ import registerAPI from "./Server/account/registerAPI";
 import findPasswordAPI from "@/apis/Server/account/findPassword";
 import addResumeAPI from "./Server/resume/addResumeAPI";
 import submitInfoApi from '@/apis/Server/enterprise/submitInfoApi'
-import getInfoApi from '@/apis/Server/enterprise/getInfoApi'
+import getInfoApi from '@/apis/Server/enterprise/getInfoApi';
+import getStudentsListApi from '@/apis/Server/enterprise/getStudentsList'
 
 export {
   passwordLoginAPI,
@@ -16,4 +17,5 @@ export {
   addResumeAPI,
   submitInfoApi,
   getInfoApi,
+  getStudentsListApi,
 };

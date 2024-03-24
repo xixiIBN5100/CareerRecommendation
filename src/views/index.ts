@@ -4,6 +4,7 @@ import FindPassword from './findPassword/index.vue';
 import resume from './resume/index.vue';
 import Home from "./home/index.vue";
 import EnterpriseInfo from "./enterprise/enterpriseInfo.vue";
+import StudentsList from "./enterprise/studentsList.vue";
 
 export {
     Login,
@@ -12,4 +13,5 @@ export {
     resume,
     Home,
     EnterpriseInfo,
+    StudentsList,
 }
