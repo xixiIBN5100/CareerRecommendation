@@ -5,6 +5,7 @@ import resume from './resume/index.vue';
 import Home from "./home/index.vue";
 import EnterpriseInfo from "./enterprise/enterpriseInfo.vue";
 import jobDatabase from "./jobDatabase/index.vue";
+import StudentsList from "./enterprise/studentsList.vue";
 
 export {
     Login,
