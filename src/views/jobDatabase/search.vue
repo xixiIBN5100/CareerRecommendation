@@ -4,11 +4,11 @@
   </div>
   <div class="overflow-x-auto">
     <div class="collapse bg-base-100">
-      <input type="checkbox" /> 
+      <input type="checkbox" />
       <div class="collapse-title">
         搜索
       </div>
-      <div class="collapse-content flex flex-col gap-4"> 
+      <div class="collapse-content flex flex-col gap-4">
         <div>
           <span>公司名称</span> <input class="input input-primary input-sm float-right" v-model="company">
         </div>

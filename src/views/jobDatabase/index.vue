@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row px-60 py-30 h-full">
+  <div class="flex flex-row px-60 py-30 h-screen ">
     <div class="basis-1/8">
       <div class="text-4xl p-30">
         岗位库
