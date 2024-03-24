@@ -73,12 +73,59 @@
         <div :class="['btn','btn-primary', 'w-full', 'mt-40', false ? 'btn-disabled' : undefined]" @click="addResumeFile">确认提交</div>
       </div>
     </div>
-    <div v-if="pageId === 2">
-      简历修改
+    <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box" v-if="pageId === 2">
+      <div class="text-2xl mb-30">
+        简历修改
+      </div>
+      <div class="flex flex-col gap-10" v-if="editIng">
+        <label class="input input-ghost flex items-center gap-2">
+          姓名<el-icon class="mr-8"><User/></el-icon>
+          <input type="text" class="grow text-right mr-8" placeholder="姓名" v-model="resumeEdit.name" />
+        </label>
+        <label class="input input-ghost flex items-center gap-2">
+          年龄<el-icon class="mr-8"><Star/></el-icon>
+          <input type="text" class="grow text-right mr-8" placeholder="年龄" v-model="ageEdit"/>
+        </label>
+        <label class="p-4">
+          <input type="radio" name="gender" class="radio radio-sm" value="1" v-model="resumeEdit.sex"/><span class="m-4 text-xl mr-50">男</span>
+          <input type="radio" name="gender" class="radio radio-sm" value="2" v-model="resumeEdit.sex"/><span class="m-4 text-xl">女</span>
+        </label>
+        <label class="input input-ghost flex items-center gap-2">
+          身份证<el-icon class="mr-8"><Postcard/></el-icon>
+          <input type="text" class="grow text-right mr-8" placeholder="身份证" v-model="resumeEdit.id_no"/>
+        </label>
+        <label class="input input-ghost flex items-center gap-2">
+          家庭住址<el-icon class="mr-8"><School/></el-icon>
+          <input type="text" class="grow text-right mr-8" placeholder="家庭住址" v-model="resumeEdit.address"/>
+        </label>
+        <label class="input input-ghost flex items-center gap-2">
+          求职意向岗位<el-icon class="mr-8"><DocumentChecked /></el-icon>
+          <input type="text" class="grow text-right mr-8" placeholder="求职意向岗位" v-model="resumeEdit.job_intention"/>
+        </label>
+        <label class="input input-ghost flex items-center gap-2">
+          学历<el-icon class="mr-8"><Reading /></el-icon>
+          <input type="text" class="grow text-right mr-8" placeholder="学历" v-model="resumeEdit.education"/>
+        </label>
+        能力特长
+        <textarea class="textarea textarea-ghost" v-model="resumeEdit.ability"></textarea>
+        工作经历
+        <textarea class="textarea textarea-ghost" v-model="resumeEdit.work_experience"></textarea>
+        所获荣誉
+        <textarea class="textarea textarea-ghost" v-model="resumeEdit.honor"></textarea>
+        自我评价
+        <textarea class="textarea textarea-ghost" v-model="resumeEdit.self_evaluation"></textarea>
+        <label class="input input-ghost flex items-center gap-2">
+          简历简介<el-icon class="mr-8"><Promotion /></el-icon>
+          <input type="text" class="grow text-right mr-8" placeholder="简历简介(仅用于用户端区分简历)" v-model="resumeEdit.remark"/>
+        </label>
+        <div class="btn btn-primary" @click="submitEdit">提交更改</div>
+      </div>
+      <div v-if="!editIng">请前往<span class="rounded bg-base-100 p-6 m-3 font-bold">简历查看</span>中选定简历</div>
     </div>
     <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box" v-if="pageId === 3">
       <div class="text-2xl mb-30">
         简历查看
+        <div class="btn btn-sm btn-accent float-end" @click="updataResumeList">刷新列表</div>
       </div>
       <div class="overflow-x-auto">
         <table class="table">
@@ -95,10 +142,22 @@
               <th>{{ res.id }}</th>
               <td>{{ res.remark }}</td>
               <td class="flex flex-row gap-4">
-                <div class="btn btn-sm btn-neutral">编辑</div>
+                <div class="btn btn-sm btn-neutral" @click="() => editResume(res.resume_id)">编辑</div>
+                <div class="btn btn-sm btn-neutral" @click="() => showModal('delete_modal')">删除</div>
                 <div class="btn btn-sm btn-neutral" v-if="!res.default" @click="() => setDefaultResume(res.resume_id)">设为默认简历</div>
+                <div class="btn btn-sm btn-neutral" v-if="res.default" @click="() => setPublicResume(res.open_public)">{{ res.open_public === 1 ? "取消公开" : "公开简历" }}</div>
               </td>
-              <td v-if="res.default">默认简历 √</td>
+              <td v-if="res.default" class="flex flex-row"><div class="leading-9 mr-8">默认简历 √</div><div class="rounded bg-base-100 p-6 leading-6">{{ res.open_public === 1 ? "公开" : "非公开" }}</div></td>
+              <dialog id="delete_modal" class="modal">
+                <div class="modal-box">
+                  <h3 class="font-bold text-lg">删除</h3>
+                  <p class="py-4">你确认要删除你的简历信息吗?</p>
+                  <div class="modal-action">
+                    <button class="btn" @click="deleteResume(res.resume_id)">删除</button>
+                    <button class="btn" @click="showModal('delete_modal', true)">取消</button>
+                  </div>
+                </div>
+              </dialog>
             </tr>
           </tbody>
         </table>
@@ -109,9 +168,9 @@
 
 <script setup lang="ts">
 import { Star } from '@element-plus/icons-vue';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
-import { addResumeAPI, getResumeListAPI, setDefaultResumeAPI } from '@/apis';
+import { addResumeAPI, getResumeListAPI, setDefaultResumeAPI, deleteResumeAPI, getResumeInfoAPI, editResumeAPI, setPublicResumeAPI } from '@/apis';
 import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
 
@@ -138,6 +197,26 @@ const resumeInfo = ref({
 const age = ref("");
 const resumeList = ref();
 
+const resumeEdit = ref({
+  name: "",
+  sex: 1,
+  age: 0,
+  address: "",
+  id_no: "",
+  phone: "",
+  email: "",
+  job_intention: "",
+  education: "",
+  ability: "",
+  work_experience: "",
+  honor: "",
+  self_evaluation: "",
+  remark: ""
+})
+const ageEdit = ref("")
+const editIng = ref(false);
+const recentEditResume = ref<number>();
+
 const updataResumeList = () => {
   useRequest(() => getResumeListAPI(loginStore.token as string), {
     onSuccess(res:any){
@@ -158,8 +237,14 @@ const addResume = () => {
   console.log(resumeInfo.value);
   useRequest(() => addResumeAPI(resumeInfo.value, loginStore.token as string), {
     onSuccess(res:any){
-      console.log(res);
-      ElNotification(res.msg);
+      if(res.code === 200) {
+        ElNotification("新简历创建成功");
+        switchPage(3);
+        resumeInfo.value = {name: "",sex: 1,age: 0,address: "",id_no: "",phone: "",email: "",job_intention: "",education: "",ability: "",work_experience: "",honor: "",self_evaluation: "",remark: ""};
+        age.value = "";
+      } else {
+        ElNotification("新简历创建失败");
+      }
     },
     onError(e){
       console.log(e);
@@ -182,6 +267,7 @@ const unableSub = computed(() => {
 
 const switchPage = (id: number) => {
   pageId.value = id;
+  updataResumeList();
 }
 
 const addResumeFile = () => {
@@ -196,12 +282,101 @@ const setDefaultResume = (id: number) => {
     onSuccess(res: any) {
       if(res.code === 200) {
         ElNotification("默认简历设置成功");
-        updataResumeList();
+        updataResumeList();        
       } else {
         ElNotification(res.msg);
       }
     }
   });
+}
+
+const showModal = (id: string, unshow:boolean = false) => {
+  if(unshow){
+    (document.getElementById(id) as any).close();
+  } else {
+    (document.getElementById(id) as any).showModal();
+  }
+}
+
+const deleteResume = (id: number) => {
+  console.log("即将删除");
+  console.log(id);
+  useRequest(() => deleteResumeAPI({
+    resume_id: id
+  }, loginStore.token as string), {
+    onSuccess(res: any) {
+      ElNotification(res.msg);
+      if(res.code === 200) {
+        showModal('delete_modal', true);
+      }
+      updataResumeList();
+    }
+  })
+}
+
+const editResume = (id: number) => {
+  editIng.value = true;
+  switchPage(2);
+  recentEditResume.value = id;
+  useRequest(() => getResumeInfoAPI({
+    resume_id: id
+  }, loginStore.token as string), {
+    onSuccess(res: any) {
+      if(res.code === 200) {
+        resumeEdit.value = res.data;
+      }
+    }
+  })
+}
+
+const submitEdit = () => {
+  useRequest(() => editResumeAPI({
+    resume_id: recentEditResume.value as number,
+    name: resumeEdit.value.name,
+    sex: resumeEdit.value.sex,
+    age: parseInt(ageEdit.value, 10),
+    address: resumeEdit.value.address,
+    id_no: resumeEdit.value.id_no,
+    phone: resumeEdit.value.phone,
+    email: resumeEdit.value.email,
+    job_intention: resumeEdit.value.job_intention,
+    education: resumeEdit.value.education,
+    ability: resumeEdit.value.ability,
+    work_experience: resumeEdit.value.work_experience,
+    honor: resumeEdit.value.honor,
+    self_evaluation: resumeEdit.value.self_evaluation,
+    remark: resumeEdit.value.remark
+  }, loginStore.token as string), {
+    onSuccess(res: any) {
+      if(res.code === 200) {
+        ElNotification("更改成功");
+        switchPage(3);
+        editIng.value = false;
+      }
+      ElNotification(res.msg);
+    },
+    onError(e) {
+      console.log(e);
+    }
+  })
+}
+
+const setPublicResume = (state: number) => {
+  const setPublic = ref<number>()
+  if(state === 1) setPublic.value = 2;
+  else setPublic.value = 1;
+  useRequest(() => setPublicResumeAPI({
+    open_public: setPublic.value as number
+  }, loginStore.token as string), {
+    onSuccess(res: any) {
+      if(res.code === 200)
+        ElNotification("状态更改成功");
+      else
+        ElNotification("状态更改失败");
+    }
+  })
+  setTimeout(() => updataResumeList(), 500);
+  
 }
 
 </script>
