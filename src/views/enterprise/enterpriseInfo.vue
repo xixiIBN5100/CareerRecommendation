@@ -5,7 +5,7 @@
       <li class="menu-title text-3xl">菜单</li>
       <div class='text-base mt-10'>
         <li><a class="active" @click='router.push("/enterprise/enterpriseInfo")'>企业信息</a></li>
-        <li><a @click='router.push("/enterprise/enterpriseInfo")'>Item 2</a></li>
+        <li><a @click='router.push("/enterprise/studentsList")'>查看学生列表</a></li>
         <li><a @click='router.push("/enterprise/enterpriseInfo")'>Item 3</a></li>
       </div>
     </ul>

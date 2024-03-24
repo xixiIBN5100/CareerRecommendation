@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import {FindPassword, Login, Register, resume, Home ,EnterpriseInfo} from "@/views";
+import {FindPassword, Login, Register, resume, Home ,EnterpriseInfo, StudentsList} from "@/views";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +38,11 @@ const router = createRouter({
       path: "/enterprise/enterpriseInfo",
       name:"enterpriseInfo",
       component:EnterpriseInfo
+    },
+    {
+      path: "/enterprise/studentsList",
+      name: "studentsList",
+      component: StudentsList,
     }
   ]
 });

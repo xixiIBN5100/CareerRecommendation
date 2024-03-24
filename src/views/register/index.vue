@@ -8,6 +8,14 @@
         </div>
         <div class="card shrink-0 w-400 max-w-sm shadow-2xl bg-base-100">
           <form class="card-body">
+            <div class='flex'>
+              <span class='flex items-center'>
+                <input type="radio" name="radio-1" class="radio" value="1" v-model='info.type' checked/><span class='ml-[5px]'>学生</span>
+              </span>
+              <span class='flex items-center ml-[15px]'>
+                <input type="radio" name="radio-1" class="radio" value="2" v-model='info.type'/><span class='ml-[5px]'>企业</span>
+              </span>
+            </div>
             <div class="form-control">
               <label class="label">
                 <span class="label-text">Account</span>
@@ -126,6 +134,7 @@ const onSuccess = (time:number) => {
 }
 
 const register = () => {
+  info.value.type = Number(info.value.type)
   useRequest(() => registerAPI(info.value as any), {
     onSuccess(res:any){
       console.log(res);
