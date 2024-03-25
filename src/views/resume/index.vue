@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row px-60 py-30" :class="{ 'h-full': pageId === 1, 'h-screen': pageId !== 1 && !editIng}">
+  <div class="flex flex-row px-60 py-30">
     <div class="basis-1/8">
       <div class="text-6xl p-30">
         简历
