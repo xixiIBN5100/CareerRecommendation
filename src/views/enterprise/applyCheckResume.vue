@@ -24,10 +24,14 @@
               姓名：
               <input type="text" class="grow" placeholder="名字" v-model='params.name'/>
             </label>
-            <label class="input input-bordered flex items-center gap-2 ml-[15px]">
-              学历：
-              <input type="text" class="grow" placeholder="学校+科或专" v-model='params.education'/>
-            </label>
+            <select class="select select-bordered w-[200px] max-w-xs ml-[10px] text-base" v-model='education'>
+              <option disabled selected>选择学历</option>
+              <option>全部</option>
+              <option>大专</option>
+              <option>本科</option>
+              <option>硕士</option>
+              <option>博士</option>
+            </select>
             <input type="radio" name="isOpen" class="radio ml-[15px]" value='0' v-model='params.status' checked/>&nbsp;所有
             <input type="radio" name="isOpen" class="radio ml-[20px]" value='1' v-model='params.status' />待处理
             <input type="radio" name="isOpen" class="radio ml-[15px]" value='2' v-model='params.status'/>&nbsp;同意
@@ -61,7 +65,7 @@
           </div>
           <div class='flex justify-center mt-[5px]'>
             <div class="join">
-              <input class="join-item btn btn-square" type="radio" name="options" aria-label="1" checked/>
+              <input id='firstPagin' class="join-item btn btn-square" type="radio" name="options" aria-label="1" @click='changePage(1)' checked/>
               <div v-for='num in pageNum'>
                 <input class="join-item btn btn-square" type="radio" name="options" :aria-label="num" @click='changePage(num)'/>
               </div>
@@ -172,6 +176,7 @@ const params = ref<object>({
   status: 0,
   education: "",
 })
+const education = ref<string>("选择学历");
 const pageInfo = ref<object>({
   page_total_num: 10,
   post_num: 100,
@@ -188,6 +193,7 @@ const getInfo = () => {
         studentsList.value = res.data.data;
         pageInfo.value.page_total_num = res.data.page_total_num;
         pageInfo.value.post_num = res.data.post_num;
+        pageNum.value = [];
         for(let i=2;i<=pageInfo.value.page_total_num;i++){
           pageNum.value.push(i);
         }
@@ -200,7 +206,20 @@ const getInfo = () => {
             studentsList.value[i].status = "拒绝";
           }
         }
+      }else{
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning',
+        })
       }
+    },
+    onError(err){
+      ElNotification({
+        title: 'Error',
+        message: err,
+        type: 'error',
+      })
     }
   })
 }
@@ -210,13 +229,21 @@ onMounted(()=>{
 })
 
 const screen = () => {
+  if(education.value === "全部" || education.value === "选择学历"){
+    params.value.education = "";
+  }else{
+    params.value.education = education.value;
+  }
   getInfo();
+  document.getElementById("firstPagin").click();
 }
 
 const reset = () => {
   params.value.name = "";
   params.value.education = "";
   params.value.status = 0;
+  params.value.page_num = 1;
+  education.value = "选择学历";
   getInfo();
 }
 
@@ -243,6 +270,11 @@ const checkResume = (student_id:number) => {
       })
     }
   })
+}
+
+const changePage = (num:number) => {
+  params.value.page_num = num;
+  getInfo();
 }
 </script>
 

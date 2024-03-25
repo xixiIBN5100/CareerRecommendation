@@ -20,15 +20,20 @@
       <div class="card w-[1250px] max-h-[1000px] bg-base-200 shadow-xl mt-[25px] hover:bg-base-300 hover:shadow-2xl">
         <div class="card-body">
           <div class='flex flex-row items-center'>
-            <label class="input input-bordered flex items-center gap-2">
-              学历：
-              <input type="text" class="grow" placeholder="学校+科或专" v-model='params.education'/>
-            </label>
+            <select class="select select-bordered w-[200px] max-w-xs text-base" v-model='education'>
+              <option disabled selected>选择学历</option>
+              <option>全部</option>
+              <option>大专</option>
+              <option>本科</option>
+              <option>硕士</option>
+              <option>博士</option>
+            </select>
             <input type="radio" name="isOpen" class="radio ml-[20px]" value='1' v-model='params.open_public' />&nbsp;简历开放
             <input type="radio" name="isOpen" class="radio ml-[15px]" value='2' v-model='params.open_public'/>&nbsp;简历不开放
             <input type="radio" name="isOpen" class="radio ml-[15px]" value='0' v-model='params.open_public' checked/>&nbsp;所有
             <div class="divider divider-horizontal"></div>
             <button class="btn btn-outline" @click='screen'>筛选</button>
+            <button class="btn btn-outline ml-[10px]" @click='reset'>重置</button>
           </div>
           <div class="divider"></div>
           <div class="overflow-x-auto">
@@ -56,7 +61,7 @@
           </div>
           <div class='flex justify-center mt-[5px]'>
             <div class="join">
-              <input class="join-item btn btn-square" type="radio" name="options" aria-label="1" checked/>
+              <input id='firstPagin' class="join-item btn btn-square" type="radio" name="options" aria-label="1" @click='changePage(1)' checked/>
               <div v-for='num in pageNum'>
                 <input class="join-item btn btn-square" type="radio" name="options" :aria-label="num" @click='changePage(num)'/>
               </div>
@@ -166,6 +171,7 @@ const params = ref<object>({
   education: "",
   open_public: 0,
 })
+const education = ref<string>("选择学历");
 const pageInfo = ref<object>({
   page_total_num: 10,
   student_num: 100,
@@ -176,6 +182,7 @@ const studentResume = ref<object>({});
 
 const changePage = (pageNum) => {
   params.value.page_num = pageNum;
+  getInfo();
 }
 
 const getInfo = () => {
@@ -219,7 +226,22 @@ onMounted(()=>{
 })
 
 const screen = () => {
+  if(education.value === "全部" || education.value === "选择学历"){
+    params.value.education = "";
+  }else{
+    params.value.education = education.value;
+  }
   params.value.open_public = Number(params.value.open_public);
+  getInfo();
+  document.getElementById("firstPagin").click()
+}
+
+const reset = () => {
+  params.value.page_num = 1;
+  params.value.page_size = 10;
+  params.value.education = "";
+  params.value.open_public = 0;
+  education.value = "选择学历";
   getInfo();
 }
 
