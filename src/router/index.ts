@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import {FindPassword, Login, Register, resume, Home ,EnterpriseInfo, StudentsList, jobDatabase, ApplyCheckResume} from "@/views";
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -25,8 +26,8 @@ const router = createRouter({
       component: FindPassword
     },
     {
-      path: '/resume',
-      name: 'resume',
+      path: "/resume",
+      name: "resume",
       component: resume
     },
     {
