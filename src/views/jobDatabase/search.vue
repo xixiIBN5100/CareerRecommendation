@@ -61,16 +61,16 @@
               <span class="float-right text-xs">{{ job.education }}</span>
             </div>
             <div class="m-3">
-              <span class="font-bold">技能要求</span>
-              <span class="float-right text-xs p-3">{{ job.description }}</span>
-            </div>
-            <div class="m-3">
               <span class="font-bold">联系人</span>
               <span class="float-right">{{ job.hiring_manager }}</span>
             </div>
             <div class="m-3">
               <span class="font-bold">地址</span>
               <span class="float-right">{{ job.address }}</span>
+            </div>
+            <div class="m-3">
+              <span class="font-bold">技能要求</span>
+              <span class="float-right text-xs p-3">{{ job.description }}</span>
             </div>
             <div class="m-3">
               <a class="btn-link font-bold" :href="job.link">详情链接</a>
