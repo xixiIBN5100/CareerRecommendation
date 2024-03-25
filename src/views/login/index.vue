@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-base-300 h-700 py-100">
+  <div class=" h-screen py-100">
   <div class="hero  bg-base-200 h-500 ">
     <div class="hero-content flex-col lg:flex-row-reverse ">
       <div class="text-center lg:text-left mx-50">

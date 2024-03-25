@@ -116,18 +116,8 @@ const getInfo = () => {
     onSuccess(res){
       // console.log(res.data.name);
       if(res.code === 200){
-        info.value.name = res.data.name;
-        info.value.introduction = res.data.introduction;
-        info.value.location = res.data.location;
-        info.value.industry = res.data.industry;
-        info.value.website = res.data.website;
-        info.value.email = res.data.email;
-        submitInfo.value.name = res.data.name;
-        submitInfo.value.introduction = res.data.introduction;
-        submitInfo.value.location = res.data.location;
-        submitInfo.value.industry = res.data.industry;
-        submitInfo.value.website = res.data.website;
-        submitInfo.value.email = res.data.email;
+        Object.assign(info.value,res.data)
+        Object.assign(submitInfo.value,res.data)
       }else{
         ElNotification({
           title: 'Warning',
@@ -183,11 +173,6 @@ const submit = () => {
 }
 
 const refreshData = () => {
-  submitInfo.value.name = info.value.name;
-  submitInfo.value.introduction = info.value.introduction;
-  submitInfo.value.location = info.value.location;
-  submitInfo.value.website = info.value.website;
-  submitInfo.value.industry = info.value.industry;
-  submitInfo.value.email = info.value.email;
+  Object.assign(submitInfo.value,info.value)
 }
 </script>

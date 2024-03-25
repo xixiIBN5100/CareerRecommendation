@@ -1,15 +1,8 @@
 <template>
-
-  <div class="h-screen">
+  <div>
+    知识图谱
   </div>
-
 </template>
 
 <script setup lang="ts">
-
 </script>
-
-
-<style scoped>
-
-</style>

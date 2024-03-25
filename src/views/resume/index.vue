@@ -1,23 +1,22 @@
 <template>
-  <div class="flex flex-row px-60 py-30 h-full">
+  <div class="flex flex-row px-60 py-30 " :class="{ 'h-full': pageId === 1 , 'h-screen': pageId !== 1}">
     <div class="basis-1/8">
       <div class="text-6xl p-30">
         简历
       </div>
-      <ul class="menu bg-base-200 rounded-box">
-        <li>
+      <ul class="menu bg-base-200 rounded-box p-10">
+        <li class="my-5">
           <a :class="pageId === 1 ? 'active' : undefined" @click="() => switchPage(1)">添加简历</a>
         </li>
-        <li>
+        <li class="my-5">
           <a :class="pageId === 3 ? 'active' : undefined" @click="() => switchPage(3)">简历查看</a>
         </li>
-        <li>
+        <li class="my-5">
           <a :class="pageId === 2 ? 'active' : undefined" @click="() => switchPage(2)">简历修改</a>
         </li>
-
       </ul>
     </div>
-    <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box" v-if="pageId === 1">
+    <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box " v-if="pageId === 1">
       <div class="text-2xl mb-30">
         添加简历
         <div class="underline text-sm text-stone-500 float-right cursor-pointer" v-if="uploadFile === 0" @click="uploadFile = 1">上传简历文档?</div>
@@ -73,7 +72,7 @@
         <div :class="['btn','btn-primary', 'w-full', 'mt-40', false ? 'btn-disabled' : undefined]" @click="addResumeFile">确认提交</div>
       </div>
     </div>
-    <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box" v-if="pageId === 2">
+    <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box" v-if="pageId === 2">
       <div class="text-2xl mb-30">
         简历修改
       </div>
@@ -122,7 +121,7 @@
       </div>
       <div v-if="!editIng">请前往<span class="rounded bg-base-100 p-6 m-3 font-bold">简历查看</span>中选定简历</div>
     </div>
-    <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box" v-if="pageId === 3">
+    <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box" v-if="pageId === 3">
       <div class="text-2xl mb-30">
         简历查看
         <div class="btn btn-sm btn-accent float-end" @click="updataResumeList">刷新列表</div>
@@ -172,12 +171,12 @@ import { computed, ref, watch } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
 import { addResumeAPI, getResumeListAPI, setDefaultResumeAPI, deleteResumeAPI, getResumeInfoAPI, editResumeAPI, setPublicResumeAPI } from '@/apis';
 import { useMainStore } from '@/stores';
-import { ElNotification } from 'element-plus';
+import {ElAlert, ElNotification} from 'element-plus';
+import {info} from "autoprefixer";
 
 const loginStore = useMainStore().useLoginStore();
 const pageId = ref(1);
 const uploadFile = ref(0);
-
 const resumeInfo = ref({
   name: "",
   sex: 1,
@@ -282,7 +281,7 @@ const setDefaultResume = (id: number) => {
     onSuccess(res: any) {
       if(res.code === 200) {
         ElNotification("默认简历设置成功");
-        updataResumeList();        
+        updataResumeList();
       } else {
         ElNotification(res.msg);
       }
@@ -376,7 +375,7 @@ const setPublicResume = (state: number) => {
     }
   })
   setTimeout(() => updataResumeList(), 500);
-  
+
 }
 
 </script>

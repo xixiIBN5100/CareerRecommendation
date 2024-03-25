@@ -1,21 +1,14 @@
 <template>
-  <div class="bg-base-300 h-700 py-100">
+  <div class=" h-screen py-100">
     <div class="hero  bg-base-200 h-500 ">
       <div class="hero-content flex-col lg:flex-row-reverse">
         <div class="text-center lg:text-left mx-50">
           <h1 class="text-5xl font-bold">Register now!</h1>
-          <p class="py-6">还在为本科毕业找工作而苦恼?<br>注册立即享受大学生就业推荐服务,准备好你的简历了吗</p>
+          <p class="py-6" v-if="info.type === 1">还在为本科毕业找工作而苦恼?<br>注册立即享受大学生就业推荐服务,准备好你的简历了吗</p>
+          <p class="py-6" v-if="info.type === 2">还在为企业找合适人才而苦恼?<br>注册立即享受大数据推荐人员服务,快速成为优秀猎头吧</p>
         </div>
         <div class="card shrink-0 w-400 max-w-sm shadow-2xl bg-base-100">
           <form class="card-body">
-            <div class='flex'>
-              <span class='flex items-center'>
-                <input type="radio" name="radio-1" class="radio" value="1" v-model='info.type' checked/><span class='ml-[5px]'>学生</span>
-              </span>
-              <span class='flex items-center ml-[15px]'>
-                <input type="radio" name="radio-1" class="radio" value="2" v-model='info.type'/><span class='ml-[5px]'>企业</span>
-              </span>
-            </div>
             <div class="form-control">
               <label class="label">
                 <span class="label-text">Account</span>
@@ -49,8 +42,16 @@
               <input  v-model="info.code" placeholder="verification code" class="input input-bordered h-35" required />
               <label class="label">
               </label>
+              <div class='flex justify-between'>
+              <span class='flex items-center'>
+                <input type="radio" name="radio-1" class="radio" @click="info.type = 1;console.log(info.type)" checked/><span class='ml-[5px]'>学生</span>
+              </span>
+                <span class='flex items-center ml-[15px]'>
+                <input type="radio" name="radio-1" class="radio"  @click="info.type = 2;console.log(info.type)"/><span class='ml-[5px]'>企业</span>
+              </span>
+              </div>
             </div>
-            <div class="form-control">
+            <div class="form-control mt-6">
             <button type="button" class="btn btn-primary" @click="register" >Register</button>
             </div>
           </form>
@@ -83,6 +84,7 @@ import "vue3-slide-verify/dist/style.css";
 import { ElNotification } from "element-plus";
 import { useRequest } from "vue-hooks-plus";
 import { sendEmailCodeAPI, registerAPI } from "@/apis";
+import {root} from "postcss";
 
 const info = ref({
   user_name:"",
@@ -140,6 +142,7 @@ const register = () => {
       console.log(res);
       if(res.code === 200 ) {
         ElNotification.success('注册成功');
+        router.push('/login')
       }else{
         ElNotification.error(res.msg)
       }
