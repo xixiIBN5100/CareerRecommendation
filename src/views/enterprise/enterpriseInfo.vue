@@ -13,7 +13,7 @@
   <div>
     <div class="card w-[1000px] bg-base-200 shadow-xl m-[50px] ml-[200px] hover:bg-base-300 hover:shadow-2xl">
       <div class="card-body">
-        <h2 class="card-title text-3xl">企业基本信息</h2>
+        <h2 class="card-title text-2xl">企业基本信息</h2>
         <div class='text-xl mt-[10px]'>企业名称：<span class='float-right text-xl'>{{info.name}}</span></div>
         <div class="divider"></div>
         <div class='text-xl'>所在地：<span class='float-right text-xl'>{{info.location}}</span></div>
