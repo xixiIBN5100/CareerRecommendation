@@ -18,7 +18,14 @@
               <label class="label">
                 <span class="label-text">E-mail</span>
               </label>
-              <input  v-model="info.email" type="email" placeholder="email" class="input input-bordered h-35" required /><div class="form-control">
+              <div class="inline">
+                <input v-model="info.email" placeholder="e-mail" class="input input-bordered w-200 h-35" required />
+                <button type="button"  class="btn btn-warning btn-sm ml-10 h-30 w-110" @click='sendCode' :disabled='isSendingCode || countdown > 0'>
+                  {{ countdown > 0 ? `重新发送(${countdown})` : '发送验证码' }}
+                </button>
+              </div>
+            </div>
+            <div class="form-control">
               <label class="label">
                 <span class="label-text">Code</span>
               </label>
@@ -34,7 +41,6 @@
               <label class="label">
                 <a href="#" class="label-text-alt link link-hover" @click="loginUseEmail">邮箱登录</a>
               </label>
-            </div>
             <button type="button" class="btn btn-primary" @click="findPassword" >Confirm</button>
           </form>
         </div>
@@ -48,9 +54,10 @@
 import router from "@/router";
 import {ref} from "vue";
 import {useRequest} from "vue-hooks-plus";
-import {emailLoginAPI, findPasswordAPI} from "@/apis";
+import {emailLoginAPI, findPasswordAPI, sendEmailCodeAPI} from "@/apis";
 import {ElNotification} from "element-plus";
-
+const isSendingCode = ref(false);
+const countdown = ref(0);
 const info = ref({
   user_name: '',
   email: '',
@@ -83,6 +90,46 @@ const findPassword = () => {
       ElNotification.error('重置失败失败，请重试' + e);
     }
   })
+}
+
+const IsEmail = (str: string) => {
+  const reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+  return  reg.test(str);
+}
+
+const sendCode = () => {
+  if(info.value.email==="") {
+    ElNotification.warning("先填写信息");
+  } else if(!IsEmail(info.value.email)) {
+    ElNotification.warning("请确认邮箱地址格式");
+  } else {
+    useRequest(() => sendEmailCodeAPI({
+      email: info.value.email
+    }), {
+      onSuccess(res:any){
+        console.log(res);
+        if(res.code === 200 && res.msg ==="OK") {
+          ElNotification.success('发送成功');
+        }else{
+          ElNotification.error(res.msg)
+        }
+      },
+      onError(e){
+        ElNotification.error('发送失败，请重试' + e);
+      }
+    })
+
+    isSendingCode.value = true;
+    countdown.value = 10;
+
+    const countInterval = setInterval(()=>{
+      countdown.value--;
+      if(countdown.value <= 0){
+        clearInterval(countInterval);
+        isSendingCode.value = false;
+      }
+    },1000)
+  }
 }
 </script>
 

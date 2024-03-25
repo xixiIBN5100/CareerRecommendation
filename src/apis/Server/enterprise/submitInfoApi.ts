@@ -1,4 +1,4 @@
-import { request } from '@/apis/axios'
+import { request } from "@/apis/axios";
 
 export interface enterpriseInfo{
   name: string,
@@ -13,8 +13,8 @@ const submitInfoApi = (data:enterpriseInfo,token:string) => {
   return request("/api/enterprise/info",{
     data: data,
     method: "post",
-    headers: {"Content-Type":"application/json","Authorization": 'Bearer ' + token},
-  })
-}
+    headers: {"Content-Type":"application/json","Authorization": "Bearer " + token},
+  });
+};
 
 export default submitInfoApi;

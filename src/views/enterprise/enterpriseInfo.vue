@@ -94,7 +94,7 @@ import router from '@/router';
 
 const loginStore = useMainStore().useLoginStore()
 
-const info = ref<object>({
+const info = ref({
   name: "",
   introduction: "",
   location: "",
@@ -102,7 +102,7 @@ const info = ref<object>({
   website: "",
   email: "",
 })
-const submitInfo = ref<object>({
+const submitInfo = ref({
   name: "",
   introduction: "",
   location: "",
@@ -112,7 +112,7 @@ const submitInfo = ref<object>({
 })
 
 const getInfo = () => {
-  useRequest(()=>getInfoApi(loginStore.token),{
+  useRequest(()=>getInfoApi(<string>loginStore.token),{
     onSuccess(res){
       // console.log(res.data.name);
       if(res.code === 200){
@@ -143,7 +143,7 @@ onMounted(()=>{
 
 const submit = () => {
   // console.log(submitInfo.value);
-  useRequest(()=>submitInfoApi(submitInfo.value,loginStore.token),{
+  useRequest(()=>submitInfoApi(submitInfo.value,<string>loginStore.token),{
     onSuccess(res){
       if(res.code===200){
         ElNotification({
