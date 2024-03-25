@@ -1,32 +1,30 @@
 <template>
 <div class='flex flex-row'>
-  <div class='w-[200px] shadow-2xl rounded-box'>
-    <ul class="menu bg-base-200 w-[200px] h-screen rounded-box hover:bg-base-300 hover:shadow-2xl">
-      <li class="menu-title text-3xl">菜单</li>
-      <div class='text-base mt-10'>
-        <li><a @click='router.push("/enterprise/enterpriseInfo")'>企业信息</a></li>
-        <li><a @click='router.push("/enterprise/studentsList")'>查看学生列表</a></li>
-        <li><a class="active" @click='router.push("/enterprise/applyCheckResume")'>申请查看的简历</a></li>
-      </div>
-    </ul>
-  </div>
+  <ul class="menu bg-base-200 w-[200px] h-600 rounded-box hover:bg-base-300 hover:shadow-2xl p-20 ml-50 mt-60">
+    <li class="menu-title text-4xl font-bold">菜单</li>
+    <div class='text-base mt-10'>
+      <li><a @click='router.push("/enterprise/enterpriseInfo")' class="my-6">查看企业信息</a></li>
+      <li><a class=" my-6" @click='router.push("/enterprise/studentsList")' >查看学生列表</a></li>
+      <li><a @click='router.push("/enterprise/applyCheckResume")' class="active  my-6">申请查看的简历</a></li>
+    </div>
+  </ul>
   <div>
     <div class='m-[30px] ml-[100px]'>
-      <div class="card w-[1250px] bg-base-200 shadow-xl hover:bg-base-300 hover:shadow-2xl">
+      <div class="card w-[1000px] bg-base-200 shadow-xl hover:bg-base-300 hover:shadow-2xl">
         <div class="card-body flex flex-row items-center h-[50px]">
           <h2 class="card-title">申请查看的简历</h2>
         </div>
       </div>
-      <div class="card w-[1250px] max-h-[1000px] bg-base-200 shadow-xl mt-[25px] hover:bg-base-300 hover:shadow-2xl">
+      <div class="card w-[1000px] max-h-[1000px] bg-base-200 shadow-xl mt-[50px] hover:bg-base-300 hover:shadow-2xl">
         <div class="card-body">
           <div class='flex flex-row items-center'>
             <label class="input input-bordered flex items-center gap-2">
               姓名：
-              <input type="text" class="grow" placeholder="名字" v-model='params.name'/>
+              <input type="text" class="grow w-100" placeholder="名字" v-model='params.name'/>
             </label>
             <label class="input input-bordered flex items-center gap-2 ml-[15px]">
               学历：
-              <input type="text" class="grow" placeholder="学校+科或专" v-model='params.education'/>
+              <input type="text" class="grow w-100" placeholder="学校+科或专" v-model='params.education'/>
             </label>
             <input type="radio" name="isOpen" class="radio ml-[15px]" value='0' v-model='params.status' checked/>&nbsp;所有
             <input type="radio" name="isOpen" class="radio ml-[20px]" value='1' v-model='params.status' />待处理
