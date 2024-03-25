@@ -13,7 +13,7 @@ import deleteResumeAPI from "./Server/resume/deleteResumeAPI";
 import getResumeInfoAPI from "./Server/resume/getResumeInfoAPI";
 import editResumeAPI from "./Server/resume/editResumeAPI";
 import setPublicResumeAPI from "./Server/resume/setPublicResumeAPI";
-
+import checkResumeApi from '@/apis/Server/enterprise/checkResumeApi';
 
 export {
   passwordLoginAPI,
@@ -31,4 +31,5 @@ export {
   getResumeInfoAPI,
   editResumeAPI,
   setPublicResumeAPI,
+  checkResumeApi,
 };
