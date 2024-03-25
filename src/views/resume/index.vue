@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row px-60 py-30 " :class="{ 'h-full': pageId === 1 , 'h-screen': pageId !== 1}">
+  <div class="flex flex-row px-60 py-30" :class="{ 'h-full': pageId === 1, 'h-screen': pageId !== 1 && !editIng}">
     <div class="basis-1/8">
       <div class="text-6xl p-30">
         简历
@@ -16,7 +16,7 @@
         </li>
       </ul>
     </div>
-    <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box " v-if="pageId === 1">
+    <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box" v-if="pageId === 1">
       <div class="text-2xl mb-30">
         添加简历
         <div class="underline text-sm text-stone-500 float-right cursor-pointer" v-if="uploadFile === 0" @click="uploadFile = 1">上传简历文档?</div>
@@ -38,6 +38,14 @@
         <label class="input input-bordered flex items-center gap-2">
           <el-icon><Postcard/></el-icon>
           <input type="text" class="grow" placeholder="身份证" v-model="resumeInfo.id_no"/>
+        </label>
+        <label class="input input-bordered flex items-center gap-2">
+          <el-icon><Iphone /></el-icon>
+          <input type="text" class="grow" placeholder="联系方式" v-model="resumeInfo.phone"/>
+        </label>
+        <label class="input input-bordered flex items-center gap-2">
+          <el-icon><Message /></el-icon>
+          <input type="text" class="grow" placeholder="邮箱" v-model="resumeInfo.email"/>
         </label>
         <label class="input input-bordered flex items-center gap-2">
           <el-icon><School/></el-icon>
@@ -75,6 +83,7 @@
     <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box" v-if="pageId === 2">
       <div class="text-2xl mb-30">
         简历修改
+        <div v-if="editIng" class="btn btn-sm btn-warning btn-outline float-end" @click="cancelEdit">取消更改</div>
       </div>
       <div class="flex flex-col gap-10" v-if="editIng">
         <label class="input input-ghost flex items-center gap-2">
@@ -92,6 +101,14 @@
         <label class="input input-ghost flex items-center gap-2">
           身份证<el-icon class="mr-8"><Postcard/></el-icon>
           <input type="text" class="grow text-right mr-8" placeholder="身份证" v-model="resumeEdit.id_no"/>
+        </label>
+        <label class="input input-ghost flex items-center gap-2">
+          联系方式<el-icon class="mr-8"><Iphone/></el-icon>
+          <input type="text" class="grow text-right mr-8" placeholder="联系方式" v-model="resumeEdit.phone"/>
+        </label>
+        <label class="input input-ghost flex items-center gap-2">
+          邮箱<el-icon class="mr-8"><Message /></el-icon>
+          <input type="text" class="grow text-right mr-8" placeholder="邮箱" v-model="resumeEdit.email"/>
         </label>
         <label class="input input-ghost flex items-center gap-2">
           家庭住址<el-icon class="mr-8"><School/></el-icon>
@@ -124,7 +141,7 @@
     <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box" v-if="pageId === 3">
       <div class="text-2xl mb-30">
         简历查看
-        <div class="btn btn-sm btn-accent float-end" @click="updataResumeList">刷新列表</div>
+        <div class="btn btn-sm btn-accent btn-outline float-end" @click="updataResumeList">刷新列表</div>
       </div>
       <div class="overflow-x-auto">
         <table class="table">
@@ -166,13 +183,11 @@
 </template>
 
 <script setup lang="ts">
-import { Star } from '@element-plus/icons-vue';
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
 import { addResumeAPI, getResumeListAPI, setDefaultResumeAPI, deleteResumeAPI, getResumeInfoAPI, editResumeAPI, setPublicResumeAPI } from '@/apis';
 import { useMainStore } from '@/stores';
-import {ElAlert, ElNotification} from 'element-plus';
-import {info} from "autoprefixer";
+import { ElNotification } from 'element-plus';
 
 const loginStore = useMainStore().useLoginStore();
 const pageId = ref(1);
@@ -375,7 +390,11 @@ const setPublicResume = (state: number) => {
     }
   })
   setTimeout(() => updataResumeList(), 500);
+}
 
+const cancelEdit = () => {
+  editIng.value = false;
+  pageId.value = 3;
 }
 
 </script>
