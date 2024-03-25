@@ -36,37 +36,50 @@
         </tr>
       </thead>
       <tbody v-for="(job, index) in jobList">
-        <tr :class="[jobShowDetailIndex === index ? 'bg-base-300' : undefined, 'border-none cursor-pointer']" @click="() => showDetail(index)">
+        <tr class="border-none cursor-pointer">
           <td>{{ job.title }}</td>
           <td>{{ job.company }}</td>
           <td>{{ job.salary }}</td>
           <td>{{ job.education }}</td>
           <td>
-            <el-icon v-if="jobShowDetailIndex === index"><ArrowUp /></el-icon>
-            <el-icon v-if="!(jobShowDetailIndex === index)"><ArrowDown /></el-icon>
+            <button class="btn btn-sm btn-neutral" @click="showModal('job_detail_modal')">详情</button>
           </td>
         </tr>
-        <tr class="border-none" v-if="jobShowDetailIndex === index">
-          <td colspan="6" class="border-none bg-base-300">
-            <div>
-              <div class="m-3">
-                <span class="font-bold">技能要求</span>
-                <span class="float-right text-xs">{{ job.description }}</span>
-              </div>
-              <div class="m-3">
-                <span class="font-bold">联系人</span>
-                <span class="float-right">{{ job.hiring_manager }}</span>
-              </div>
-              <div class="m-3">
-                <span class="font-bold">地址</span>
-                <span class="float-right">{{ job.address }}</span>
-              </div>
-              <div class="m-3">
-                <a class="btn-link font-bold" :href="job.link">详情链接</a>
-              </div>
+        <dialog id="job_detail_modal" class="modal">
+          <div class="modal-box">
+            <h3 class="font-bold text-lg">{{ job.title }}</h3>
+            <div class="m-3">
+              <span class="font-bold">公司名称</span>
+              <span class="float-right text-xs">{{ job.company }}</span>
             </div>
-          </td>
-        </tr>
+            <div class="m-3">
+              <span class="font-bold">薪资条件</span>
+              <span class="float-right text-xs">{{ job.salary }}</span>
+            </div>
+            <div class="m-3">
+              <span class="font-bold">学历要求</span>
+              <span class="float-right text-xs">{{ job.education }}</span>
+            </div>
+            <div class="m-3">
+              <span class="font-bold">联系人</span>
+              <span class="float-right">{{ job.hiring_manager }}</span>
+            </div>
+            <div class="m-3">
+              <span class="font-bold">地址</span>
+              <span class="float-right">{{ job.address }}</span>
+            </div>
+            <div class="m-3">
+              <span class="font-bold">技能要求</span>
+              <span class="float-right text-xs p-3">{{ job.description }}</span>
+            </div>
+            <div class="m-3">
+              <a class="btn-link font-bold" :href="job.link">详情链接</a>
+            </div>
+            <div class="modal-action">
+              <button class="btn" @click="showModal('job_detail_modal', true)">关闭</button>
+            </div>
+          </div>
+        </dialog>
       </tbody>
     </table>
   </div>
@@ -158,5 +171,13 @@ watch(address, () => {
   checkJobDatabase();
   jobShowDetailIndex.value = undefined;
 })
+
+const showModal = (id: string, unshow:boolean = false) => {
+  if(unshow){
+    (document.getElementById(id) as any).close();
+  } else {
+    (document.getElementById(id) as any).showModal();
+  }
+}
 
 </script>
