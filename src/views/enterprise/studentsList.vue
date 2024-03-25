@@ -48,7 +48,8 @@
                 <td>{{ student.name }}</td>
                 <td>{{ student.education }}</td>
                 <td>{{ student.open_public}}</td>
-                <td><button class="btn btn-outline" :disabled='student.open_public==="不开放"'>查看简历信息</button></td>
+                <td v-if='student.open_public==="开放"'><button class="btn btn-outline" @click='checkResume(student.student_id)' onclick="studentResume.showModal()">查看简历信息</button></td>
+                <td v-else><button class="btn btn-outline" @click='applyCheck(student.student_id)'>申请查看简历</button></td>
               </tr>
               </tbody>
             </table>
@@ -65,13 +66,95 @@
       </div>
     </div>
   </div>
+  <dialog id="studentResume" class="modal">
+    <div class="modal-box w-[1070px] max-w-[1200px]">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
+      <div class="mockup-window border bg-base-300">
+        <div class='bg-base-200'>
+          <h3 class="font-bold text-2xl ml-[30px] mt-[30px]">学生简历信息</h3>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <div class='flex items-center'>
+              <h3>姓名：</h3>
+              <span>{{studentResume.name}}</span>
+              <div class="divider divider-horizontal ml-[30px]"></div>
+            </div>
+            <div class='flex items-center text-xl ml-[15px]'>
+              <h3>性别：</h3>
+              <span>{{studentResume.sex}}</span>
+              <div class="divider divider-horizontal ml-[30px]"></div>
+            </div>
+            <div class='flex items-center text-xl ml-[15px]'>
+              <h3>年龄：</h3>
+              <span>{{studentResume.age}}</span>
+              <div class="divider divider-horizontal ml-[30px]"></div>
+            </div>
+            <div class='flex items-center text-xl ml-[15px]'>
+              <h3>学历：</h3>
+              <span>{{studentResume.education}}</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <h3>求职意向岗位：</h3><span>{{studentResume.job_intention}}</span>
+          </div>
+          <div class="divider"></div>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <h3>能力特长：</h3>
+            <div class='border border-black w-[350px] h-[300px]'>
+              <div class='m-[15px]'>
+                <span>&nbsp;&nbsp;{{studentResume.ability}}</span>
+              </div>
+            </div>
+<!--            <div class="divider divider-horizontal"></div>-->
+            <h3 class='ml-[30px]'>所获荣誉：</h3>
+            <div class='border border-black w-[350px] h-[300px]'>
+              <div class='m-[15px]'>
+                <span>&nbsp;&nbsp;{{studentResume.honor}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <h3>工作经历：</h3>
+            <div class='border border-black w-[350px] h-[400px]'>
+              <div class='m-[15px]'>
+                <span>&nbsp;&nbsp;{{studentResume.work_experience}}</span>
+              </div>
+            </div>
+<!--            <div class="divider divider-horizontal"></div>-->
+            <h3 class='ml-[30px]'>自我评价：</h3>
+            <div class='border border-black w-[350px] h-[400px]'>
+              <div class='m-[15px]'>
+                <span>&nbsp;&nbsp;{{studentResume.self_evaluation}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <h3>手机号：</h3><span>{{studentResume.phone}}</span>
+            <div class="divider divider-horizontal"></div>
+            <h3 class=''>住址：</h3><span>{{studentResume.address}}</span>
+          </div>
+          <div class="divider"></div>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <h3>邮箱地址：</h3><span>{{studentResume.email}}</span>
+            <div class="divider divider-horizontal"></div>
+            <h3>身份证号码：</h3><span>{{studentResume.id_no}}</span>
+          </div>
+          <div class="divider"></div>
+        </div>
+      </div>
+    </div>
+  </dialog>
 </div>
 </template>
 
 <script setup lang='ts'>
 import router from '@/router';
 import { ref,onMounted } from "vue";
-import { getStudentsListApi } from "@/apis";
+import { getStudentsListApi,checkResumeApi } from "@/apis";
 import { useRequest } from "vue-hooks-plus";
 import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
@@ -89,6 +172,7 @@ const pageInfo = ref<object>({
 })
 const pageNum = ref([]);
 const studentsList = ref();
+const studentResume = ref<object>({});
 
 const changePage = (pageNum) => {
   params.value.page_num = pageNum;
@@ -121,7 +205,11 @@ const getInfo = () => {
       }
     },
     onError(err){
-      console.log(err);
+      ElNotification({
+        title: 'Error',
+        message: err,
+        type: 'error',
+      })
     }
   })
 }
@@ -133,5 +221,34 @@ onMounted(()=>{
 const screen = () => {
   params.value.open_public = Number(params.value.open_public);
   getInfo();
+}
+
+const checkResume = (student_id:number) => {
+  useRequest(()=>checkResumeApi(student_id,loginStore.token),{
+    onSuccess(res){
+      console.log(res.data);
+      if(res.code === 200){
+        Object.assign(studentResume.value,res.data);
+        console.log(studentResume.value)
+      }else{
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning',
+        })
+      }
+    },
+    onError(err){
+      ElNotification({
+        title: 'Error',
+        message: err,
+        type: 'error',
+      })
+    }
+  });
+}
+
+const applyCheck = (student_id:number) => {
+
 }
 </script>
