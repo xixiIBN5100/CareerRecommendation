@@ -6,6 +6,7 @@ import Home from "./home/index.vue";
 import EnterpriseInfo from "./enterprise/enterpriseInfo.vue";
 import jobDatabase from "./jobDatabase/index.vue";
 import StudentsList from "./enterprise/studentsList.vue";
+import ApplyCheckResume from "./enterprise/applyCheckResume.vue";
 
 export {
   Login,
@@ -15,5 +16,6 @@ export {
   Home,
   EnterpriseInfo,
   jobDatabase,
-  StudentsList
+  StudentsList,
+  ApplyCheckResume,
 };

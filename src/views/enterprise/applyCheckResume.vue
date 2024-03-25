@@ -5,8 +5,8 @@
       <li class="menu-title text-3xl">菜单</li>
       <div class='text-base mt-10'>
         <li><a @click='router.push("/enterprise/enterpriseInfo")'>企业信息</a></li>
-        <li><a class="active" @click='router.push("/enterprise/studentsList")'>查看学生列表</a></li>
-        <li><a @click='router.push("/enterprise/applyCheckResume")'>申请查看的简历</a></li>
+        <li><a @click='router.push("/enterprise/studentsList")'>查看学生列表</a></li>
+        <li><a class="active" @click='router.push("/enterprise/applyCheckResume")'>申请查看的简历</a></li>
       </div>
     </ul>
   </div>
@@ -14,21 +14,27 @@
     <div class='m-[30px] ml-[100px]'>
       <div class="card w-[1250px] bg-base-200 shadow-xl hover:bg-base-300 hover:shadow-2xl">
         <div class="card-body flex flex-row items-center h-[50px]">
-          <h2 class="card-title">学生列表</h2>
+          <h2 class="card-title">申请查看的简历</h2>
         </div>
       </div>
       <div class="card w-[1250px] max-h-[1000px] bg-base-200 shadow-xl mt-[25px] hover:bg-base-300 hover:shadow-2xl">
         <div class="card-body">
           <div class='flex flex-row items-center'>
             <label class="input input-bordered flex items-center gap-2">
+              姓名：
+              <input type="text" class="grow" placeholder="名字" v-model='params.name'/>
+            </label>
+            <label class="input input-bordered flex items-center gap-2 ml-[15px]">
               学历：
               <input type="text" class="grow" placeholder="学校+科或专" v-model='params.education'/>
             </label>
-            <input type="radio" name="isOpen" class="radio ml-[20px]" value='1' v-model='params.open_public' />&nbsp;简历开放
-            <input type="radio" name="isOpen" class="radio ml-[15px]" value='2' v-model='params.open_public'/>&nbsp;简历不开放
-            <input type="radio" name="isOpen" class="radio ml-[15px]" value='0' v-model='params.open_public' checked/>&nbsp;所有
+            <input type="radio" name="isOpen" class="radio ml-[15px]" value='0' v-model='params.status' checked/>&nbsp;所有
+            <input type="radio" name="isOpen" class="radio ml-[20px]" value='1' v-model='params.status' />待处理
+            <input type="radio" name="isOpen" class="radio ml-[15px]" value='2' v-model='params.status'/>&nbsp;同意
+            <input type="radio" name="isOpen" class="radio ml-[15px]" value='3' v-model='params.status'/>&nbsp;拒绝
             <div class="divider divider-horizontal"></div>
             <button class="btn btn-outline" @click='screen'>筛选</button>
+            <button class="btn btn-outline ml-[10px]" @click='reset'>重置</button>
           </div>
           <div class="divider"></div>
           <div class="overflow-x-auto">
@@ -39,7 +45,7 @@
                 <th></th>
                 <th>学生姓名</th>
                 <th>学历</th>
-                <th>简历是否开放</th>
+                <th>状态</th>
               </tr>
               </thead>
               <tbody class='text-base'>
@@ -47,9 +53,8 @@
                 <th>{{ student.student_id }}</th>
                 <td>{{ student.name }}</td>
                 <td>{{ student.education }}</td>
-                <td>{{ student.open_public}}</td>
-                <td v-if='student.open_public==="开放"'><button class="btn btn-outline" @click='checkResume(student.student_id)' onclick="studentResume.showModal()">查看简历信息</button></td>
-                <td v-else><button class="btn btn-outline" @click='applyCheck(student.student_id)'>申请查看简历</button></td>
+                <td>{{ student.status}}</td>
+                <td><button class="btn btn-outline" @click='checkResume(student.student_id)' onclick="studentResume.showModal()" :disabled='student.status==="待处理" || student.status==="拒绝"'>查看简历信息</button></td>
               </tr>
               </tbody>
             </table>
@@ -107,7 +112,7 @@
                 <span>&nbsp;&nbsp;{{studentResume.ability}}</span>
               </div>
             </div>
-<!--            <div class="divider divider-horizontal"></div>-->
+            <!--            <div class="divider divider-horizontal"></div>-->
             <h3 class='ml-[30px]'>所获荣誉：</h3>
             <div class='border border-black w-[350px] h-[300px]'>
               <div class='m-[10px]'>
@@ -123,7 +128,7 @@
                 <span>&nbsp;&nbsp;{{studentResume.work_experience}}</span>
               </div>
             </div>
-<!--            <div class="divider divider-horizontal"></div>-->
+            <!--            <div class="divider divider-horizontal"></div>-->
             <h3 class='ml-[30px]'>自我评价：</h3>
             <div class='border border-black w-[350px] h-[400px]'>
               <div class='m-[10px]'>
@@ -153,63 +158,49 @@
 
 <script setup lang='ts'>
 import router from '@/router';
-import { ref,onMounted } from "vue";
-import { getStudentsListApi,checkResumeApi,applyCheckResumeApi } from "@/apis";
-import { useRequest } from "vue-hooks-plus";
+import { ref,onMounted } from 'vue';
 import { useMainStore } from '@/stores';
-import { ElNotification } from 'element-plus';
+import { getApplyListApi,checkResumeApi } from "@/apis";
+import { useRequest } from 'vue-hooks-plus'
+import { ElNotification } from 'element-plus'
 
 const loginStore = useMainStore().useLoginStore();
 const params = ref<object>({
   page_num : 1,
   page_size: 10,
+  name: "",
+  status: 0,
   education: "",
-  open_public: 0,
 })
 const pageInfo = ref<object>({
   page_total_num: 10,
-  student_num: 100,
+  post_num: 100,
 })
 const pageNum = ref([]);
 const studentsList = ref();
 const studentResume = ref<object>({});
 
-const changePage = (pageNum) => {
-  params.value.page_num = pageNum;
-}
-
 const getInfo = () => {
-  useRequest(()=>getStudentsListApi(params.value,loginStore.token),{
+  useRequest(()=>getApplyListApi(params.value,loginStore.token),{
     onSuccess(res){
+      // console.log(res.data);
       if(res.code === 200){
-        console.log(res.data)
+        studentsList.value = res.data.data;
         pageInfo.value.page_total_num = res.data.page_total_num;
-        pageInfo.value.student_num = res.data.student_num;
+        pageInfo.value.post_num = res.data.post_num;
         for(let i=2;i<=pageInfo.value.page_total_num;i++){
           pageNum.value.push(i);
         }
-        studentsList.value = res.data.students;
         for(let i=0;i<studentsList.value.length;i++){
-          if(studentsList.value[i].open_public === 2){
-            studentsList.value[i].open_public = "不开放";
-          }else{
-            studentsList.value[i].open_public = "开放";
+          if(studentsList.value[i].status === 1){
+            studentsList.value[i].status = "待处理";
+          }else if(studentsList.value[i].status === 2){
+            studentsList.value[i].status = "同意";
+          }else if(studentsList.value[i].status === 3){
+            studentsList.value[i].status = "拒绝";
           }
         }
-      }else{
-        ElNotification({
-          title: 'Warning',
-          message: res.msg,
-          type: 'warning',
-        })
       }
-    },
-    onError(err){
-      ElNotification({
-        title: 'Error',
-        message: err,
-        type: 'error',
-      })
     }
   })
 }
@@ -219,7 +210,13 @@ onMounted(()=>{
 })
 
 const screen = () => {
-  params.value.open_public = Number(params.value.open_public);
+  getInfo();
+}
+
+const reset = () => {
+  params.value.name = "";
+  params.value.education = "";
+  params.value.status = 0;
   getInfo();
 }
 
@@ -245,33 +242,10 @@ const checkResume = (student_id:number) => {
         type: 'error',
       })
     }
-  });
-}
-
-const applyCheck = (student_id:number) => {
-  useRequest(()=>applyCheckResumeApi(student_id,loginStore.token),{
-    onSuccess(res){
-      if(res.code === 200){
-        ElNotification({
-          title: 'Success',
-          message: '申请成功，请在"查看申请的简历"页面查看状态',
-          type: 'success',
-        })
-      }else{
-        ElNotification({
-          title: 'Warning',
-          message: res.msg,
-          type: 'warning',
-        })
-      }
-    },
-    onError(err){
-      ElNotification({
-        title: 'Error',
-        message: err,
-        type: 'error',
-      })
-    }
   })
 }
 </script>
+
+<style scoped>
+
+</style>

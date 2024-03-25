@@ -15,6 +15,8 @@ import editResumeAPI from "./Server/resume/editResumeAPI";
 import setPublicResumeAPI from "./Server/resume/setPublicResumeAPI";
 import checkJobDatabaseAPI from "./Server/jobDatabase/checkJobDatabaseAPI";
 import checkResumeApi from '@/apis/Server/enterprise/checkResumeApi';
+import applyCheckResumeApi from '@/apis/Server/enterprise/applyCheckResumeApi';
+import getApplyListApi from '@/apis/Server/enterprise/getApplyListApi';
 
 export {
   passwordLoginAPI,
@@ -34,4 +36,6 @@ export {
   setPublicResumeAPI,
   checkJobDatabaseAPI,
   checkResumeApi,
+  applyCheckResumeApi,
+  getApplyListApi,
 };
