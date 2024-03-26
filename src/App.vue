@@ -8,7 +8,6 @@
         <ul class="menu menu-horizontal px-1">
           <li><a @click="router.push('/login')" v-show="loginStore.loginSession === false">登录</a></li>
           <li><a @click="router.push('/register')" v-show="loginStore.loginSession === false">注册</a></li>
-          <li><a @click="logout" v-show="loginStore.loginSession === true">注销</a></li>
           <li><a @click="router.push('/register')" v-show="loginStore.loginSession === true">编辑简历</a></li>
           <li><a @click="router.push('/register')" v-show="loginStore.loginSession === true">分析简历</a></li>
           <li>
@@ -51,6 +50,14 @@
               </div>
               <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="() => showModal('avatar_upload_modal')">
                 <div class="text text-primary"><el-icon><PictureRounded /></el-icon></div>头像修改
+              </div>
+            </div>
+            <div class="text-lg font-bold">
+              账户状态
+            </div>
+            <div class="flex flex-col gap-3">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="logout">
+                <div class="text text-warning"><el-icon><SwitchButton /></el-icon></div>注销
               </div>
             </div>
           </div>
@@ -124,11 +131,12 @@ const new_password = ref("");
 const confirm_password = ref("");
 
 const logout = () => {
-  router.push('/login')
-  loginStore.setLogin(false)
-  loginStore.setToken("")
-  loginStore.setUserName("")
-  ElNotification.success("登出成功")
+  router.push('/login');
+  loginStore.setLogin(false);
+  loginStore.setToken("");
+  loginStore.setUserName("");
+  ElNotification.success("登出成功");
+  (document.getElementById("homeNavbar") as any).checked = false;
 }
 
 const showModal = (id: string, unshow:boolean = false) => {
