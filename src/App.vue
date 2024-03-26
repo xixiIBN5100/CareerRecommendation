@@ -23,7 +23,7 @@
       <label for="homeNavbar" class="drawer-button" v-if="loginStore.loginSession">
         <div class="avatar m-5 cursor-pointer">
           <div class="w-40 rounded-full">
-            <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+            <img :src="loginStore.avatarUrl" />
           </div>
         </div>
       </label>
@@ -37,7 +37,7 @@
         <ul class="menu p-20 w-300 min-h-full bg-base-200 text-base-content z-50">
           <div class="avatar mb-20">
             <div class="w-40 rounded-full">
-              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"/>
+              <img :src="loginStore.avatarUrl"/>
             </div>
             <span class="text-2xl mx-10 mt-4 text-nowrap">{{ loginStore.userName }}</span>
           </div>
