@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row px-60 py-30">
     <div class="basis-1/8">
-      <div class="text-6xl p-30">
+      <div class="text-6xl p-30 text-nowrap">
         简历
       </div>
       <ul class="menu bg-base-200 rounded-box p-10">
