@@ -9,21 +9,27 @@
     </div>
   </ul>
   <div>
-    <div class="card w-[1000px] bg-base-200 shadow-xl m-[50px] ml-[100px] hover:bg-base-300 hover:shadow-2xl">
-      <div class="card-body">
-        <h2 class="card-title text-2xl">企业基本信息</h2>
-        <div class='text-xl mt-[10px]'>企业名称：<span class='float-right text-xl'>{{info.name}}</span></div>
-        <div class="divider"></div>
-        <div class='text-xl'>所在地：<span class='float-right text-xl'>{{info.location}}</span></div>
-        <div class="divider"></div>
-        <div class='text-xl'>企业网站：<span class='float-right text-xl'>{{info.website}}</span></div>
-        <div class="divider"></div>
-        <div class='text-xl'>企业邮箱：<span class='float-right text-xl'>{{info.email}}</span></div>
-        <div class="divider"></div>
-        <div class='text-xl'>企业简介：</div><span class='text-xl'>{{info.introduction}}</span>
-        <div class="divider"></div>
-        <div class="card-actions justify-end">
-          <button class="btn btn-outline" onclick="my_modal_1.showModal()">编辑</button>
+    <div class='m-[30px] ml-[200px]'>
+      <div class="card w-[1000px] bg-base-200 shadow-xl hover:bg-base-300 hover:shadow-2xl">
+        <div class="card-body flex flex-row items-center h-[50px]">
+          <h2 class="card-title">企业基本信息</h2>
+        </div>
+      </div>
+      <div class="card w-[1000px] bg-base-200 shadow-xl mt-[20px] hover:bg-base-300 hover:shadow-2xl">
+        <div class="card-body">
+          <div class='text-xl mt-[10px]'>企业名称：<span class='float-right text-xl'>{{info.name}}</span></div>
+          <div class="divider"></div>
+          <div class='text-xl'>所在地：<span class='float-right text-xl'>{{info.location}}</span></div>
+          <div class="divider"></div>
+          <div class='text-xl'>企业网站：<span class='float-right text-xl'>{{info.website}}</span></div>
+          <div class="divider"></div>
+          <div class='text-xl'>企业邮箱：<span class='float-right text-xl'>{{info.email}}</span></div>
+          <div class="divider"></div>
+          <div class='text-xl'>企业简介：</div><span class='text-xl'>{{info.introduction}}</span>
+          <div class="divider"></div>
+          <div class="card-actions justify-end">
+            <button class="btn btn-outline" onclick="my_modal_1.showModal()">编辑</button>
+          </div>
         </div>
       </div>
     </div>
