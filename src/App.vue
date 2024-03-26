@@ -1,18 +1,3 @@
-<script setup lang="ts">
-import { RouterView } from 'vue-router'
-import router from "@/router";
-import useLoginStore from "@/stores/service/loginStore";
-import { ElNotification } from "element-plus";
-
-const loginStore = useLoginStore()
-const logout = () => {
-  router.push('/login')
-  loginStore.setLogin(false)
-  loginStore.setToken("")
-  ElNotification.success("登出成功")
-}
-</script>
-
 <template>
   <div class="bg-base-300 overflow-y-scroll h-screen">
     <div class="navbar bg-base-100 shadow-lg my-3">
@@ -35,7 +20,7 @@ const logout = () => {
           </li>
         </ul>
       </div>
-      <label for="homeNavbar" class="drawer-button">
+      <label for="homeNavbar" class="drawer-button" v-if="loginStore.loginSession">
         <div class="avatar m-5 cursor-pointer">
           <div class="w-40 rounded-full">
             <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
@@ -45,29 +30,161 @@ const logout = () => {
     </div>
     <RouterView/>
     <div class="drawer drawer-end">
-        <input id="homeNavbar" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content"></div> 
-        <div class="drawer-side">
-          <label for="homeNavbar" aria-label="close sidebar" class="drawer-overlay"></label>
-          <ul class="menu p-20 w-300 min-h-full bg-base-200 text-base-content z-50">
-            <div class="avatar mb-20">
-              <div class="w-40 rounded-full">
-                <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-              </div>
-              <span class="text-2xl mx-10 mt-4">UserName</span>
+      <input id="homeNavbar" type="checkbox" class="drawer-toggle" />
+      <div class="drawer-content"></div> 
+      <div class="drawer-side">
+        <label for="homeNavbar" aria-label="close sidebar" class="drawer-overlay"></label>
+        <ul class="menu p-20 w-300 min-h-full bg-base-200 text-base-content z-50">
+          <div class="avatar mb-20">
+            <div class="w-40 rounded-full">
+              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"/>
             </div>
-            <div>
-              <div class="text-lg font-bold">
-                用户设置
+            <span class="text-2xl mx-10 mt-4 text-nowrap">{{ loginStore.userName }}</span>
+          </div>
+          <div>
+            <div class="text-lg font-bold">
+              用户设置
+            </div>
+            <div class="flex flex-col gap-3">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="() => showModal('password_change_modal')">
+                <div class="text text-info"><el-icon><Key /></el-icon></div>密码修改
               </div>
-              <div class="flex flex-col gap-3 ml-6">
-                <div>密码修改</div>
-                <div>头像修改</div>
+              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="() => showModal('avatar_upload_modal')">
+                <div class="text text-primary"><el-icon><PictureRounded /></el-icon></div>头像修改
               </div>
             </div>
-          </ul>
+          </div>
+        </ul>
+      </div>
+    </div>
+    <dialog id="avatar_upload_modal" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">修改头像</h3>
+        <div class="flex flex-row gap-20 p-20">
+          <div class="avatar">
+            <div class="w-80 rounded-full">
+              <img :src="loginStore.avatarUrl"/>
+            </div>
+          </div>
+          <div class="my-auto">
+            <input type="file" class="file-input file-input-bordered file-input-primary w-full max-w-xs" @change="fileChange"/>
+          </div>
+        </div>
+        <div class="modal-action">
+          <div class="btn btn-success btn-outline" :class="avatarUploaded ? undefined : 'btn-disabled'" @click="setAvatar">确定更改</div>
+          <div class="btn btn-warning btn-outline" @click="() => showModal('avatar_upload_modal', true)">取消</div>
         </div>
       </div>
-    
+    </dialog>
+    <dialog id="password_change_modal" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">修改密码</h3>
+        <div class="flex flex-col gap-8 p-12">
+          <label class="input input-bordered flex items-center gap-2">
+            <span class="font-bold">旧密码</span>
+            <input type="text" class="grow" v-model="old_password" />
+          </label>
+          <label class="input input-bordered flex items-center gap-2">
+            <span class="font-bold">新密码</span>
+            <input type="password" class="grow" v-model="new_password" />
+          </label>
+          <label class="input input-bordered flex items-center gap-2 relative">
+            <span class="font-bold">新密码</span>
+            <input type="password" class="grow" placeholder="再次输入新密码以确认" v-model="confirm_password" />
+            <span
+            class="absolute right-4 rounded-lg border border-warning text-warning text-sm font-light p-4"
+            v-if="confirm_password !== new_password && confirm_password !== '' && new_password !== ''">两次密码不相同</span>
+          </label>
+        </div>
+        <div class="modal-action">
+          <div class="btn btn-success btn-outline" @click="setPassword"
+            :class="old_password !== '' && new_password !== '' && confirm_password !== '' && new_password === confirm_password ? undefined : 'btn-disabled'"
+          >确定更改</div>
+          <div class="btn btn-warning btn-outline" @click="() => showModal('password_change_modal', true)">取消</div>
+        </div>
+      </div>
+    </dialog>
   </div>
 </template>
+
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+import router from "@/router";
+import useLoginStore from "@/stores/service/loginStore";
+import { ElNotification } from "element-plus";
+import { useRequest } from 'vue-hooks-plus';
+import { setAvatarAPI, setPasswordAPI } from "@/apis";
+import { ref } from 'vue';
+
+const loginStore = useLoginStore()
+const avatarFile = ref();
+const avatarUploaded = ref(false);
+const old_password = ref("");
+const new_password = ref("");
+const confirm_password = ref("");
+
+const logout = () => {
+  router.push('/login')
+  loginStore.setLogin(false)
+  loginStore.setToken("")
+  loginStore.setUserName("")
+  ElNotification.success("登出成功")
+}
+
+const showModal = (id: string, unshow:boolean = false) => {
+  if(unshow){
+    (document.getElementById(id) as any).close();
+  } else {
+    (document.getElementById(id) as any).showModal();
+  }
+}
+
+const setAvatar = () => {
+  const formData = new FormData();
+  formData.append("avatar", avatarFile.value);
+  useRequest(() => setAvatarAPI(formData, loginStore.token as string), {
+    onSuccess(res: any){
+      if(res.code === 200){
+        loginStore.setAvatarUrl(res.data.avatar);
+        ElNotification("头像更改成功");
+        showModal('avatar_upload_modal', true);
+      }
+    }
+  })
+}
+
+const fileChange = (event: any) => {
+  avatarFile.value = event.target.files[0];
+  avatarUploaded.value = true;
+  if(avatarFile.value.type != "image/jpeg" && avatarFile.value.type != "image/png"){
+    avatarFile.value = null;
+    ElNotification({
+      title: 'Error',
+      message: '文件格式错误，请选择正确的文件格式',
+      type: 'error',
+    });
+    avatarUploaded.value = false;
+  }
+}
+
+const setPassword = () => {
+  useRequest(() => setPasswordAPI({
+    old_password: old_password.value,
+    new_password: new_password.value
+  }, loginStore.token as string), {
+    onSuccess(res: any) {
+      console.log(res);
+      if(res.code === 200) {
+        ElNotification("密码修改成功");
+        showModal("password_change_modal", true);
+        new_password.value = "";
+        old_password.value = "";
+        confirm_password.value = "";
+      } else {
+        ElNotification(res.msg);
+      }
+    }
+  });
+}
+
+</script>

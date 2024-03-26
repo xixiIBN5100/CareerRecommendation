@@ -101,6 +101,7 @@ const loginPassword = () => {
         ElNotification.success('登陆成功');
         loginStore.setLogin(true)
         loginStore.setToken(res.data.token)
+        loginStore.setUserName(info.value.user_name);
         cleanForm()
         router.push('/home')
       }else{
@@ -124,6 +125,7 @@ const loginEmail = () => {
         ElNotification.success('登陆成功');
         loginStore.setLogin(true);
         loginStore.setToken(res.data.token);
+        loginStore.setUserName(info.value.user_name);
         jumpPage("/resume");
       }else{
         ElNotification.error(res.msg)
