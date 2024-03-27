@@ -14,7 +14,9 @@
         <li class="my-5">
           <a :class="pageId === 2 ? 'active' : undefined" @click="() => switchPage(2)">简历修改</a>
         </li>
-
+        <li class="my-5">
+          <a :class="pageId === 4 ? 'active' : undefined" @click="() => switchPage(4)">简历访问请求</a>
+        </li>
       </ul>
     </div>
     <div class="bg-base-200 shadow-lg basis-8/12 ml-120 my-60 p-50 rounded-box hover:bg-base-300/20 hover:shadow-2xl" v-if="pageId === 1">
@@ -177,22 +179,25 @@
               <div v-if="res.default" class="leading-9 mr-8">默认简历 √</div> <!-- Display "默认简历" status -->
               <div v-if="res.default" class="rounded bg-base-100 p-6 leading-6">{{ res.open_public === 1 ? "公开" : "非公开" }}</div> <!-- Display "公开状况" status -->
             </td>
+            <dialog id="delete_modal" class="modal">
+              <div class="modal-box">
+                <h3 class="font-bold text-lg">删除</h3>
+                <p class="py-4">你确认要删除你的简历信息吗?</p>
+                <div class="modal-action">
+                  <button class="btn" @click="deleteResume(res.resume_id)">删除</button>
+                  <button class="btn" @click="showModal('delete_modal', true)">取消</button>
+                </div>
+              </div>
+            </dialog>
           </tr>
           </tbody>
         </table>
       </div>
     </div>
-  </div>
-  <dialog id="delete_modal" class="modal">
-    <div class="modal-box">
-      <h3 class="font-bold text-lg">删除</h3>
-      <p class="py-4">你确认要删除你的简历信息吗?</p>
-      <div class="modal-action">
-        <button class="btn" @click="deleteResume(res.resume_id)">删除</button>
-        <button class="btn" @click="showModal('delete_modal', true)">取消</button>
-      </div>
+    <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box" v-if="pageId === 4">
+      <access-request></access-request>
     </div>
-  </dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -201,6 +206,7 @@ import { useRequest } from 'vue-hooks-plus';
 import { addResumeAPI, getResumeListAPI, setDefaultResumeAPI, deleteResumeAPI, getResumeInfoAPI, editResumeAPI, setPublicResumeAPI } from '@/apis';
 import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
+import accessRequest from "./accessRequest.vue";
 
 const loginStore = useMainStore().useLoginStore();
 const pageId = ref(1);

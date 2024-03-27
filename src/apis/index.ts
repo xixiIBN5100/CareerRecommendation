@@ -19,6 +19,8 @@ import applyCheckResumeApi from "@/apis/Server/enterprise/applyCheckResumeApi";
 import getApplyListApi from "@/apis/Server/enterprise/getApplyListApi";
 import setAvatarAPI from "./Server/user/setAvatarAPI";
 import setPasswordAPI from "./Server/user/setPasswordAPI";
+import getResumeRequestAPI from "./Server/resume/getResumeRequestAPI";
+import setPostStatusAPI from "./Server/resume/setPostStatusAPI";
 
 export {
   passwordLoginAPI,
@@ -42,4 +44,6 @@ export {
   getApplyListApi,
   setAvatarAPI,
   setPasswordAPI,
+  getResumeRequestAPI,
+  setPostStatusAPI,
 };
