@@ -19,48 +19,57 @@
         </li>
       </ul>
     </div>
-    <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box" v-if="pageId === 1">
-      <div class="text-2xl mb-30">
+    <div class="bg-base-200 shadow-lg basis-8/12 ml-120 my-60 p-50 rounded-box hover:bg-base-300/20 hover:shadow-2xl" v-if="pageId === 1">
+      <div class="text-4xl mb-30 ">
         添加简历
         <div class="underline text-sm text-stone-500 float-right cursor-pointer" v-if="uploadFile === 0" @click="uploadFile = 1">上传简历文档?</div>
         <div class="underline text-sm text-stone-500 float-right cursor-pointer" v-if="uploadFile === 1" @click="uploadFile = 0">手动输入简历?</div>
       </div>
       <div class="flex flex-col gap-10" v-if="uploadFile === 0">
-        <label class="input input-bordered flex items-center gap-2">
+        <div class="flex justify-between">
+        <label class="input input-bordered flex items-center gap-2 w-5/12 shadow-lg">
           <el-icon><User/></el-icon>
           <input type="text" class="grow" placeholder="姓名" v-model="resumeInfo.name" />
         </label>
-        <label class="input input-bordered flex items-center gap-2">
+        <label class="input input-bordered flex items-center gap-2 w-5/12 shadow-lg">
           <el-icon><Star/></el-icon>
           <input type="text" class="grow" placeholder="年龄" v-model="age"/>
         </label>
-        <label class="p-4">
-          <input type="radio" name="gender" class="radio radio-sm" value="1" v-model="resumeInfo.sex"/><span class="m-4 text-xl mr-50">男</span>
-          <input type="radio" name="gender" class="radio radio-sm" value="2" v-model="resumeInfo.sex"/><span class="m-4 text-xl">女</span>
-        </label>
-        <label class="input input-bordered flex items-center gap-2">
+        </div>
+
+        <div class="flex justify-between flex-wrap">
+        <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
           <el-icon><Postcard/></el-icon>
           <input type="text" class="grow" placeholder="身份证" v-model="resumeInfo.id_no"/>
         </label>
-        <label class="input input-bordered flex items-center gap-2">
+        <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
           <el-icon><Iphone /></el-icon>
           <input type="text" class="grow" placeholder="联系方式" v-model="resumeInfo.phone"/>
         </label>
-        <label class="input input-bordered flex items-center gap-2">
+        <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
           <el-icon><Message /></el-icon>
           <input type="text" class="grow" placeholder="邮箱" v-model="resumeInfo.email"/>
         </label>
-        <label class="input input-bordered flex items-center gap-2">
+        <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
           <el-icon><School/></el-icon>
           <input type="text" class="grow" placeholder="家庭住址" v-model="resumeInfo.address"/>
         </label>
-        <label class="input input-bordered flex items-center gap-2">
+        <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
           <el-icon><DocumentChecked /></el-icon>
           <input type="text" class="grow" placeholder="求职意向岗位" v-model="resumeInfo.job_intention"/>
         </label>
-        <label class="input input-bordered flex items-center gap-2">
+        <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
           <el-icon><Reading /></el-icon>
           <input type="text" class="grow" placeholder="学历" v-model="resumeInfo.education"/>
+        </label>
+        </div>
+        <label class="p-4 flex justify-between">
+          <label>
+            <input type="radio" name="gender" class="radio radio-sm shadow-lg" value="1" v-model="resumeInfo.sex"/><span class="m-4 text-xl mr-50">男</span>
+          </label>
+          <label>
+            <input type="radio" name="gender" class="radio radio-sm shadow-lg" value="2" v-model="resumeInfo.sex"/><span class="m-4 text-xl">女</span>
+          </label>
         </label>
         能力特长
         <textarea class="textarea textarea-bordered" v-model="resumeInfo.ability"></textarea>
@@ -148,36 +157,39 @@
       </div>
       <div class="overflow-x-auto">
         <table class="table">
-          <!-- head -->
           <thead>
-            <tr>
-              <th></th>
-              <th>简介</th>
-              <th>操作</th>
-            </tr>
+          <tr>
+            <th>编号</th>
+            <th>简介</th>
+            <th>操作</th>
+            <th>状态</th> <!-- Include the "状态" column header -->
+          </tr>
           </thead>
           <tbody>
-            <tr v-for="res in resumeList" :class="res.default ? 'bg-base-300' : undefined">
-              <th>{{ res.id }}</th>
-              <td>{{ res.remark }}</td>
-              <td class="flex flex-row gap-4">
-                <div class="btn btn-sm btn-neutral" @click="() => editResume(res.resume_id)">编辑</div>
-                <div class="btn btn-sm btn-neutral" @click="() => showModal('delete_modal')">删除</div>
-                <div class="btn btn-sm btn-neutral" v-if="!res.default" @click="() => setDefaultResume(res.resume_id)">设为默认简历</div>
-                <div class="btn btn-sm btn-neutral" v-if="res.default" @click="() => setPublicResume(res.open_public)">{{ res.open_public === 1 ? "取消公开" : "公开简历" }}</div>
-              </td>
-              <td v-if="res.default" class="flex flex-row"><div class="leading-9 mr-8">默认简历 √</div><div class="rounded bg-base-100 p-6 leading-6">{{ res.open_public === 1 ? "公开" : "非公开" }}</div></td>
-              <dialog id="delete_modal" class="modal">
-                <div class="modal-box">
-                  <h3 class="font-bold text-lg">删除</h3>
-                  <p class="py-4">你确认要删除你的简历信息吗?</p>
-                  <div class="modal-action">
-                    <button class="btn" @click="deleteResume(res.resume_id)">删除</button>
-                    <button class="btn" @click="showModal('delete_modal', true)">取消</button>
-                  </div>
+          <tr v-for="res in resumeList" :class="res.default ? 'bg-base-300' : undefined">
+            <td>{{ res.id }}</td> <!-- Display "编号" in this column -->
+            <td>{{ res.remark }}</td> <!-- Display "简介" in this column -->
+            <td class="flex flex-row gap-4">
+              <div class="btn btn-sm btn-neutral" @click="() => editResume(res.resume_id)">编辑</div>
+              <div class="btn btn-sm btn-neutral" @click="() => showModal('delete_modal')">删除</div>
+              <div class="btn btn-sm btn-neutral" v-if="!res.default" @click="() => setDefaultResume(res.resume_id)">设为默认简历</div>
+              <div class="btn btn-sm btn-neutral" v-if="res.default" @click="() => setPublicResume(res.open_public)">{{ res.open_public === 1 ? "取消公开" : "公开简历" }}</div>
+            </td>
+            <td class="flex flex-row gap-4">
+              <div v-if="res.default" class="leading-9 mr-8">默认简历 √</div> <!-- Display "默认简历" status -->
+              <div v-if="res.default" class="rounded bg-base-100 p-6 leading-6">{{ res.open_public === 1 ? "公开" : "非公开" }}</div> <!-- Display "公开状况" status -->
+            </td>
+            <dialog id="delete_modal" class="modal">
+              <div class="modal-box">
+                <h3 class="font-bold text-lg">删除</h3>
+                <p class="py-4">你确认要删除你的简历信息吗?</p>
+                <div class="modal-action">
+                  <button class="btn" @click="deleteResume(res.resume_id)">删除</button>
+                  <button class="btn" @click="showModal('delete_modal', true)">取消</button>
                 </div>
-              </dialog>
-            </tr>
+              </div>
+            </dialog>
+          </tr>
           </tbody>
         </table>
       </div>

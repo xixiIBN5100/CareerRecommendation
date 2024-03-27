@@ -104,7 +104,9 @@ const sendVerificationCode = () => {
   }), {
     onSuccess(res:any){
       console.log(res);
-      ElNotification(res.msg);
+      if(res.code === 200 && res.msg === "OK"){
+        ElNotification.success("发送成功")
+      }
     }
   })
 
