@@ -14,6 +14,9 @@
         <li class="my-5">
           <a :class="pageId === 2 ? 'active' : undefined" @click="() => switchPage(2)">简历修改</a>
         </li>
+        <li class="my-5">
+          <a :class="pageId === 4 ? 'active' : undefined" @click="() => switchPage(4)">简历访问请求</a>
+        </li>
       </ul>
     </div>
     <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box" v-if="pageId === 1">
@@ -179,6 +182,9 @@
         </table>
       </div>
     </div>
+    <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box" v-if="pageId === 4">
+      <access-request></access-request>
+    </div>
   </div>
 </template>
 
@@ -188,6 +194,7 @@ import { useRequest } from 'vue-hooks-plus';
 import { addResumeAPI, getResumeListAPI, setDefaultResumeAPI, deleteResumeAPI, getResumeInfoAPI, editResumeAPI, setPublicResumeAPI } from '@/apis';
 import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
+import accessRequest from "./accessRequest.vue";
 
 const loginStore = useMainStore().useLoginStore();
 const pageId = ref(1);
