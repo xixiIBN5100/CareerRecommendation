@@ -77,17 +77,20 @@ if(localStorage.getItem("way") !== null){
   loginWay.value = 'password'
   console.log(loginWay.value)
 }
-const info = ref(
-  {
+const info = ref({
+  user_name: '',
+  password: '',
+  email: '',
+  code: ''
+});
+
+const cleanForm = () => {
+  info.value =   {
     user_name: '',
     password: '',
     email: '',
     code: ''
-  }
-);
-
-const cleanForm = () => {
-  info.value = '';
+  };
 }
 
 const loginPassword = () => {
@@ -102,6 +105,8 @@ const loginPassword = () => {
         loginStore.setLogin(true)
         loginStore.setToken(res.data.token)
         loginStore.setUserName(info.value.user_name);
+        loginStore.setAvatarUrl(res.data.avatar);
+        loginStore.setUserType(res.data.type);
         cleanForm()
         router.push('/home')
       }else{

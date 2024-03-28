@@ -19,7 +19,7 @@
         </li>
       </ul>
     </div>
-    <div class="bg-base-200 shadow-lg basis-8/12 ml-120 my-60 p-50 rounded-box hover:bg-base-300/20 hover:shadow-2xl" v-if="pageId === 1">
+    <div class="bg-base-200 shadow-lg basis-8/12 ml-120 my-60 p-50 rounded-box" v-if="pageId === 1">
       <div class="text-4xl mb-30 ">
         添加简历
         <div class="underline text-sm text-stone-500 float-right cursor-pointer" v-if="uploadFile === 0" @click="uploadFile = 1">上传简历文档?</div>

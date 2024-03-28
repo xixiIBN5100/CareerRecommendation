@@ -17,6 +17,7 @@
     "@themesberg/flowbite": "^1.3.0",
     "axios": "^1.6.8",
     "element-plus": "^2.6.1",
+    "neovis.js": "^2.1.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "theme-change": "^2.5.0",
