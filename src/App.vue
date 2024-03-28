@@ -52,6 +52,7 @@
                 <div class="text text-primary"><el-icon><PictureRounded /></el-icon></div>头像修改
               </div>
             </div>
+            <div class="divider m-0"></div>
             <div class="text-lg font-bold">
               页面概览
             </div>
@@ -77,6 +78,7 @@
                 <div class="text text-rose-500"><el-icon><Document /></el-icon></div>简历查看申请
               </div>
             </div>
+            <div class="divider m-0"></div>
             <div class="text-lg font-bold">
               账户状态
             </div>
@@ -85,6 +87,7 @@
                 <div class="text text-warning"><el-icon><SwitchButton /></el-icon></div>注销
               </div>
             </div>
+            <div class="divider m-0"></div>
           </div>
         </ul>
       </div>
