@@ -21,6 +21,7 @@ import setAvatarAPI from "./Server/user/setAvatarAPI";
 import setPasswordAPI from "./Server/user/setPasswordAPI";
 import getResumeRequestAPI from "./Server/resume/getResumeRequestAPI";
 import setPostStatusAPI from "./Server/resume/setPostStatusAPI";
+import resetPostStatusAPI from "./Server/resume/resetPostStatusAPI";
 
 export {
   passwordLoginAPI,
@@ -46,4 +47,5 @@ export {
   setPasswordAPI,
   getResumeRequestAPI,
   setPostStatusAPI,
+  resetPostStatusAPI,
 };

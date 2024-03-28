@@ -63,9 +63,11 @@
                 </div>
                 <div class="p-8 pt-0">企业简介: {{ post.introduction }}</div>
               </div>
-              <div class="modal-action">
+              <div class="modal-action relative">
+                <div class="btn btn-sm absolute left-0" :class="post.post_status === 2 ? 'btn-success' : 'btn-warning'" v-if="post.post_status !== 1">审批状态: {{ post.post_status === 2 ? "已同意" : "已拒绝"}}</div>
                 <div class="btn btn-sm btn-success btn-outline" @click="() => setPostStatus(post.post_id, 1)" v-if="post.post_status === 1">审批通过</div>
                 <div class="btn btn-sm btn-warning btn-outline" @click="() => setPostStatus(post.post_id, 2)" v-if="post.post_status === 1">审批驳回</div>
+                <div class="btn btn-sm btn-accent btn-outline" @click="() => resetPostStatus(post.post_id)" v-if="post.post_status !== 1">审批撤回</div>
                 <div class="btn btn-sm btn-outline" @click="() => showModal('resume_request_modal', true)">取消</div>
               </div>
             </div>
@@ -79,7 +81,7 @@
 <script setup lang="ts">
 import { useRequest } from 'vue-hooks-plus';
 import { ref } from 'vue';
-import { getResumeRequestAPI, setPostStatusAPI } from "@/apis";
+import { getResumeRequestAPI, setPostStatusAPI, resetPostStatusAPI } from "@/apis";
 import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
 
@@ -122,8 +124,25 @@ const setPostStatus = (post_id: number, status: number) => {
     status: status
   }, loginStore.token as string), {
     onSuccess(res: any) {
+      console.log(res);
       if(res.code === 200) {
         ElNotification("审批成功");
+      } else {
+        ElNotification(res.msg);
+      }
+    }
+  })
+}
+
+const resetPostStatus = (post_id: number) => {
+  useRequest(() => resetPostStatusAPI({
+    post_id: post_id
+  }, loginStore.token as string), {
+    onSuccess(res: any) {
+      if(res.code === 200) {
+        ElNotification("撤回审批成功");
+      } else {
+        ElNotification(res.msg);
       }
     }
   })
