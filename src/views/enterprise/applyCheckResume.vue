@@ -1,21 +1,21 @@
 <template>
 <div class='flex flex-row'>
-  <ul class="menu bg-base-200 w-[200px] h-600 rounded-box hover:bg-base-300 hover:shadow-2xl p-20 ml-50 mt-60">
+  <ul class="menu bg-base-200 w-[200px] h-600 rounded-box p-20 ml-50 mt-60">
     <li class="menu-title text-4xl font-bold">菜单</li>
     <div class='text-base mt-10'>
       <li><a @click='router.push("/enterprise/enterpriseInfo")' class="my-6">查看企业信息</a></li>
       <li><a class=" my-6" @click='router.push("/enterprise/studentsList")' >查看学生列表</a></li>
-      <li><a @click='router.push("/enterprise/applyCheckResume")' class="active  my-6">申请查看的简历</a></li>
+      <li><a @click='router.push("/enterprise/applyCheckResume")' class="active  my-6">查看简历申请</a></li>
     </div>
   </ul>
   <div>
     <div class='m-[30px] ml-[100px]'>
-      <div class="card w-[1000px] bg-base-200 shadow-xl hover:bg-base-300 hover:shadow-2xl">
+      <div class="card w-[1000px] bg-base-200 shadow-xl hover:translate-y-1 hover:shadow-2xl">
         <div class="card-body flex flex-row items-center h-[50px]">
           <h2 class="card-title">申请查看的简历</h2>
         </div>
       </div>
-      <div class="card w-[1000px] max-h-[1000px] bg-base-200 shadow-xl mt-[50px] hover:bg-base-300 hover:shadow-2xl">
+      <div class="card w-[1000px] max-h-[1000px] bg-base-200 shadow-xl mt-[50px] hover:translate-y-1 hover:shadow-2xl">
         <div class="card-body">
           <div class='flex flex-row items-center'>
             <label class="input input-bordered flex items-center gap-2">

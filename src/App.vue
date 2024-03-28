@@ -69,13 +69,13 @@
               </div>
             </div>
             <div class="flex flex-col gap-3" v-if="loginStore.userType === 2">
-              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-40 shadow-2xl" @click="() => jumpPage('/enterprise/enterpriseInfo')">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100 mt-20" @click="() => jumpPage('/enterprise/enterpriseInfo')">
                 <div class="text text-sky-500"><el-icon><PieChart /></el-icon></div>企业信息
               </div>
-              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-40 shadow-2xl" @click="() => jumpPage('/enterprise/studentsList')">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => jumpPage('/enterprise/studentsList')">
                 <div class="text text-emerald-500"><el-icon><DocumentCopy /></el-icon></div>学生列表
               </div>
-              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-40 shadow-2xl" @click="() => jumpPage('/enterprise/applyCheckResume')">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => jumpPage('/enterprise/applyCheckResume')">
                 <div class="text text-rose-500"><el-icon><Document /></el-icon></div>简历查看申请
               </div>
             </div>
@@ -84,7 +84,7 @@
               账户状态
             </div>
             <div class="flex flex-col gap-3 items-center">
-              <div class="cursor-pointer btnm btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100 mt-20" @click="logout">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100 mt-20" @click="logout">
                 <div class="text text-warning"><el-icon><SwitchButton /></el-icon></div>注销
               </div>
             </div>
@@ -94,45 +94,45 @@
       </div>
     </div>
     <dialog id="avatar_upload_modal" class="modal">
-      <div class="modal-box">
-        <h3 class="font-bold text-lg">修改头像</h3>
-        <div class="flex flex-row gap-20 p-20">
-          <div class="avatar">
-            <div class="w-80 rounded-full">
+      <div class="modal-box p-30 bg-base-300">
+        <h3 class="font-bold text-2xl">修改头像</h3>
+        <div class="flex flex-row gap-30 p-20 mt-20">
+          <div class="avatar ml-15">
+            <div class="w-80 rounded-full ">
               <img :src="loginStore.avatarUrl"/>
             </div>
           </div>
           <div class="my-auto">
-            <input type="file" class="file-input file-input-bordered file-input-primary w-full max-w-xs" @change="fileChange"/>
+            <input type="file" class="file-input file-input-bordered file-input-primary  w-11/12 ml-15" @change="fileChange"/>
           </div>
         </div>
-        <div class="modal-action">
+        <div class="modal-action flex justify-evenly">
           <div class="btn btn-success btn-outline" :class="avatarUploaded ? undefined : 'btn-disabled'" @click="setAvatar">确定更改</div>
           <div class="btn btn-warning btn-outline" @click="() => showModal('avatar_upload_modal', true)">取消</div>
         </div>
       </div>
     </dialog>
     <dialog id="password_change_modal" class="modal">
-      <div class="modal-box">
-        <h3 class="font-bold text-lg">修改密码</h3>
-        <div class="flex flex-col gap-8 p-12">
-          <label class="input input-bordered flex items-center gap-2">
-            <span class="font-bold">旧密码</span>
+      <div class="modal-box bg-base-300">
+        <h3 class="font-bold text-2xl ml-10 mt-10">修改密码</h3>
+        <div class="flex flex-col gap-20 p-20 mt-20 items-center ">
+          <label class="input input-bordered flex items-center gap-5 w-10/12 shadow-lg" >
+            <span class="font-bold">旧密码:</span>
             <input type="text" class="grow" v-model="old_password" />
           </label>
-          <label class="input input-bordered flex items-center gap-2">
-            <span class="font-bold">新密码</span>
+          <label class="input input-bordered flex items-center gap-5 w-10/12 shadow-lg">
+            <span class="font-bold">新密码:</span>
             <input type="password" class="grow" v-model="new_password" />
           </label>
-          <label class="input input-bordered flex items-center gap-2 relative">
-            <span class="font-bold">新密码</span>
-            <input type="password" class="grow" placeholder="再次输入新密码以确认" v-model="confirm_password" />
+          <label class="input input-bordered flex items-center gap-5 relative w-10/12 shadow-lg">
+            <span class="font-bold">确认密码:</span>
+            <input type="password" class="grow"  v-model="confirm_password" />
             <span
             class="absolute right-4 rounded-lg border border-warning text-warning text-sm font-light p-4"
             v-if="confirm_password !== new_password && confirm_password !== '' && new_password !== ''">两次密码不相同</span>
           </label>
         </div>
-        <div class="modal-action">
+        <div class=" flex justify-evenly my-10">
           <div class="btn btn-success btn-outline" @click="setPassword"
             :class="old_password !== '' && new_password !== '' && confirm_password !== '' && new_password === confirm_password ? undefined : 'btn-disabled'"
           >确定更改</div>
