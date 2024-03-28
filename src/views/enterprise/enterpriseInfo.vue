@@ -39,12 +39,12 @@
           <span class='text-xl'>企业名称：</span>
           <span class='input input-bordered w-full max-w-[500px] flex items-center'>
             <el-icon><User /></el-icon>
-            <input type="text" placeholder="Name" class="text-lg ml-[5px]" v-model='submitInfo.name'/>
+            <input type="text" placeholder="Name" class="text-lg ml-[5px] w-[500px]" v-model='submitInfo.name'/>
           </span>
         </div>
         <div class='mt-[10px] flex items-center'>
           <span class='text-xl'>所属行业：</span>
-          <span class='input input-bordered w-full max-w-[500px] flex items-center'>
+          <span class='input input-bordered w-full max-w-[500px] flex items-center w-[500px]'>
             <el-icon><OfficeBuilding /></el-icon>
             <input type="text" placeholder="Industry" class="text-lg ml-[5px]" v-model='submitInfo.industry' />
           </span>
@@ -53,21 +53,21 @@
           <span class='text-xl'>所在地：</span>
           <span class='input input-bordered w-full max-w-[500px] flex items-center'>
             <el-icon><Location /></el-icon>
-            <input type="text" placeholder="location" class="text-lg ml-[5px]" v-model='submitInfo.location' />
+            <input type="text" placeholder="location" class="text-lg ml-[5px] w-[500px]" v-model='submitInfo.location' />
           </span>
         </div>
         <div class='mt-[10px] flex items-center'>
           <span class='text-xl'>企业网站：</span>
           <span class='input input-bordered w-full max-w-[500px] flex items-center'>
             <el-icon><Monitor /></el-icon>
-            <input type="text" placeholder="Website" class="text-lg ml-[5px]" v-model='submitInfo.website' />
+            <input type="text" placeholder="Website" class="text-lg ml-[5px] w-[500px]" v-model='submitInfo.website' />
           </span>
         </div>
         <div class='mt-[10px] flex items-center'>
           <span class='text-xl'>企业邮箱：</span>
           <span class='input input-bordered w-full max-w-[500px] flex items-center'>
             <el-icon><Message /></el-icon>
-            <input type="text" placeholder="Email" class="text-lg ml-[5px]" v-model='submitInfo.email' />
+            <input type="text" placeholder="Email" class="text-lg ml-[5px] w-[500px]" v-model='submitInfo.email' />
           </span>
         </div>
         <div class='mt-[10px]'>
