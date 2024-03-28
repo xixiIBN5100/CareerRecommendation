@@ -1,6 +1,6 @@
 <template>
   <div class="bg-base-300 overflow-y-scroll h-screen">
-    <div class="navbar bg-base-100 shadow-lg my-3">
+    <div class="navbar bg-base-100 shadow-lg">
       <div class="flex-1">
         <a class="btn btn-ghost text-xl">大学生就业推荐平台</a>
       </div>
@@ -30,64 +30,65 @@
     <RouterView/>
     <div class="drawer drawer-end">
       <input id="homeNavbar" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-content"></div> 
+      <div class="drawer-content"></div>
       <div class="drawer-side">
         <label for="homeNavbar" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul class="menu p-20 w-300 min-h-full bg-base-200 text-base-content z-50">
-          <div class="avatar mb-20">
+          <div class="avatar  ml-10 my-10">
             <div class="w-40 rounded-full">
               <img :src="loginStore.avatarUrl"/>
             </div>
             <span class="text-2xl mx-10 mt-4 text-nowrap">{{ loginStore.userName }}</span>
           </div>
           <div>
-            <div class="text-lg font-bold">
+            <div class="divider "></div>
+            <div class="text-2xl font-bold  mt-20">
               用户设置
             </div>
             <div class="flex flex-col gap-3">
-              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="() => showModal('password_change_modal')">
-                <div class="text text-info"><el-icon><Key /></el-icon></div>密码修改
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100 mt-20" @click="() => showModal('password_change_modal')">
+                <div class="text text-info"><el-icon><Key /></el-icon></div><span>密码修改</span>
               </div>
-              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="() => showModal('avatar_upload_modal')">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => showModal('avatar_upload_modal')">
                 <div class="text text-primary"><el-icon><PictureRounded /></el-icon></div>头像修改
               </div>
             </div>
-            <div class="divider m-0"></div>
-            <div class="text-lg font-bold">
+            <div class="divider mt-15"></div>
+            <div class="text-2xl font-bold">
               页面概览
             </div>
             <div class="flex flex-col gap-3" v-if="loginStore.userType === 1">
-              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="() => jumpPage('/resume')">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl  my-6 bg-base-100 mt-20" @click="() => jumpPage('/resume')">
                 <div class="text text-sky-500"><el-icon><Document /></el-icon></div>简历
               </div>
-              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="() => jumpPage('/jobDatabase')">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => jumpPage('/jobDatabase')">
                 <div class="text text-emerald-500"><el-icon><MessageBox /></el-icon></div>岗位库
               </div>
-              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="() => jumpPage('/resume')">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => jumpPage('/resume')">
                 <div class="text text-rose-500"><el-icon><Cpu /></el-icon></div>能力评估
               </div>
             </div>
             <div class="flex flex-col gap-3" v-if="loginStore.userType === 2">
-              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="() => jumpPage('/enterprise/enterpriseInfo')">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-40 shadow-2xl" @click="() => jumpPage('/enterprise/enterpriseInfo')">
                 <div class="text text-sky-500"><el-icon><PieChart /></el-icon></div>企业信息
               </div>
-              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="() => jumpPage('/enterprise/studentsList')">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-40 shadow-2xl" @click="() => jumpPage('/enterprise/studentsList')">
                 <div class="text text-emerald-500"><el-icon><DocumentCopy /></el-icon></div>学生列表
               </div>
-              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="() => jumpPage('/enterprise/applyCheckResume')">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-40 shadow-2xl" @click="() => jumpPage('/enterprise/applyCheckResume')">
                 <div class="text text-rose-500"><el-icon><Document /></el-icon></div>简历查看申请
               </div>
             </div>
-            <div class="divider m-0"></div>
-            <div class="text-lg font-bold">
+            <div class="divider mt-15"></div>
+            <div class="text-2xl font-bold">
               账户状态
             </div>
-            <div class="flex flex-col gap-3">
-              <div class="cursor-pointer btn btn-sm justify-start font-medium" @click="logout">
+            <div class="flex flex-col gap-3 items-center">
+              <div class="cursor-pointer btnm btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100 mt-20" @click="logout">
                 <div class="text text-warning"><el-icon><SwitchButton /></el-icon></div>注销
               </div>
             </div>
-            <div class="divider m-0"></div>
+            <div class="divider m-15"></div>
           </div>
         </ul>
       </div>
