@@ -22,6 +22,9 @@ import setPasswordAPI from "./Server/user/setPasswordAPI";
 import getResumeRequestAPI from "./Server/resume/getResumeRequestAPI";
 import setPostStatusAPI from "./Server/resume/setPostStatusAPI";
 import resetPostStatusAPI from "./Server/resume/resetPostStatusAPI";
+import getHotSkillAPI from "@/apis/Server/hot/getHotSkill";
+import getHotWorkAPI from "@/apis/Server/hot/getHotWork";
+import getHotAddressAPI from "@/apis/Server/hot/getHotAddress";
 
 export {
   passwordLoginAPI,
@@ -48,4 +51,7 @@ export {
   getResumeRequestAPI,
   setPostStatusAPI,
   resetPostStatusAPI,
+  getHotSkillAPI,
+  getHotWorkAPI,
+  getHotAddressAPI
 };

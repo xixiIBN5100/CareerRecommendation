@@ -18,7 +18,7 @@
             <label class="label">
               <span class="label-text">Password</span>
             </label>
-            <input  v-model="info.password" type="password" placeholder="password" class="input input-bordered" required />
+            <input  v-model="info.password" type="password" placeholder="password" class="input input-bordered" required @keyup.enter="loginPassword"/>
           </div>
           <div class="form-control" v-if="loginWay === 'email'">
             <label class="label">
@@ -35,7 +35,7 @@
             <label class="label">
               <span class="label-text">Verification code</span>
             </label>
-            <input  v-model="info.code"  placeholder="Verification code" class="input input-bordered" required />
+            <input  v-model="info.code"  placeholder="Verification code" class="input input-bordered" required @keyup.enter="loginEmail"/>
           </div>
 
           <label class="label">
@@ -131,7 +131,7 @@ const loginEmail = () => {
         loginStore.setLogin(true);
         loginStore.setToken(res.data.token);
         loginStore.setUserName(info.value.user_name);
-        jumpPage("/resume");
+        jumpPage("/home");
       }else{
         ElNotification.error(res.msg)
         loginStore.setLogin(true)
