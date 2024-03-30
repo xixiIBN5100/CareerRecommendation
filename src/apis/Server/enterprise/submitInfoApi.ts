@@ -1,6 +1,6 @@
 import { request } from "@/apis/axios";
 
-export interface enterpriseInfo{
+interface enterpriseInfo{
   name: string,
   introduction: string,
   location: string,

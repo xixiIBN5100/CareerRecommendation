@@ -6,6 +6,7 @@
       <li><a @click='router.push("/enterprise/enterpriseInfo")' class="active my-6">查看企业信息</a></li>
       <li><a class=" my-6" @click='router.push("/enterprise/studentsList")' >查看学生列表</a></li>
       <li><a @click='router.push("/enterprise/applyCheckResume")' class="my-6">查看简历申请</a></li>
+      <li><a @click='router.push("/enterprise/jobRequireMatch")' class="my-6">职位需求匹配</a></li>
     </div>
   </ul>
   <div>
@@ -16,7 +17,7 @@
         </div>
       </div>
       <div class="flex justify-center">
-      <div class="card w-10/12 bg-base-200 shadow-xl mt-50 hover:translate-y-1 hover:shadow-2xl">
+      <div class="card max-w-[900px] bg-base-200 shadow-xl mt-50 hover:translate-y-1 hover:shadow-2xl">
         <div class="card-body">
           <div class='text-xl mt-[10px]'>企业名称：<span class='float-right text-xl'>{{info.name}}</span></div>
           <div class="divider"></div>
