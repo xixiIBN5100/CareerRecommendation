@@ -39,7 +39,7 @@
               <label class="label">
                 <span class="label-text">Verification code</span>
               </label>
-              <input  v-model="info.code" placeholder="verification code" class="input input-bordered h-35" required />
+              <input  v-model="info.code" placeholder="verification code" class="input input-bordered h-35" required @keyup.enter="register"/>
               <label class="label">
               </label>
               <div class='flex justify-between'>

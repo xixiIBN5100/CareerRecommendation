@@ -108,7 +108,11 @@ const loginPassword = () => {
         loginStore.setAvatarUrl(res.data.avatar);
         loginStore.setUserType(res.data.type);
         cleanForm()
-        router.push('/home')
+        if(res.data.type === 1) {
+          router.push('/home')
+        }else {
+          router.push('/enterprise/enterpriseInfo')
+        }
       }else{
         ElNotification.error(res.msg)
       }
@@ -131,13 +135,16 @@ const loginEmail = () => {
         loginStore.setLogin(true);
         loginStore.setToken(res.data.token);
         loginStore.setUserName(info.value.user_name);
-        jumpPage("/home");
+        if(res.data.type === 1) {
+          router.push('/home')
+        }else {
+          router.push('/enterprise/enterpriseInfo')
+        }
       }else{
         ElNotification.error(res.msg)
         loginStore.setLogin(true)
         loginStore.setToken(res.data.token)
         cleanForm()
-        router.push('/home')
       }
     },
     onError(e){
