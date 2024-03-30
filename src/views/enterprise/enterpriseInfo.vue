@@ -36,49 +36,56 @@
       </div>
     </div>
     <dialog id="my_modal_1" class="modal">
-      <div class="modal-box w-[900px] max-w-5xl">
-        <div class='flex flex-row items-center'>
+      <div class="modal-box w-[900px] max-w-5xl bg-base-300 p-45">
+        <h3 class="font-bold text-2xl">编辑信息</h3>
+        <div class="mt-30 ">
+        <div class='flex  my-20 justify-between'>
+          <div class="flex gap-10 items-center">
           <span class='text-xl'>企业名称：</span>
-          <span class='input input-bordered w-full max-w-[500px] flex items-center'>
+          <span class='input input-bordered  max-w-[500px]  flex items-center shadow-lg'>
             <el-icon><User /></el-icon>
-            <input type="text" placeholder="Name" class="text-lg ml-[5px]" v-model='submitInfo.name'/>
+            <input type="text" placeholder="Name" class="text-lg ml-[5px] " v-model='submitInfo.name'/>
           </span>
         </div>
-        <div class='mt-[10px] flex items-center'>
-          <span class='text-xl'>所属行业：</span>
-          <span class='input input-bordered w-full max-w-[500px] flex items-center'>
+        <div class=' flex items-center gap-10'>
+          <span class='text-xl '>所属行业：</span>
+          <span class='input input-bordered  max-w-[500px] flex items-center shadow-lg'>
             <el-icon><OfficeBuilding /></el-icon>
             <input type="text" placeholder="Industry" class="text-lg ml-[5px]" v-model='submitInfo.industry' />
           </span>
         </div>
-        <div class='mt-[10px] flex items-center'>
-          <span class='text-xl'>所在地：</span>
-          <span class='input input-bordered w-full max-w-[500px] flex items-center'>
-            <el-icon><Location /></el-icon>
-            <input type="text" placeholder="location" class="text-lg ml-[5px]" v-model='submitInfo.location' />
-          </span>
         </div>
-        <div class='mt-[10px] flex items-center'>
+        <div class="flex  my-20 justify-between">
+        <div class='flex gap-10 items-center'>
           <span class='text-xl'>企业网站：</span>
-          <span class='input input-bordered w-full max-w-[500px] flex items-center'>
+          <span class='input input-bordered max-w-[500px] flex items-center shadow-lg'>
             <el-icon><Monitor /></el-icon>
             <input type="text" placeholder="Website" class="text-lg ml-[5px]" v-model='submitInfo.website' />
           </span>
         </div>
-        <div class='mt-[10px] flex items-center'>
+        <div class=' flex items-center gap-10'>
           <span class='text-xl'>企业邮箱：</span>
-          <span class='input input-bordered w-full max-w-[500px] flex items-center'>
+          <span class='input input-bordered max-w-[500px] flex items-center shadow-lg'>
             <el-icon><Message /></el-icon>
             <input type="text" placeholder="Email" class="text-lg ml-[5px]" v-model='submitInfo.email' />
           </span>
         </div>
-        <div class='mt-[10px]'>
-          <span class='text-xl'>企业简介：</span><br />
-          <textarea class="textarea textarea-bordered w-[850px] mt-[5px] h-[280px] text-lg" placeholder="introduction" v-model='submitInfo.introduction'></textarea>
         </div>
-        <div class="modal-action">
-          <form method="dialog">
-            <button class="btn" @click='submit'>提交信息</button>
+        <div class=' flex items-center my-10'>
+          <span class='text-xl'>所在地：&ensp;&ensp;&ensp;</span>
+          <span class='input input-bordered flex items-center shadow-lg'>
+            <el-icon><Location /></el-icon>
+            <input type="text" placeholder="location" class="text-lg ml-[5px]" v-model='submitInfo.location' />
+          </span>
+        </div>
+        <div class='my-40'>
+          <span class='text-xl'>企业简介：</span><br />
+          <textarea class="textarea textarea-bordered w-full mt-[15px] h-[280px] text-lg shadow-lg" placeholder="introduction" v-model='submitInfo.introduction'></textarea>
+        </div>
+        </div>
+        <div class="modal-action flex justify-center">
+          <form method="dialog" class="shadow-lg">
+            <button class="btn" @click='submit'><span class="text-lg ">提交信息</span></button>
           </form>
         </div>
       </div>
