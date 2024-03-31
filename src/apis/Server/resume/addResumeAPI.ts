@@ -52,7 +52,7 @@ export type ResumeData = {
   /**
    * 求职意向薪资
    */
-  salary_intention: string;
+  salary_intention: number;
   /**
    * 自我评价
    */
