@@ -179,5 +179,4 @@ const showModal = (id: string, unshow:boolean = false) => {
     (document.getElementById(id) as any).showModal();
   }
 }
-
 </script>

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import {FindPassword, Login, Register, resume, Home ,EnterpriseInfo, StudentsList, jobDatabase, ApplyCheckResume} from "@/views";
+import {FindPassword, Login, Register, resume, Home ,EnterpriseInfo, StudentsList, jobDatabase, ApplyCheckResume, JobRequireMatch, RobotChat} from "@/views";
 
 
 const router = createRouter({
@@ -54,6 +54,16 @@ const router = createRouter({
       path: "/enterprise/applyCheckResume",
       name: "applyCheckResume",
       component: ApplyCheckResume,
+    },
+    {
+      path: "/enterprise/jobRequireMatch",
+      name: "jobRequireMatch",
+      component: JobRequireMatch,
+    },
+    {
+      path: "/robotChat",
+      name: "robotChat",
+      component: RobotChat,
     }
   ]
 });
