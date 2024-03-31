@@ -23,86 +23,88 @@
         </div>
       </div>
     </div>
-    <div v-if="jobList.length !== 0">
-      <div v-if="totalPageNum < pageNum" @click="() => {pageNum = totalPageNum}" class="cursor-pointer">
-        该页数过大 点击返回末页
-      </div>
-      <table class="table" v-else>
-        <thead>
-          <tr>
-            <th>岗位名称</th>
-            <th>公司名称</th>
-            <th>薪酬</th>
-            <th>最低学历要求</th>
-          </tr>
-        </thead>
-        <tbody v-for="job in jobList">
-          <tr class="border-none cursor-pointer">
-            <td>{{ job.title }}</td>
-            <td>{{ job.company }}</td>
-            <td>{{ job.salary }}</td>
-            <td>{{ job.education }}</td>
-            <td>
-              <button class="btn btn-sm btn-neutral" @click="checkDetail(job)">详情</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="flex justify-center mt-16">
-        <div class="join">
-          <button class="join-item btn" @click="() => switchPageNum(-1)">«</button>
-          <button class="join-item btn">
-            page
-            <input class="input input-sm input-ghost w-100" v-model="pageNum">
-          </button>
-          <button class="join-item btn" @click="() => switchPageNum(1)">»</button>
-        </div>
-      </div>
+    <div v-if="totalPageNum < pageNum" @click="() => {pageNum = totalPageNum}" class="cursor-pointer">
+      该页数过大 点击返回末页
     </div>
-    <div v-else class="divider text-center">暂无数据</div>
+    <table class="table" v-else>
+      <thead>
+        <tr>
+          <th>岗位名称</th>
+          <th>公司名称</th>
+          <th>薪酬</th>
+          <th>最低学历要求</th>
+        </tr>
+      </thead>
+      <tbody v-for="job in jobList">
+        <tr class="border-none cursor-pointer">
+          <td>{{ job.title }}</td>
+          <td>{{ job.company }}</td>
+          <td>{{ job.salary }}</td>
+          <td>{{ job.education }}</td>
+          <td>
+            <button class="btn btn-sm btn-neutral" @click="checkDetail(job)">详情</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <dialog id="job_detail_modal" class="modal">
-    <div class="modal-box">
-      <h3 class="font-bold text-lg">{{ modalJobData.title }}</h3>
+  <dialog id="job_detail_modal" class="modal ">
+    <div class="modal-box p-20">
+      <h3 class="font-bold text-2xl">{{ modalJobData.title }}</h3>
+      <div class="flex flex-col gap-10 mt-15">
       <div class="m-3">
-        <span class="font-bold">公司名称</span>
-        <span class="float-right text-xs">{{ modalJobData.company }}</span>
+        <span class="font-bold text-xl">公司名称:</span>
+        <span class="float-right text-lg">{{ modalJobData.company }}</span>
       </div>
       <div class="m-3">
-        <span class="font-bold">薪资条件</span>
-        <span class="float-right text-xs">{{ modalJobData.salary }}</span>
+        <span class="font-bold text-xl">薪资条件:</span>
+        <span class="float-right text-lg">{{ modalJobData.salary }}</span>
       </div>
       <div class="m-3">
-        <span class="font-bold">学历要求</span>
-        <span class="float-right text-xs">{{ modalJobData.education }}</span>
+        <span class="font-bold text-xl">学历要求:</span>
+        <span class="float-right text-lg">{{ modalJobData.education }}</span>
       </div>
       <div class="m-3">
-        <span class="font-bold">联系人</span>
-        <span class="float-right">{{ modalJobData.hiring_manager }}</span>
+        <span class="font-bold text-xl">联系人:</span>
+        <span class="float-right text-lg">{{ modalJobData.hiring_manager }}</span>
       </div>
       <div class="m-3">
-        <span class="font-bold">地址</span>
-        <span class="float-right">{{ modalJobData.address }}</span>
+        <span class="font-bold text-xl">地址:</span>
+        <span class="float-right text-lg">{{ modalJobData.address }}</span>
       </div>
-      <div class="m-3">
-        <span class="font-bold">技能要求</span>
-        <span class="float-right text-xs p-3">{{ modalJobData.description }}</span>
       </div>
-      <div class="m-3">
-        <a class="btn-link font-bold" :href="modalJobData.link">详情链接</a>
+      <div class="m-3 my-10">
+        <span class="font-bold text-xl ">技能要求:</span>
+        <span class="float-right text-xs p-6 mt-4">{{ modalJobData.description }}</span>
       </div>
+      <div class="m-3 ">
+        <a class="btn-link font-bold mt-6" :href="modalJobData.link">详情链接</a>
+      </div>
+      <div class="divider my-6"></div>
+      <span class="text-xl m-3">评论</span>
+      <div class="divider my-6"></div>
       <div class="modal-action">
         <button class="btn" @click="showModal('job_detail_modal', true)">关闭</button>
       </div>
     </div>
   </dialog>
+  <div class="flex justify-center mt-16">
+    <div class="join">
+      <button class="join-item btn" @click="() => switchPageNum(-1)">«</button>
+      <button class="join-item btn">
+        page
+        <input class="input input-sm input-ghost w-100" v-model="pageNum">
+      </button>
+      <button class="join-item btn" @click="() => switchPageNum(1)">»</button>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useMainStore } from '@/stores';
 import { useRequest } from 'vue-hooks-plus';
-import { checkJobDatabaseAPI } from '@/apis';
+import {checkJobDatabaseAPI, getCommentAPI} from '@/apis';
 
 const loginStore = useMainStore().useLoginStore();
 const pageNum = ref(1);
@@ -114,6 +116,7 @@ const title = ref("");
 const education = ref("");
 const address = ref("");
 const modalJobData = ref({
+  id: -1,
   title: "",
   company: "",
   salary: "",
@@ -123,15 +126,25 @@ const modalJobData = ref({
   description: "",
   link: "",
 })
-
-jobList.value = [];
-
+const comment = ref();
 const checkDetail = (job: any) => {
   modalJobData.value = job;
+  console.log(modalJobData.value.id)
+  useRequest(() => getCommentAPI({
+    job_id: modalJobData.value.id,
+    page_num: pageNum.value,
+    page_size: 4
+  },loginStore.token as string),{
+    onSuccess(res: any) {
+      if(res.code === 200) {
+        console.log(res);
+      }
+    }
+  })
   showModal('job_detail_modal');
 }
 
-const checkJobDatabase = (time: number = 1500) => {
+const checkJobDatabase = () => {
   useRequest(() => checkJobDatabaseAPI({
     page_num: pageNum.value,
     page_size: 4,
@@ -140,16 +153,25 @@ const checkJobDatabase = (time: number = 1500) => {
     education: education.value,
     address: address.value
   }, loginStore.token as string), {
-    debounceWait: time,
     onSuccess(res: any) {
       if(res.code === 200) {
         jobList.value = res.data.data;
         totalPageNum.value = res.data.total_page_num;
+        console.log(jobList.value);
       }
     }
   })
+
 }
 checkJobDatabase();
+
+const showDetail = (index: number) => {
+  if(index === jobShowDetailIndex.value) {
+    jobShowDetailIndex.value = undefined;
+  } else {
+    jobShowDetailIndex.value = index;
+  }
+}
 
 const switchPageNum = (num: number) => {
   if(typeof pageNum.value === 'string' )
@@ -160,7 +182,7 @@ const switchPageNum = (num: number) => {
 }
 
 watch(pageNum, () => {
-  checkJobDatabase(100);
+  checkJobDatabase();
   jobShowDetailIndex.value = undefined;
 })
 
