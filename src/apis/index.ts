@@ -26,6 +26,7 @@ import getHotSkillAPI from "@/apis/Server/hot/getHotSkill";
 import getHotWorkAPI from "@/apis/Server/hot/getHotWork";
 import getHotAddressAPI from "@/apis/Server/hot/getHotAddress";
 import jobRequireMatchApi from "@/apis/Server/enterprise/jobRequireMatchApi";
+import getCommentAPI from "@/apis/Server/jobDatabase/getComment";
 
 export {
   passwordLoginAPI,
@@ -56,4 +57,5 @@ export {
   getHotWorkAPI,
   getHotAddressAPI,
   jobRequireMatchApi,
+  getCommentAPI
 };

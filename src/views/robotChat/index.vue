@@ -18,7 +18,7 @@
           <div v-else class="chat chat-end">
             <div class="chat-image avatar">
               <div class="w-[50px] rounded-full">
-                <img alt="Tailwind CSS chat bubble component" src="C:\Users\31986\Desktop\CareerRecommendation\public\robot.jpg" />
+                <img alt="Tailwind CSS chat bubble component" src="..\public\robot.jpg" />
               </div>
             </div>
             <div class="chat-bubble max-w-[500px]">{{msg.content}}</div>

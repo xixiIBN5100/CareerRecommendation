@@ -13,7 +13,7 @@
          <div class="skeleton h-30 mt-30" v-for="index in 7" :key="index"  v-if="isLoadingWork"></div>
          <ul class="menu mt-15" v-if="!isLoadingWork">
            <li v-for="(item, index) in hotWork" :key="item.id">
-             <a :class="{ 'text-3xl': index === 0, 'text-xl': index === 1 , 'bg-neutral-content' : index % 2 === 0}" class="my-5"> <span>No.{{ index+1 }}</span>&ensp;&ensp;{{ item.name }}</a>
+             <a :class="{ 'text-3xl': index === 0, 'text-xl': index === 1 , 'bg-primary-content' : index % 2 === 0}" class="my-5"> <span>No.{{ index+1 }}</span>&ensp;&ensp;{{ item.name }}</a>
            </li>
          </ul>
        </div>
@@ -26,7 +26,7 @@
       <div class="skeleton h-30 mt-30" v-for="index in 7" :key="index"  v-if="isLoadingAddress"></div>
       <ul class="menu mt-15" v-if="!isLoadingAddress">
         <li v-for="(item, index) in hotWorkAddress" :key="item.id">
-          <a :class="{ 'text-3xl': index === 0, 'text-xl': index === 1 , 'bg-neutral-content' : index % 2 === 0}" class="my-5"> <span>No.{{ index+1 }}</span>&ensp;&ensp;{{ item.name }}</a>
+          <a :class="{ 'text-3xl': index === 0, 'text-xl': index === 1 , 'bg-primary-content' : index % 2 === 0}" class="my-5"> <span>No.{{ index+1 }}</span>&ensp;&ensp;{{ item.name }}</a>
         </li>
       </ul>
     </div>
@@ -38,7 +38,7 @@
       <div class="skeleton h-30 mt-30" v-for="index in 7" :key="index"  v-if="isLoadingSkill"></div>
       <ul class="menu mt-15" v-if="!isLoadingSkill">
         <li v-for="(item, index) in hotWorkSkill" :key="item.id">
-          <a :class="{ 'text-3xl': index === 0, 'text-xl': index === 1 , 'bg-neutral-content' : index % 2 === 0}" class="my-5"> <span>No.{{ index+1 }}</span>&ensp;&ensp;{{ item.name }}</a>
+          <a :class="{ 'text-3xl': index === 0, 'text-xl': index === 1 , 'bg-primary-content' : index % 2 === 0}" class="my-5"> <span>No.{{ index+1 }}</span>&ensp;&ensp;{{ item.name }}</a>
         </li>
       </ul>
     </div>
