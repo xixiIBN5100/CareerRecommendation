@@ -29,7 +29,7 @@
     </dialog>
   </div>
   <div>
-    <table class="table">
+    <table class="table" v-if="postList.length !== 0">
       <thead>
         <tr>
           <th></th>
@@ -74,12 +74,24 @@
         </dialog>
       </tbody>
     </table>
+    <div v-if="postList.length !== 0" class="flex justify-center mt-16">
+      <div class="join">
+        <button class="join-item btn" @click="() => switchPage(-1)">«</button>
+        <button class="join-item btn">Page 
+          <input class="input input-ghost input-sm w-100" v-model="pageNum">
+        </button>
+        <button class="join-item btn" @click="() => switchPage(1)">»</button>
+      </div>
+    </div>
+    <div class="m-20" v-if="postList.length === 0">
+      暂无公司投递申请
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRequest } from 'vue-hooks-plus';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { getResumeRequestAPI, setPostStatusAPI, resetPostStatusAPI } from "@/apis";
 import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
@@ -87,6 +99,9 @@ import { ElNotification } from 'element-plus';
 const checkId = ref(0);
 const loginStore = useMainStore().useLoginStore();
 const postList = ref();
+const totalPostList = ref();
+const pageNum = ref(1);
+const pageSize = 4;
 const student_status = ref();
 const rentPost = ref({
   email: "",
@@ -98,6 +113,9 @@ const rentPost = ref({
   post_status: 0,
   post_id: 0
 });
+
+postList.value = [];
+totalPostList.value = [];
 
 const switchCheckId = (id: number) => {
   checkId.value = id;
@@ -111,8 +129,10 @@ const getResumeRequest = () => {
     onSuccess(res: any) {
       console.log(res);
       if(res.code === 200) {
-        postList.value = res.data.post;
+        pageNum.value = 1;
+        totalPostList.value = res.data.post;
         student_status.value = res.data.student_status;
+        updatePostList();
       }
     }
   })
@@ -133,9 +153,10 @@ const setPostStatus = (post_id: number, status: number) => {
     status: status
   }, loginStore.token as string), {
     onSuccess(res: any) {
-      console.log(res);
       if(res.code === 200) {
         ElNotification("审批成功");
+        getResumeRequest();
+        pageNum.value = 1;
         showModal('resume_request_modal', true);
       } else {
         ElNotification(res.msg);
@@ -151,6 +172,8 @@ const resetPostStatus = (post_id: number) => {
     onSuccess(res: any) {
       if(res.code === 200) {
         ElNotification("撤回审批成功");
+        getResumeRequest();
+        pageNum.value = 1;
         showModal('resume_request_modal', true);
       } else {
         ElNotification(res.msg);
@@ -163,5 +186,31 @@ const approvePost = (post: any) => {
   rentPost.value = post;
   showModal('resume_request_modal');
 }
+
+const switchPage = (step: number) => {
+  if(0 < pageNum.value + step && pageNum.value + step <= Math.ceil(totalPostList.value.length / pageSize)) {
+    pageNum.value += step;
+  }
+  if(0 >= pageNum.value || pageNum.value > Math.ceil(totalPostList.value.length / pageSize)) {
+    pageNum.value = 1;
+    ElNotification("超过了页数限制");
+  }
+}
+
+watch(pageNum, () => updatePostList())
+
+const updatePostList = () => {
+  if(typeof pageNum.value === "string") {
+    pageNum.value = parseInt(pageNum.value, 10);
+  }
+  let i = (pageNum.value-1)*pageSize;
+  let j = (pageNum.value)*pageSize;
+  if(i<0) i=0;
+  if(i>=totalPostList.value.length) i=totalPostList.value.length-1;
+  if(j<1) j=1;
+  if(j>totalPostList.value.length) j=totalPostList.value.length;
+  postList.value = totalPostList.value.slice(i,j);
+  console.log(postList.value);
+};
 
 </script>
