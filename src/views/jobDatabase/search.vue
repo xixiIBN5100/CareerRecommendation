@@ -23,30 +23,43 @@
         </div>
       </div>
     </div>
-    <div v-if="totalPageNum < pageNum" @click="() => {pageNum = totalPageNum}" class="cursor-pointer">
-      该页数过大 点击返回末页
+    <div v-if="jobList.length !== 0">
+      <div v-if="totalPageNum < pageNum" @click="() => {pageNum = totalPageNum}" class="cursor-pointer">
+        该页数过大 点击返回末页
+      </div>
+      <table class="table" v-else>
+        <thead>
+          <tr>
+            <th>岗位名称</th>
+            <th>公司名称</th>
+            <th>薪酬</th>
+            <th>最低学历要求</th>
+          </tr>
+        </thead>
+        <tbody v-for="job in jobList">
+          <tr class="border-none cursor-pointer">
+            <td>{{ job.title }}</td>
+            <td>{{ job.company }}</td>
+            <td>{{ job.salary }}</td>
+            <td>{{ job.education }}</td>
+            <td>
+              <button class="btn btn-sm btn-neutral" @click="checkDetail(job)">详情</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="flex justify-center mt-16">
+        <div class="join">
+          <button class="join-item btn" @click="() => switchPageNum(-1)">«</button>
+          <button class="join-item btn">
+            page
+            <input class="input input-sm input-ghost w-100" v-model="pageNum">
+          </button>
+          <button class="join-item btn" @click="() => switchPageNum(1)">»</button>
+        </div>
+      </div>
     </div>
-    <table class="table" v-else>
-      <thead>
-        <tr>
-          <th>岗位名称</th>
-          <th>公司名称</th>
-          <th>薪酬</th>
-          <th>最低学历要求</th>
-        </tr>
-      </thead>
-      <tbody v-for="job in jobList">
-        <tr class="border-none cursor-pointer">
-          <td>{{ job.title }}</td>
-          <td>{{ job.company }}</td>
-          <td>{{ job.salary }}</td>
-          <td>{{ job.education }}</td>
-          <td>
-            <button class="btn btn-sm btn-neutral" @click="checkDetail(job)">详情</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div v-else class="divider text-center">暂无数据</div>
   </div>
   <dialog id="job_detail_modal" class="modal">
     <div class="modal-box">
@@ -83,16 +96,6 @@
       </div>
     </div>
   </dialog>
-  <div class="flex justify-center mt-16">
-    <div class="join">
-      <button class="join-item btn" @click="() => switchPageNum(-1)">«</button>
-      <button class="join-item btn">
-        page
-        <input class="input input-sm input-ghost w-100" v-model="pageNum">
-      </button>
-      <button class="join-item btn" @click="() => switchPageNum(1)">»</button>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -121,12 +124,14 @@ const modalJobData = ref({
   link: "",
 })
 
+jobList.value = [];
+
 const checkDetail = (job: any) => {
   modalJobData.value = job;
   showModal('job_detail_modal');
 }
 
-const checkJobDatabase = () => {
+const checkJobDatabase = (time: number = 1500) => {
   useRequest(() => checkJobDatabaseAPI({
     page_num: pageNum.value,
     page_size: 4,
@@ -135,11 +140,11 @@ const checkJobDatabase = () => {
     education: education.value,
     address: address.value
   }, loginStore.token as string), {
+    debounceWait: time,
     onSuccess(res: any) {
       if(res.code === 200) {
         jobList.value = res.data.data;
         totalPageNum.value = res.data.total_page_num;
-        // console.log(jobList.value);
       }
     }
   })
@@ -155,7 +160,7 @@ const switchPageNum = (num: number) => {
 }
 
 watch(pageNum, () => {
-  checkJobDatabase();
+  checkJobDatabase(100);
   jobShowDetailIndex.value = undefined;
 })
 
