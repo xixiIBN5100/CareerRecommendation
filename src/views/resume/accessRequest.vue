@@ -9,9 +9,9 @@
       <div class="btn btn-sm join-item" :class="checkId === 2 ? 'btn-neutral' : undefined" @click="() => switchCheckId(2)">已审核</div>
     </div>
     <div
-    class="btn btn-success float-right"
-    v-if="student_status === 1 || student_status === 2"
-    @click="() => showModal('resume_public_introduce_modal')"
+      class="btn btn-success float-right"
+      v-if="student_status === 1 || student_status === 2"
+      @click="() => showModal('resume_public_introduce_modal')"
     >你的的默认简历: {{ student_status === 1 ? "已公开" : "未公开"}}</div>
     <dialog id="resume_public_introduce_modal" class="modal">
       <div class="modal-box">
@@ -28,9 +28,8 @@
       </form>
     </dialog>
   </div>
-  <div class="overflow-x-auto">
+  <div>
     <table class="table">
-      <!-- head -->
       <thead>
         <tr>
           <th></th>
@@ -46,33 +45,33 @@
           <td>{{ post.name }}</td>
           <td>{{ post.industry }}</td>
           <td>{{ post.location }}</td>
-          <td><div class="btn btn-sm" @click="() => showModal('resume_request_modal')">审批</div></td>
-          <dialog id="resume_request_modal" class="modal">
-            <div class="modal-box">
-              <div>
-                <h2 class="text-xl font-bold">{{ post.name }}</h2>
-                <div class="flex p-8 pb-0">
-                  <div class="w-1/2">
-                    <div>所属行业: {{ post.industry }}</div>
-                    <div>企业网站: {{ post.website }}</div>
-                  </div>
-                  <div class="w-1/2">
-                    <div>所在地: {{ post.location }}</div>
-                    <div>企业邮箱: {{ post.email }}</div>
-                  </div>
-                </div>
-                <div class="p-8 pt-0">企业简介: {{ post.introduction }}</div>
-              </div>
-              <div class="modal-action relative">
-                <div class="btn btn-sm absolute left-0" :class="post.post_status === 2 ? 'btn-success' : 'btn-warning'" v-if="post.post_status !== 1">审批状态: {{ post.post_status === 2 ? "已同意" : "已拒绝"}}</div>
-                <div class="btn btn-sm btn-success btn-outline" @click="() => setPostStatus(post.post_id, 1)" v-if="post.post_status === 1">审批通过</div>
-                <div class="btn btn-sm btn-warning btn-outline" @click="() => setPostStatus(post.post_id, 2)" v-if="post.post_status === 1">审批驳回</div>
-                <div class="btn btn-sm btn-accent btn-outline" @click="() => resetPostStatus(post.post_id)" v-if="post.post_status !== 1">审批撤回</div>
-                <div class="btn btn-sm btn-outline" @click="() => showModal('resume_request_modal', true)">取消</div>
-              </div>
-            </div>
-          </dialog>
+          <td><div class="btn btn-sm" @click="() => approvePost(post)">审批</div></td>
         </tr>
+        <dialog id="resume_request_modal" class="modal">
+          <div class="modal-box">
+            <div>
+              <h2 class="text-xl font-bold">{{ rentPost.name }}</h2>
+              <div class="flex p-8 pb-0">
+                <div class="w-1/2">
+                  <div>所属行业: {{ rentPost.industry }}</div>
+                  <div>企业网站: {{ rentPost.website }}</div>
+                </div>
+                <div class="w-1/2">
+                  <div>所在地: {{ rentPost.location }}</div>
+                  <div>企业邮箱: {{ rentPost.email }}</div>
+                </div>
+              </div>
+              <div class="p-8 pt-0">企业简介: {{ rentPost.introduction }}</div>
+            </div>
+            <div class="modal-action relative">
+              <div class="btn btn-sm absolute left-0" :class="rentPost.post_status === 2 ? 'btn-success' : 'btn-warning'" v-if="rentPost.post_status !== 1">审批状态: {{ rentPost.post_status === 2 ? "已同意" : "已拒绝"}}</div>
+              <div class="btn btn-sm btn-success btn-outline" @click="() => setPostStatus(rentPost.post_id, 1)" v-if="rentPost.post_status === 1">审批通过</div>
+              <div class="btn btn-sm btn-warning btn-outline" @click="() => setPostStatus(rentPost.post_id, 2)" v-if="rentPost.post_status === 1">审批驳回</div>
+              <div class="btn btn-sm btn-accent btn-outline" @click="() => resetPostStatus(rentPost.post_id)" v-if="rentPost.post_status !== 1">审批撤回</div>
+              <div class="btn btn-sm btn-outline" @click="() => showModal('resume_request_modal', true)">取消</div>
+            </div>
+          </div>
+        </dialog>
       </tbody>
     </table>
   </div>
@@ -89,6 +88,16 @@ const checkId = ref(0);
 const loginStore = useMainStore().useLoginStore();
 const postList = ref();
 const student_status = ref();
+const rentPost = ref({
+  email: "",
+  name: "",
+  industry: "",
+  website: "",
+  location: "",
+  introduction: "",
+  post_status: 0,
+  post_id: 0
+});
 
 const switchCheckId = (id: number) => {
   checkId.value = id;
@@ -127,6 +136,7 @@ const setPostStatus = (post_id: number, status: number) => {
       console.log(res);
       if(res.code === 200) {
         ElNotification("审批成功");
+        showModal('resume_request_modal', true);
       } else {
         ElNotification(res.msg);
       }
@@ -141,11 +151,17 @@ const resetPostStatus = (post_id: number) => {
     onSuccess(res: any) {
       if(res.code === 200) {
         ElNotification("撤回审批成功");
+        showModal('resume_request_modal', true);
       } else {
         ElNotification(res.msg);
       }
     }
   })
+}
+
+const approvePost = (post: any) => {
+  rentPost.value = post;
+  showModal('resume_request_modal');
 }
 
 </script>

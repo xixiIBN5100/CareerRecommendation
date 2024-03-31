@@ -35,54 +35,54 @@
           <th>最低学历要求</th>
         </tr>
       </thead>
-      <tbody v-for="(job, index) in jobList">
+      <tbody v-for="job in jobList">
         <tr class="border-none cursor-pointer">
           <td>{{ job.title }}</td>
           <td>{{ job.company }}</td>
           <td>{{ job.salary }}</td>
           <td>{{ job.education }}</td>
           <td>
-            <button class="btn btn-sm btn-neutral" @click="showModal('job_detail_modal')">详情</button>
+            <button class="btn btn-sm btn-neutral" @click="checkDetail(job)">详情</button>
           </td>
         </tr>
-        <dialog id="job_detail_modal" class="modal">
-          <div class="modal-box">
-            <h3 class="font-bold text-lg">{{ job.title }}</h3>
-            <div class="m-3">
-              <span class="font-bold">公司名称</span>
-              <span class="float-right text-xs">{{ job.company }}</span>
-            </div>
-            <div class="m-3">
-              <span class="font-bold">薪资条件</span>
-              <span class="float-right text-xs">{{ job.salary }}</span>
-            </div>
-            <div class="m-3">
-              <span class="font-bold">学历要求</span>
-              <span class="float-right text-xs">{{ job.education }}</span>
-            </div>
-            <div class="m-3">
-              <span class="font-bold">联系人</span>
-              <span class="float-right">{{ job.hiring_manager }}</span>
-            </div>
-            <div class="m-3">
-              <span class="font-bold">地址</span>
-              <span class="float-right">{{ job.address }}</span>
-            </div>
-            <div class="m-3">
-              <span class="font-bold">技能要求</span>
-              <span class="float-right text-xs p-3">{{ job.description }}</span>
-            </div>
-            <div class="m-3">
-              <a class="btn-link font-bold" :href="job.link">详情链接</a>
-            </div>
-            <div class="modal-action">
-              <button class="btn" @click="showModal('job_detail_modal', true)">关闭</button>
-            </div>
-          </div>
-        </dialog>
       </tbody>
     </table>
   </div>
+  <dialog id="job_detail_modal" class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">{{ modalJobData.title }}</h3>
+      <div class="m-3">
+        <span class="font-bold">公司名称</span>
+        <span class="float-right text-xs">{{ modalJobData.company }}</span>
+      </div>
+      <div class="m-3">
+        <span class="font-bold">薪资条件</span>
+        <span class="float-right text-xs">{{ modalJobData.salary }}</span>
+      </div>
+      <div class="m-3">
+        <span class="font-bold">学历要求</span>
+        <span class="float-right text-xs">{{ modalJobData.education }}</span>
+      </div>
+      <div class="m-3">
+        <span class="font-bold">联系人</span>
+        <span class="float-right">{{ modalJobData.hiring_manager }}</span>
+      </div>
+      <div class="m-3">
+        <span class="font-bold">地址</span>
+        <span class="float-right">{{ modalJobData.address }}</span>
+      </div>
+      <div class="m-3">
+        <span class="font-bold">技能要求</span>
+        <span class="float-right text-xs p-3">{{ modalJobData.description }}</span>
+      </div>
+      <div class="m-3">
+        <a class="btn-link font-bold" :href="modalJobData.link">详情链接</a>
+      </div>
+      <div class="modal-action">
+        <button class="btn" @click="showModal('job_detail_modal', true)">关闭</button>
+      </div>
+    </div>
+  </dialog>
   <div class="flex justify-center mt-16">
     <div class="join">
       <button class="join-item btn" @click="() => switchPageNum(-1)">«</button>
@@ -110,6 +110,21 @@ const company = ref("");
 const title = ref("");
 const education = ref("");
 const address = ref("");
+const modalJobData = ref({
+  title: "",
+  company: "",
+  salary: "",
+  education: "",
+  hiring_manager: "",
+  address: "",
+  description: "",
+  link: "",
+})
+
+const checkDetail = (job: any) => {
+  modalJobData.value = job;
+  showModal('job_detail_modal');
+}
 
 const checkJobDatabase = () => {
   useRequest(() => checkJobDatabaseAPI({
