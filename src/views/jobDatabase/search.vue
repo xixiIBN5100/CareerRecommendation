@@ -139,20 +139,12 @@ const checkJobDatabase = () => {
       if(res.code === 200) {
         jobList.value = res.data.data;
         totalPageNum.value = res.data.total_page_num;
-        console.log(jobList.value);
+        // console.log(jobList.value);
       }
     }
   })
 }
 checkJobDatabase();
-
-const showDetail = (index: number) => {
-  if(index === jobShowDetailIndex.value) {
-    jobShowDetailIndex.value = undefined;
-  } else {
-    jobShowDetailIndex.value = index;
-  }
-}
 
 const switchPageNum = (num: number) => {
   if(typeof pageNum.value === 'string' )
