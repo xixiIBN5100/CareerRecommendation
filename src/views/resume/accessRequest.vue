@@ -83,7 +83,7 @@
         <button class="join-item btn" @click="() => switchPage(1)">»</button>
       </div>
     </div>
-    <div class="m-20" v-if="postList.length === 0 && totalPostList.length <= pageSize">
+    <div class="m-20" v-if="postList.length === 0">
       暂无公司投递申请
     </div>
   </div>
