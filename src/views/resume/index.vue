@@ -62,6 +62,14 @@
           <el-icon><Reading /></el-icon>
           <input type="text" class="grow" placeholder="学历" v-model="resumeInfo.education"/>
         </label>
+        <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
+          <el-icon><Place /></el-icon>
+          <input type="text" class="grow" placeholder="求职意向城市" v-model="resumeInfo.city_intention"/>
+        </label>
+        <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
+          <el-icon><Money /></el-icon>
+          <input type="text" class="grow" placeholder="求职意向薪资(单位为千，请填具体数字)" v-model="resumeInfo.salary_intention"/>
+        </label>
         </div>
         <label class="p-4 flex justify-between">
           <label>
@@ -225,7 +233,9 @@ const resumeInfo = ref({
   work_experience: "",
   honor: "",
   self_evaluation: "",
-  remark: ""
+  remark: "",
+  city_intention: "",
+  salary_intention: ""
 })
 const age = ref("");
 const resumeList = ref();
@@ -267,13 +277,12 @@ updataResumeList();
 
 const addResume = () => {
   resumeInfo.value.age = parseInt(age.value, 10);
-  console.log(resumeInfo.value);
   useRequest(() => addResumeAPI(resumeInfo.value, loginStore.token as string), {
     onSuccess(res:any){
       if(res.code === 200) {
         ElNotification("新简历创建成功");
         switchPage(3);
-        resumeInfo.value = {name: "",sex: 1,age: 0,address: "",id_no: "",phone: "",email: "",job_intention: "",education: "",ability: "",work_experience: "",honor: "",self_evaluation: "",remark: ""};
+        resumeInfo.value = {name: "",sex: 1,age: 0,address: "",id_no: "",phone: "",email: "",job_intention: "",education: "",ability: "",work_experience: "",honor: "",self_evaluation: "",remark: "", city_intention: "",salary_intention: ""};
         age.value = "";
       } else {
         ElNotification("新简历创建失败");
