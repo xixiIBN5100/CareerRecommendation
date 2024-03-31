@@ -6,6 +6,7 @@
       <li><a @click='router.push("/enterprise/enterpriseInfo")' class="my-6">查看企业信息</a></li>
       <li><a class=" my-6" @click='router.push("/enterprise/studentsList")' >查看学生列表</a></li>
       <li><a @click='router.push("/enterprise/applyCheckResume")' class="active  my-6">查看简历申请</a></li>
+      <li><a @click='router.push("/enterprise/jobRequireMatch")' class="my-6">职位需求匹配</a></li>
     </div>
   </ul>
   <div>

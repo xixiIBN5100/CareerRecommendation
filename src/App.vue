@@ -67,6 +67,9 @@
               <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => jumpPage('/resume')">
                 <div class="text text-rose-500"><el-icon><Cpu /></el-icon></div>能力评估
               </div>
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => jumpPage('/robotChat')">
+                <div class="text text-gray-500"><el-icon><Headset /></el-icon></div>私聊机器人
+              </div>
             </div>
             <div class="flex flex-col gap-3" v-if="loginStore.userType === 2">
               <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100 mt-20" @click="() => jumpPage('/enterprise/enterpriseInfo')">

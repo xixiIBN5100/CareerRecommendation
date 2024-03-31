@@ -25,6 +25,7 @@ import resetPostStatusAPI from "./Server/resume/resetPostStatusAPI";
 import getHotSkillAPI from "@/apis/Server/hot/getHotSkill";
 import getHotWorkAPI from "@/apis/Server/hot/getHotWork";
 import getHotAddressAPI from "@/apis/Server/hot/getHotAddress";
+import jobRequireMatchApi from "@/apis/Server/enterprise/jobRequireMatchApi";
 
 export {
   passwordLoginAPI,
@@ -53,5 +54,6 @@ export {
   resetPostStatusAPI,
   getHotSkillAPI,
   getHotWorkAPI,
-  getHotAddressAPI
+  getHotAddressAPI,
+  jobRequireMatchApi,
 };

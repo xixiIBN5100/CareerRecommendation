@@ -7,6 +7,8 @@ import EnterpriseInfo from "./enterprise/enterpriseInfo.vue";
 import jobDatabase from "./jobDatabase/index.vue";
 import StudentsList from "./enterprise/studentsList.vue";
 import ApplyCheckResume from "./enterprise/applyCheckResume.vue";
+import JobRequireMatch from "./enterprise/jobRequireMatch.vue";
+import RobotChat from "./robotChat/index.vue";
 
 export {
   Login,
@@ -18,4 +20,6 @@ export {
   jobDatabase,
   StudentsList,
   ApplyCheckResume,
+  JobRequireMatch,
+  RobotChat,
 };
