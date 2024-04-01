@@ -73,11 +73,14 @@ import { ElNotification } from 'element-plus';
 import { useMainStore } from '@/stores';
 
 const loginStore = useMainStore().useLoginStore();
-const emit = defineEmits(["getPageId"]);
+const emit = defineEmits(["getPageId", "setEditIng"]);
 const props = defineProps<{
   resume_id: number
+  editIng: boolean
 }>();
-const editIng = ref(false);
+
+console.log(props.editIng);
+
 const age = ref("");
 const salary_intention = ref("");
 const resumeInfo = ref({
@@ -116,13 +119,17 @@ const loadResumeInfo = () => {
 loadResumeInfo();
 
 const cancelEdit = () => {
-  editIng.value = false;
+  setEditIng(false);
   getPageId(3);
 }
 
 const getPageId = (pageId: number) => {
   emit("getPageId", pageId);
 };
+
+const setEditIng = (tf: boolean) => {
+  emit("setEditIng", tf);
+}
 
 const submitEdit = () => {
   resumeInfo.value.age = parseInt(age.value, 10);
@@ -132,7 +139,7 @@ const submitEdit = () => {
       if(res.code === 200) {
         ElNotification("更改成功");
         getPageId(3);
-        editIng.value = false;
+        setEditIng(false);
       }
       ElNotification(res.msg);
     },
