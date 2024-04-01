@@ -49,7 +49,7 @@
     </table>
   </div>
   <dialog id="job_detail_modal" class="modal ">
-    <div class="modal-box p-20">
+    <div class="modal-box p-20 bg-base-200">
       <h3 class="font-bold text-2xl">{{ modalJobData.title }}</h3>
       <div class="flex flex-col gap-10 mt-15">
       <div class="m-3">
@@ -81,10 +81,20 @@
         <a class="btn-link font-bold mt-6" :href="modalJobData.link">详情链接</a>
       </div>
       <div class="divider my-6"></div>
-      <span class="text-xl m-3">评论</span>
-      <div class="divider my-6"></div>
+      <span class="text-xl m-3">评论:</span>
+      <ul class="menu bg-base-200  rounded-box">
+        <div v-for="item in commentList">
+          <div class="divider my-3"></div>
+          <li><a><span class="text-xl">{{item.user_name}}</span>: &ensp;{{item.content}}</a></li>
+        </div>
+      </ul>
+      <div class="divider my-6 "></div>
+      <div class="flex justify-between mt-10">
+        <input class="input input-bordered w-9/12 shadow-lg" v-model="comment"/>
+        <button class="btn shadow-lg bg-base-100" @click="setComment" ><span>发布评论</span></button>
+      </div>
       <div class="modal-action">
-        <button class="btn" @click="showModal('job_detail_modal', true)">关闭</button>
+        <button class="btn bg-base-100" @click="showModal('job_detail_modal', true)">关闭</button>
       </div>
     </div>
   </dialog>
@@ -104,7 +114,9 @@
 import { ref, watch } from 'vue';
 import { useMainStore } from '@/stores';
 import { useRequest } from 'vue-hooks-plus';
-import {checkJobDatabaseAPI, getCommentAPI} from '@/apis';
+import {checkJobDatabaseAPI, getCommentAPI, setCommentAPI} from '@/apis';
+import Index from "@/views/login/index.vue";
+import {ElNotification} from "element-plus";
 
 const loginStore = useMainStore().useLoginStore();
 const pageNum = ref(1);
@@ -115,6 +127,8 @@ const company = ref("");
 const title = ref("");
 const education = ref("");
 const address = ref("");
+const comment = ref();
+const commentList = ref();
 const modalJobData = ref({
   id: -1,
   title: "",
@@ -126,7 +140,6 @@ const modalJobData = ref({
   description: "",
   link: "",
 })
-const comment = ref();
 const checkDetail = (job: any) => {
   modalJobData.value = job;
   console.log(modalJobData.value.id)
@@ -137,7 +150,7 @@ const checkDetail = (job: any) => {
   },loginStore.token as string),{
     onSuccess(res: any) {
       if(res.code === 200) {
-        console.log(res);
+        commentList.value = res.data.data
       }
     }
   })
@@ -181,6 +194,38 @@ const switchPageNum = (num: number) => {
   }
 }
 
+
+const setComment = () => {
+  useRequest(() => setCommentAPI({
+    job_id: modalJobData.value.id,
+    parent_id:0,
+    content:comment.value
+  },loginStore.token as string),{
+    onSuccess(res: any) {
+      if(res.code === 200 && res.msg === 'OK') {
+        ElNotification.success("评论成功")
+        comment.value = ''
+        useRequest(() => getCommentAPI({
+          job_id: modalJobData.value.id,
+          page_num: pageNum.value,
+          page_size: 4
+        },loginStore.token as string),{
+          onSuccess(res: any) {
+            if(res.code === 200) {
+              commentList.value = res.data
+              console.log(commentList.value)
+            }
+          }
+        })
+      }else{
+        ElNotification.error(res.msg);
+      }
+    },
+    onError(e:any){
+      ElNotification.error("网络错误"+e)
+    }
+  })
+}
 watch(pageNum, () => {
   checkJobDatabase();
   jobShowDetailIndex.value = undefined;
