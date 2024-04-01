@@ -23,62 +23,7 @@
       <add-resume @get-page-id="switchPage"></add-resume>
     </div>
     <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box" v-if="pageId === 2">
-      <div class="text-2xl mb-30">
-        简历修改
-        <div v-if="editIng" class="btn btn-sm btn-warning btn-outline float-end" @click="cancelEdit">取消更改</div>
-      </div>
-      <div class="flex flex-col gap-10" v-if="editIng">
-        <label class="input input-ghost flex items-center gap-2">
-          姓名<el-icon class="mr-8"><User/></el-icon>
-          <input type="text" class="grow text-right mr-8" placeholder="姓名" v-model="resumeEdit.name" />
-        </label>
-        <label class="input input-ghost flex items-center gap-2">
-          年龄<el-icon class="mr-8"><Star/></el-icon>
-          <input type="text" class="grow text-right mr-8" placeholder="年龄" v-model="ageEdit"/>
-        </label>
-        <label class="p-4">
-          <input type="radio" name="gender" class="radio radio-sm" value="1" v-model="resumeEdit.sex"/><span class="m-4 text-xl mr-50">男</span>
-          <input type="radio" name="gender" class="radio radio-sm" value="2" v-model="resumeEdit.sex"/><span class="m-4 text-xl">女</span>
-        </label>
-        <label class="input input-ghost flex items-center gap-2">
-          身份证<el-icon class="mr-8"><Postcard/></el-icon>
-          <input type="text" class="grow text-right mr-8" placeholder="身份证" v-model="resumeEdit.id_no"/>
-        </label>
-        <label class="input input-ghost flex items-center gap-2">
-          联系方式<el-icon class="mr-8"><Iphone/></el-icon>
-          <input type="text" class="grow text-right mr-8" placeholder="联系方式" v-model="resumeEdit.phone"/>
-        </label>
-        <label class="input input-ghost flex items-center gap-2">
-          邮箱<el-icon class="mr-8"><Message /></el-icon>
-          <input type="text" class="grow text-right mr-8" placeholder="邮箱" v-model="resumeEdit.email"/>
-        </label>
-        <label class="input input-ghost flex items-center gap-2">
-          家庭住址<el-icon class="mr-8"><School/></el-icon>
-          <input type="text" class="grow text-right mr-8" placeholder="家庭住址" v-model="resumeEdit.address"/>
-        </label>
-        <label class="input input-ghost flex items-center gap-2">
-          求职意向岗位<el-icon class="mr-8"><DocumentChecked /></el-icon>
-          <input type="text" class="grow text-right mr-8" placeholder="求职意向岗位" v-model="resumeEdit.job_intention"/>
-        </label>
-        <label class="input input-ghost flex items-center gap-2">
-          学历<el-icon class="mr-8"><Reading /></el-icon>
-          <input type="text" class="grow text-right mr-8" placeholder="学历" v-model="resumeEdit.education"/>
-        </label>
-        能力特长
-        <textarea class="textarea textarea-ghost" v-model="resumeEdit.ability"></textarea>
-        工作经历
-        <textarea class="textarea textarea-ghost" v-model="resumeEdit.work_experience"></textarea>
-        所获荣誉
-        <textarea class="textarea textarea-ghost" v-model="resumeEdit.honor"></textarea>
-        自我评价
-        <textarea class="textarea textarea-ghost" v-model="resumeEdit.self_evaluation"></textarea>
-        <label class="input input-ghost flex items-center gap-2">
-          简历简介<el-icon class="mr-8"><Promotion /></el-icon>
-          <input type="text" class="grow text-right mr-8" placeholder="简历简介(仅用于用户端区分简历)" v-model="resumeEdit.remark"/>
-        </label>
-        <div class="btn btn-primary" @click="submitEdit">提交更改</div>
-      </div>
-      <div v-if="!editIng">请前往<span class="rounded bg-base-100 p-6 m-3 font-bold">简历查看</span>中选定简历</div>
+      <edit-resume @get-page-id="switchPage" :resume_id="recentEditResume"></edit-resume>
     </div>
     <div class="bg-base-200 shadow-lg basis-3/4 ml-120 my-60 p-30 rounded-box" v-if="pageId === 3">
       <div class="text-2xl mb-30">
@@ -100,7 +45,7 @@
             <td>{{ res.id }}</td> <!-- Display "编号" in this column -->
             <td>{{ res.remark }}</td> <!-- Display "简介" in this column -->
             <td class="flex flex-row gap-4">
-              <div class="btn btn-sm btn-neutral" @click="() => editResume(res.resume_id)">编辑</div>
+              <!-- <div class="btn btn-sm btn-neutral" @click="() => editResume(res.resume_id)">编辑</div> -->
               <div class="btn btn-sm btn-neutral" @click="() => showModal('delete_modal')">删除</div>
               <div class="btn btn-sm btn-neutral" v-if="!res.default" @click="() => setDefaultResume(res.resume_id)">设为默认简历</div>
               <div class="btn btn-sm btn-neutral" v-if="res.default" @click="() => setPublicResume(res.open_public)">{{ res.open_public === 1 ? "取消公开" : "公开简历" }}</div>
@@ -138,30 +83,12 @@ import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
 import accessRequest from "./accessRequest.vue";
 import addResume from './addResume.vue';
+import editResume from './editResume.vue';
 
 const loginStore = useMainStore().useLoginStore();
 const pageId = ref(1);
 const resumeList = ref();
-
-const resumeEdit = ref({
-  name: "",
-  sex: 1,
-  age: 0,
-  address: "",
-  id_no: "",
-  phone: "",
-  email: "",
-  job_intention: "",
-  education: "",
-  ability: "",
-  work_experience: "",
-  honor: "",
-  self_evaluation: "",
-  remark: ""
-})
-const ageEdit = ref("")
-const editIng = ref(false);
-const recentEditResume = ref<number>();
+const recentEditResume = ref(0);
 
 const updataResumeList = () => {
   useRequest(() => getResumeListAPI(loginStore.token as string), {
@@ -222,52 +149,20 @@ const deleteResume = (id: number) => {
   })
 }
 
-const editResume = (id: number) => {
-  editIng.value = true;
-  switchPage(2);
-  recentEditResume.value = id;
-  useRequest(() => getResumeInfoAPI({
-    resume_id: id
-  }, loginStore.token as string), {
-    onSuccess(res: any) {
-      if(res.code === 200) {
-        resumeEdit.value = res.data;
-      }
-    }
-  })
-}
-
-const submitEdit = () => {
-  useRequest(() => editResumeAPI({
-    resume_id: recentEditResume.value as number,
-    name: resumeEdit.value.name,
-    sex: resumeEdit.value.sex,
-    age: parseInt(ageEdit.value, 10),
-    address: resumeEdit.value.address,
-    id_no: resumeEdit.value.id_no,
-    phone: resumeEdit.value.phone,
-    email: resumeEdit.value.email,
-    job_intention: resumeEdit.value.job_intention,
-    education: resumeEdit.value.education,
-    ability: resumeEdit.value.ability,
-    work_experience: resumeEdit.value.work_experience,
-    honor: resumeEdit.value.honor,
-    self_evaluation: resumeEdit.value.self_evaluation,
-    remark: resumeEdit.value.remark
-  }, loginStore.token as string), {
-    onSuccess(res: any) {
-      if(res.code === 200) {
-        ElNotification("更改成功");
-        switchPage(3);
-        editIng.value = false;
-      }
-      ElNotification(res.msg);
-    },
-    onError(e) {
-      console.log(e);
-    }
-  })
-}
+// const editResume = (id: number) => {
+//   editIng.value = true;
+//   switchPage(2);
+//   recentEditResume.value = id;
+//   useRequest(() => getResumeInfoAPI({
+//     resume_id: id
+//   }, loginStore.token as string), {
+//     onSuccess(res: any) {
+//       if(res.code === 200) {
+//         resumeEdit.value = res.data;
+//       }
+//     }
+//   })
+// }
 
 const setPublicResume = (state: number) => {
   const setPublic = ref<number>()
@@ -284,11 +179,6 @@ const setPublicResume = (state: number) => {
     }
   })
   setTimeout(() => updataResumeList(), 500);
-}
-
-const cancelEdit = () => {
-  editIng.value = false;
-  pageId.value = 3;
 }
 
 </script>

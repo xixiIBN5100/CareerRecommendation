@@ -1,7 +1,6 @@
 import { request } from "@/apis/axios";
 
-export type editResumeData = {
-  resume_id: number;
+export type EditResumeData = {
   /**
    * 能力特长
    */
@@ -13,9 +12,10 @@ export type editResumeData = {
   /**
    * 年龄
    */
-  age: number | null;
+  age: number;
+  city_intention: string;
   /**
-   * 学历，某某学校+某某科或专
+   * 学历，某某学校某某科或专
    */
   education: string;
   /**
@@ -43,6 +43,15 @@ export type editResumeData = {
    */
   phone: string;
   /**
+   * 简历备注
+   */
+  remark: string;
+  /**
+   * 简历编号
+   */
+  resume_id: number;
+  salary_intention: number;
+  /**
    * 自我评价
    */
   self_evaluation: string;
@@ -54,14 +63,13 @@ export type editResumeData = {
    * 工作经历
    */
   work_experience: string;
-  remark: string;
 }
 
-const editResumeAPI = (data: editResumeData,token: string) => {
+const editResumeAPI = (data: EditResumeData,token: string) => {
   return request("/api/student/resume", {
     data: data,
     method: "PUT",
-    headers: { "Authorization": 'Bearer ' + token}
+    headers: { "Authorization": "Bearer " + token}
   });
 };
 
