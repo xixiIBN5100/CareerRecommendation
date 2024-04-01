@@ -1,6 +1,6 @@
 import { request } from "@/apis/axios";
 
-export type resumeData = {
+export type ResumeData = {
   /**
    * 能力特长
    */
@@ -12,7 +12,11 @@ export type resumeData = {
   /**
    * 年龄
    */
-  age: number | null;
+  age: number;
+  /**
+   * 求职意向城市
+   */
+  city_intention: string;
   /**
    * 学历，某某学校+某某科或专
    */
@@ -42,6 +46,14 @@ export type resumeData = {
    */
   phone: string;
   /**
+   * 备注
+   */
+  remark: string;
+  /**
+   * 求职意向薪资
+   */
+  salary_intention: number;
+  /**
    * 自我评价
    */
   self_evaluation: string;
@@ -53,14 +65,13 @@ export type resumeData = {
    * 工作经历
    */
   work_experience: string;
-  remark: string;
 }
 
-const addResumeAPI = (data: resumeData, token: string) => {
+const addResumeAPI = (data: ResumeData, token: string) => {
   return request("/api/student/resume", {
     data: data,
     method: "POST",
-    headers: { "Authorization": 'Bearer ' + token}
+    headers: { "Authorization": "Bearer " + token}
   });
 };
 

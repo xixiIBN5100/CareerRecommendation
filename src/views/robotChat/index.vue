@@ -16,7 +16,7 @@
             <div v-else class="chat chat-end">
               <div class="chat-image avatar">
                 <div class="w-[50px] rounded-full">
-                  <img alt="Tailwind CSS chat bubble component" src="C:\Users\31986\Desktop\CareerRecommendation\public\robot.jpg" />
+                  <img alt="Tailwind CSS chat bubble component" src="http://phlin.top/static/d4948cef-a92a-435f-a0fd-37ad638d16b2.jpg" />
                 </div>
               </div>
               <div class="chat-bubble max-w-[500px]">{{msg.content}}</div>
@@ -49,7 +49,8 @@ import { onMounted,ref,nextTick } from "vue";
 
 const loginStore = useMainStore().useLoginStore();
 const sendMsg = ref("");
-const chatMsg = ref([]);
+const chatMsg = ref();
+chatMsg.value = [];
 
 const url = "wss://phlin.top/api/ws/" + loginStore.userName;
 let ws = new WebSocket(url);
@@ -74,7 +75,7 @@ onMounted(()=>{
       }
     }
     await nextTick();
-    let card = document.getElementById("msgBox");
+    let card = document.getElementById("msgBox") as any;
     card.scrollTop = card.scrollHeight
   }
 })
@@ -88,14 +89,14 @@ const send = () => {
     isLoadingMsg.value ++;
 
     await nextTick();
-    let card = document.getElementById("msgBox");
+    let card = document.getElementById("msgBox") as any;
     card.scrollTop = card.scrollHeight;
   }
   sendMsg.value = "";
   isLoadingMsg.value = 0;
 }
 
-const keyDown = (e) => {
+const keyDown = (e: any) => {
   if(e.keyCode == 13){
     send();
   }
