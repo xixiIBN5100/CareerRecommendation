@@ -84,7 +84,7 @@ router.beforeEach((to, _, next) => {
       } else {
         next();
       }
-    } else if(loginStore.userType === 1){ //企业端
+    } else if(loginStore.userType === 2){ //企业端
       if(to.path === "/resume" ||
          to.path === "/home" ||
          to.path === "/jobDatabase" ||
@@ -94,6 +94,7 @@ router.beforeEach((to, _, next) => {
         next();
       }
     }
+    next();
   }
 });
 
