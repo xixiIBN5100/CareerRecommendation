@@ -108,15 +108,17 @@
       <button class="join-item btn" @click="() => switchPageNum(1)">»</button>
     </div>
   </div>
+  <info :job="modalJobData"></info>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import {provide, ref, watch} from 'vue';
 import { useMainStore } from '@/stores';
 import { useRequest } from 'vue-hooks-plus';
 import {checkJobDatabaseAPI, getCommentAPI, setCommentAPI} from '@/apis';
 import Index from "@/views/login/index.vue";
 import {ElNotification} from "element-plus";
+import Info from "@/views/jobDatabase/info.vue";
 
 const loginStore = useMainStore().useLoginStore();
 const pageNum = ref(1);
@@ -140,6 +142,7 @@ const modalJobData = ref({
   description: "",
   link: "",
 })
+
 const checkDetail = (job: any) => {
   modalJobData.value = job;
   console.log(modalJobData.value.id)
