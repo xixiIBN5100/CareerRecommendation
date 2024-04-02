@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from "vue-router";
 import {
   FindPassword,
   Login,
@@ -11,9 +11,12 @@ import {
   ApplyCheckResume,
   JobRequireMatch,
   RobotChat,
-  Info
+  Info,
+  resetEmail,
 } from "@/views";
 
+import pinia from "@/stores/createPinia";
+import { useMainStore } from "@/stores";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -79,11 +82,44 @@ const router = createRouter({
       component: RobotChat,
     },
     {
+      path: "/resetEmail",
+      name: "resetEmail",
+      component: resetEmail,
+    },
+    {
       path: "/info",
       name: "info",
       component: Info,
-    }
+    },
   ]
+});
+
+router.beforeEach((to, _, next) => {
+  const loginStore = useMainStore(pinia).useLoginStore(pinia);
+  if(loginStore.loginSession === false && to.path !== "/login" && to.path !== "/register" && to.path !== "/findPassword"){
+    next("/login");
+  } else {
+    if(loginStore.userType === 1){ //学生端
+      if(to.path === "/enterprise/enterpriseInfo" ||
+         to.path === "/enterprise/studentsList" ||
+         to.path === "/enterprise/applyCheckResume" ||
+         to.path === "/enterprise/jobRequireMatch") {
+        next("/home");
+      } else {
+        next();
+      }
+    } else if(loginStore.userType === 2){ //企业端
+      if(to.path === "/resume" ||
+         to.path === "/home" ||
+         to.path === "/jobDatabase" ||
+         to.path === "/robotChat") {
+        next("/home");
+      } else {
+        next();
+      }
+    }
+    next();
+  }
 });
 
 export default router;

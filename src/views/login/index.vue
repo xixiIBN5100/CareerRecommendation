@@ -60,8 +60,6 @@ import { ElNotification } from "element-plus";
 import { useRequest } from "vue-hooks-plus";
 import { passwordLoginAPI, emailLoginAPI, sendEmailCodeAPI } from "@/apis";
 import { useMainStore } from "@/stores";
-import { jumpPage } from "@/tool";
-// import {c} from "vite/dist/node/types.d-FdqQ54oU";
 
 const loginStore = useMainStore().useLoginStore();
 const loginWay = ref("  ")
@@ -107,6 +105,7 @@ const loginPassword = () => {
         loginStore.setUserName(info.value.user_name);
         loginStore.setAvatarUrl(res.data.avatar);
         loginStore.setUserType(res.data.type);
+        loginStore.setUserEmail(res.data.email);
         cleanForm()
         if(res.data.type === 1) {
           router.push('/home')
@@ -114,7 +113,7 @@ const loginPassword = () => {
           router.push('/enterprise/enterpriseInfo')
         }
       }else{
-        ElNotification.error(res.msg)
+        ElNotification.error(res.msg);
       }
     },
     onError(e){
@@ -135,16 +134,15 @@ const loginEmail = () => {
         loginStore.setLogin(true);
         loginStore.setToken(res.data.token);
         loginStore.setUserName(info.value.user_name);
+        loginStore.setUserType(res.data.type);
+        loginStore.setUserEmail(res.data.email);
         if(res.data.type === 1) {
           router.push('/home')
         }else {
           router.push('/enterprise/enterpriseInfo')
         }
       }else{
-        ElNotification.error(res.msg)
-        loginStore.setLogin(true)
-        loginStore.setToken(res.data.token)
-        cleanForm()
+        ElNotification.error(res.msg);
       }
     },
     onError(e){

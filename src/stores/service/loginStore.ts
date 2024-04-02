@@ -6,7 +6,8 @@ const useLoginStore = defineStore("login", () => {
   const token = ref<string|undefined>();
   const userName = ref();
   const avatarUrl = ref();
-  const userType = ref(0);
+  const userType = ref(0); //1学生 2企业
+  const userEmail = ref("");
   const setLogin = (loginNewSession: boolean) => {
     loginSession.value = loginNewSession;
   };
@@ -22,6 +23,9 @@ const useLoginStore = defineStore("login", () => {
   const setUserType = (type: number) => {
     userType.value = type;
   };
+  const setUserEmail = (email: string) => {
+    userEmail.value = email;
+  };
 
   return{
     loginSession,
@@ -29,11 +33,13 @@ const useLoginStore = defineStore("login", () => {
     userName,
     avatarUrl,
     userType,
+    userEmail,
     setLogin,
     setToken,
     setUserName,
     setAvatarUrl,
     setUserType,
+    setUserEmail,
   };
 },{ persist: true });
 
