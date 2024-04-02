@@ -96,7 +96,7 @@ const router = createRouter({
 
 router.beforeEach((to, _, next) => {
   const loginStore = useMainStore(pinia).useLoginStore(pinia);
-  if(loginStore.loginSession === false && to.path !== "/login"){
+  if(loginStore.loginSession === false && to.path !== "/login" && to.path !== "/register" && to.path !== "/findPassword"){
     next("/login");
   } else {
     if(loginStore.userType === 1){ //学生端
