@@ -40,18 +40,26 @@
               <!-- head -->
               <thead>
               <tr class='text-lg'>
-                <th></th>
-                <th>学生姓名</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>年龄</th>
                 <th>学历</th>
+                <th>求职意向</th>
+                <th>意向城市</th>
+                <th>理想薪资</th>
                 <th>简历是否开放</th>
               </tr>
               </thead>
               <tbody class='text-base'>
-              <tr class='hover' v-for='student in studentsList'>
-                <th>{{ student.student_id }}</th>
-                <td>{{ student.name }}</td>
-                <td>{{ student.education }}</td>
-                <td>{{ student.open_public}}</td>
+              <tr class="hover:bg-base-300" v-for='student in studentsList'>
+                <td>{{student.name}}</td>
+                <td>{{student.sex}}</td>
+                <td>{{student.age}}</td>
+                <td>{{student.education}}</td>
+                <td>{{student.job_intention}}</td>
+                <td>{{student.city_intention}}</td>
+                <td>{{student.salary_intention}}</td>
+                <td>{{student.open_public}}</td>
                 <td v-if='student.open_public==="开放"'><button class="btn btn-outline" @click='checkResume(student.student_id)' onclick="studentResume.showModal()">查看简历信息</button></td>
                 <td v-else><button class="btn btn-outline" @click='applyCheck(student.student_id)'>申请查看简历</button></td>
               </tr>
@@ -60,10 +68,12 @@
           </div>
           <div class='flex justify-center mt-[5px]'>
             <div class="join">
+              <button class="join-item btn bg-base-100">«</button>
               <input id='firstPagin' class="join-item btn btn-square" type="radio" name="options" aria-label="1" @click='changePage(1)' checked/>
               <div v-for='num in pageNum'>
                 <input class="join-item btn btn-square" type="radio" name="options" :aria-label="num" @click='changePage(num)'/>
               </div>
+              <button class="join-item btn bg-base-100">»</button>
             </div>
           </div>
         </div>
@@ -201,6 +211,11 @@ const getInfo = () => {
           }else{
             studentsList.value[i].open_public = "开放";
           }
+          if(studentsList.value[i].sex === 1){
+            studentsList.value[i].sex = "男";
+          }else if(studentsList.value[i].sex === 2){
+            studentsList.value[i].sex = "女";
+          }
         }
       }else{
         ElNotification({
@@ -250,7 +265,12 @@ const checkResume = (student_id:number) => {
       console.log(res.data);
       if(res.code === 200){
         Object.assign(studentResume.value,res.data);
-        console.log(studentResume.value)
+        // console.log(studentResume.value)
+        if(studentResume.value.sex === 1){
+          studentResume.value.sex = "男";
+        }else{
+          studentResume.value.sex = "女";
+        }
       }else{
         ElNotification({
           title: 'Warning',

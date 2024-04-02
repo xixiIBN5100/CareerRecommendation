@@ -1,5 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
-import {FindPassword, Login, Register, resume, Home ,EnterpriseInfo, StudentsList, jobDatabase, ApplyCheckResume, JobRequireMatch, RobotChat, resetEmail} from "@/views";
+import {
+  FindPassword,
+  Login,
+  Register,
+  resume,
+  Home,
+  EnterpriseInfo,
+  StudentsList,
+  jobDatabase,
+  ApplyCheckResume,
+  JobRequireMatch,
+  RobotChat,
+  Info,
+  resetEmail,
+} from "@/views";
 
 import pinia from "@/stores/createPinia";
 import { useMainStore } from "@/stores";
@@ -71,6 +85,11 @@ const router = createRouter({
       path: "/resetEmail",
       name: "resetEmail",
       component: resetEmail,
+    },
+    {
+      path: "/info",
+      name: "info",
+      component: Info,
     },
   ]
 });

@@ -17,24 +17,28 @@
     </div>
     <div class="card  max-h-[1000px] bg-base-200 shadow-xl  hover:shadow-2xl mt-50 hover:translate-y-1">
       <div class="card-body">
-        <div class="collapse bg-base-100 w-[500px]">
-          <input type="checkbox" class='w-[400px]'/>
+        <div class="collapse bg-base-100">
+          <input type="checkbox" class='w-[850px]'/>
           <div class="collapse-title text-xl font-medium">
             需求信息填写
             <button class="btn btn-sm btn-outline btn-info float-right" @click='clear'>清空</button>
           </div>
-          <div class="collapse-content">
-            <label class="input input-bordered flex items-center gap-2">
+          <div class="collapse-content grid grid-cols-2 gap-[25px]">
+            <label class="input input-bordered flex items-center gap-4">
               <el-icon><Management /></el-icon>
-              <input type="text" class="grow ml-[5px]" placeholder="学历要求" v-model='params.education' />
+              <input type="text" class="grow" placeholder="学历要求" v-model='params.education' />
             </label>
-            <label class="input input-bordered flex items-center gap-2 my-[10px]">
+            <label class="input input-bordered flex items-center gap-4">
               <el-icon><Platform /></el-icon>
-              <input type="text" class="grow ml-[5px]" placeholder="技术要求" v-model='params.ability' />
+              <input type="text" class="grow" placeholder="技术要求" v-model='params.ability' />
             </label>
-            <label class="input input-bordered flex items-center gap-2">
+            <label class="input input-bordered flex items-center gap-4">
               <el-icon><LocationFilled /></el-icon>
-              <input type="text" class="grow ml-[5px]" placeholder="工作地址" v-model='params.address' />
+              <input type="text" class="grow" placeholder="工作地址" v-model='params.address' />
+            </label>
+            <label class="input input-bordered flex items-center gap-4">
+              <el-icon><WalletFilled /></el-icon>
+              <input type="text" class="grow" placeholder="薪资要求" v-model='salary' />
             </label>
           </div>
         </div>
@@ -43,33 +47,137 @@
           <table class="table text-base">
             <!-- head -->
             <thead>
-            <tr class='text-base'>
-              <th></th>
+            <tr class='text-lg'>
               <th>姓名</th>
+              <th>性别</th>
+              <th>年龄</th>
+              <th>学历</th>
+              <th>求职意向</th>
+              <th>意向城市</th>
+              <th>理想薪资</th>
               <th>简历是否开放</th>
             </tr>
             </thead>
             <tbody>
             <!-- row 1 -->
             <tr v-for='student in studentsList'>
-              <th>1</th>
               <td>{{student.name}}</td>
+              <td>{{student.sex}}</td>
+              <td>{{student.age}}</td>
+              <td>{{student.education}}</td>
+              <td>{{student.job_intention}}</td>
+              <td>{{student.city_intention}}</td>
+              <td>{{student.salary_intention}}</td>
               <td>{{student.open_public}}</td>
+              <td v-if='student.open_public==="开放"'><button class="btn btn-outline" @click='checkResume(student.student_id)' onclick="studentResume.showModal()">查看简历信息</button></td>
+              <td v-else><button class="btn btn-outline" @click='applyCheck(student.student_id)'>申请查看简历</button></td>
             </tr>
             </tbody>
           </table>
         </div>
+        <div class='flex justify-center mt-[5px]'>
+          <div class="join">
+            <button class="join-item btn bg-base-100">«</button>
+            <input id='firstPagin' class="join-item btn btn-square" type="radio" name="options" aria-label="1" @click='changePage(1)' checked/>
+            <div v-for='num in pageNum'>
+              <input class="join-item btn btn-square" type="radio" name="options" :aria-label="num" @click='changePage(num)'/>
+            </div>
+            <button class="join-item btn bg-base-100">»</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+  <dialog id="studentResume" class="modal">
+    <div class="modal-box w-[1070px] max-w-[1200px]">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
+      <div class="mockup-window border bg-base-300">
+        <div class='bg-base-200'>
+          <h3 class="font-bold text-2xl ml-[30px] mt-[30px]">学生简历信息</h3>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <div class='flex items-center'>
+              <h3>姓名：</h3>
+              <span>{{studentResume.name}}</span>
+              <div class="divider divider-horizontal ml-[30px]"></div>
+            </div>
+            <div class='flex items-center text-xl ml-[15px]'>
+              <h3>性别：</h3>
+              <span>{{studentResume.sex}}</span>
+              <div class="divider divider-horizontal ml-[30px]"></div>
+            </div>
+            <div class='flex items-center text-xl ml-[15px]'>
+              <h3>年龄：</h3>
+              <span>{{studentResume.age}}</span>
+              <div class="divider divider-horizontal ml-[30px]"></div>
+            </div>
+            <div class='flex items-center text-xl ml-[15px]'>
+              <h3>学历：</h3>
+              <span>{{studentResume.education}}</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <h3>求职意向岗位：</h3><span>{{studentResume.job_intention}}</span>
+          </div>
+          <div class="divider"></div>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <h3>能力特长：</h3>
+            <div class='border border-black w-[350px] h-[300px]'>
+              <div class='m-[10px]'>
+                <span>&nbsp;&nbsp;{{studentResume.ability}}</span>
+              </div>
+            </div>
+            <!--            <div class="divider divider-horizontal"></div>-->
+            <h3 class='ml-[30px]'>所获荣誉：</h3>
+            <div class='border border-black w-[350px] h-[300px]'>
+              <div class='m-[10px]'>
+                <span>&nbsp;&nbsp;{{studentResume.honor}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <h3>工作经历：</h3>
+            <div class='border border-black w-[350px] h-[400px]'>
+              <div class='m-[10px]'>
+                <span>&nbsp;&nbsp;{{studentResume.work_experience}}</span>
+              </div>
+            </div>
+            <!--            <div class="divider divider-horizontal"></div>-->
+            <h3 class='ml-[30px]'>自我评价：</h3>
+            <div class='border border-black w-[350px] h-[400px]'>
+              <div class='m-[10px]'>
+                <span>&nbsp;&nbsp;{{studentResume.self_evaluation}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <h3>手机号：</h3><span>{{studentResume.phone}}</span>
+            <div class="divider divider-horizontal"></div>
+            <h3 class=''>住址：</h3><span>{{studentResume.address}}</span>
+          </div>
+          <div class="divider"></div>
+          <div class='flex mt-[10px] ml-[30px] text-xl'>
+            <h3>邮箱地址：</h3><span>{{studentResume.email}}</span>
+            <div class="divider divider-horizontal"></div>
+            <h3>身份证号码：</h3><span>{{studentResume.id_no}}</span>
+          </div>
+          <div class="divider"></div>
+        </div>
+      </div>
+    </div>
+  </dialog>
 </div>
 </template>
 
 <script setup lang='ts'>
 import router from '@/router';
-import { ref,onMounted,watch } from "vue";
+import { ref,onMounted,watch,computed } from "vue";
 import { useMainStore } from '@/stores';
-import { jobRequireMatchApi } from "@/apis";
+import { jobRequireMatchApi,checkResumeApi,applyCheckResumeApi } from "@/apis";
 import { useRequest } from 'vue-hooks-plus';
 import { ElNotification } from 'element-plus'
 
@@ -78,12 +186,56 @@ const params = ref({
   education: "",
   ability: "",
   address: "",
+  salary: -1,
+  page_num: 1,
+  page_size: 8,
 });
+const salary = ref<string>("");
+params.value.salary = computed(()=>{
+  return Number(salary.value);
+})
 const studentsList = ref([]);
+const studentResume = ref<object>({});
+const pageInfo = ref({
+  page_total_num: 1,
+  student_num: 1,
+})
+const pageNum = ref([]);
 
-const { run } = useRequest(()=>jobRequireMatchApi(params,loginStore.token),{
+const changePage = (pageNum) => {
+  params.value.page_num = pageNum;
+  run();
+}
+
+const { run } = useRequest(()=>jobRequireMatchApi(params.value,loginStore.token),{
   onSuccess(res){
-    console.log(res);
+    // console.log(res);
+    if(res.code === 200){
+      pageInfo.value.page_total_num = res.data.page_total_num;
+      pageInfo.value.student_num = res.data.student_num;
+      studentsList.value = res.data.students;
+      for(let i=2;i<=pageInfo.value.page_total_num;i++){
+        pageNum.value.push(i);
+      }
+      for(let i=0;i<studentsList.value.length;i++){
+        if(studentsList.value[i].open_public === 2){
+          studentsList.value[i].open_public = "不开放";
+        }else{
+          studentsList.value[i].open_public = "开放";
+        }
+        if(studentsList.value[i].sex === 1){
+          studentsList.value[i].sex = "男";
+        }else if(studentsList.value[i].sex === 2){
+          studentsList.value[i].sex = "女";
+        }
+      }
+    }else{
+      ElNotification({
+        title: 'Warning',
+        message: res.msg,
+        type: 'warning',
+      })
+    }
   },
   onError(err){
     ElNotification({
@@ -109,5 +261,63 @@ const clear = () => {
   params.value.education = "";
   params.value.ability = "";
   params.value.address = "";
+  salary.value = "";
+}
+
+const checkResume = (student_id:number) => {
+  useRequest(()=>checkResumeApi(student_id,loginStore.token),{
+    onSuccess(res){
+      console.log(res.data);
+      if(res.code === 200){
+        Object.assign(studentResume.value,res.data);
+        // console.log(studentResume.value)
+        if(studentResume.value.sex === 1){
+          studentResume.value.sex = "男";
+        }else{
+          studentResume.value.sex = "女";
+        }
+      }else{
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning',
+        })
+      }
+    },
+    onError(err){
+      ElNotification({
+        title: 'Error',
+        message: err,
+        type: 'error',
+      })
+    }
+  });
+}
+
+const applyCheck = (student_id:number) => {
+  useRequest(()=>applyCheckResumeApi(student_id,loginStore.token),{
+    onSuccess(res){
+      if(res.code === 200){
+        ElNotification({
+          title: 'Success',
+          message: '申请成功，请在"查看申请的简历"页面查看状态',
+          type: 'success',
+        })
+      }else{
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning',
+        })
+      }
+    },
+    onError(err){
+      ElNotification({
+        title: 'Error',
+        message: err,
+        type: 'error',
+      })
+    }
+  })
 }
 </script>

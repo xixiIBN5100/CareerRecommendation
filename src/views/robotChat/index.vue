@@ -3,6 +3,15 @@
   <div class='mt-[20px]'>
     <div class="card w-[1040px] bg-base-100 shadow-xl">
       <div class="card-body">
+        <div class="dropdown dropdown-right mt-[-25px]">
+          <div class='float-right'>
+            <div tabindex="0" role="button" class="btn btn-ghost m-1"><el-icon size='25' class='float-right'><MoreFilled /></el-icon></div>
+            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-[200px] text-lg">
+              <li><a onclick="clearDia.showModal()">清空消息记录</a></li>
+              <li><a>查找聊天记录</a></li>
+            </ul>
+          </div>
+        </div>
         <div id='msgBox' class="px-4 py-16 w-[1000px] h-[650px] overflow-auto">
           <div v-for='msg in chatMsg'>
             <div v-if='msg.user_name === loginStore.userName' class="chat chat-start">
@@ -40,17 +49,32 @@
       </div>
     </div>
   </div>
+  <!-- Open the modal using ID.showModal() method -->
+  <dialog id="clearDia" class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">警告</h3>
+      <p class="py-4 text-base">聊天消息一经删除无法复原</p>
+      <p class="py-4">您确定要删除吗？</p>
+      <button class="btn btn-sm btn-active btn-accent" @click='clearMsg' onclick="clearDia.close()">确认</button>
+      <button class="btn btn-sm btn-warning ml-[15px]" onclick="clearDia.close()">取消</button>
+    </div>
+<!--    <form method="dialog" class="modal-backdrop">-->
+<!--      <button>close</button>-->
+<!--    </form>-->
+  </dialog>
 </div>
 </template>
 
 <script setup lang='ts'>
 import { useMainStore } from '@/stores';
 import { onMounted,ref,nextTick } from "vue";
+import { useRequest } from "vue-hooks-plus";
+import { clearMsgApi } from "@/apis";
+import { ElNotification } from 'element-plus'
 
 const loginStore = useMainStore().useLoginStore();
 const sendMsg = ref("");
-const chatMsg = ref();
-chatMsg.value = [];
+const chatMsg = ref([]);
 
 const url = "wss://phlin.top/api/ws/" + loginStore.userName;
 let ws = new WebSocket(url);
@@ -100,5 +124,33 @@ const keyDown = (e: any) => {
   if(e.keyCode == 13){
     send();
   }
+}
+
+const clearMsg = () => {
+  useRequest(()=>clearMsgApi(loginStore.token),{
+    onSuccess(res){
+      if(res.code === 200){
+        ElNotification({
+          title: 'Success',
+          message: "清除成功",
+          type: 'success',
+        })
+      }else{
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning',
+        })
+      }
+    },
+    onError(err){
+      ElNotification({
+        title: 'Error',
+        message: err,
+        type: 'error',
+      })
+    }
+  })
+  chatMsg.value = [];
 }
 </script>

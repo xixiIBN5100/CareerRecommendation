@@ -7,7 +7,7 @@ interface params{
 }
 
 const jobRequireMatchApi = async (params:params,token:string) => {
-  return request("/api/enterprise/requirements",{
+  return request("/api/enterprise/requirement",{
     method: "get",
     headers: {"Authorization": "Bearer " + token},
     params: params,

@@ -45,17 +45,17 @@
               <!-- head -->
               <thead>
               <tr class='text-lg'>
-                <th></th>
                 <th>学生姓名</th>
                 <th>学历</th>
+                <th>申请时间</th>
                 <th>状态</th>
               </tr>
               </thead>
               <tbody class='text-base'>
               <tr class='hover' v-for='student in studentsList'>
-                <th>{{ student.student_id }}</th>
                 <td>{{ student.name }}</td>
                 <td>{{ student.education }}</td>
+                <td>{{ student.post_time }}</td>
                 <td>{{ student.status}}</td>
                 <td><button class="btn btn-outline" @click='checkResume(student.student_id)' onclick="studentResume.showModal()" :disabled='student.status==="待处理" || student.status==="拒绝"'>查看简历信息</button></td>
               </tr>
@@ -64,10 +64,12 @@
           </div>
           <div class='flex justify-center mt-[5px]'>
             <div class="join">
+              <button class="join-item btn bg-base-100">«</button>
               <input id='firstPagin' class="join-item btn btn-square" type="radio" name="options" aria-label="1" @click='changePage(1)' checked/>
               <div v-for='num in pageNum'>
                 <input class="join-item btn btn-square" type="radio" name="options" :aria-label="num" @click='changePage(num)'/>
               </div>
+              <button class="join-item btn bg-base-100">»</button>
             </div>
           </div>
         </div>
@@ -184,6 +186,11 @@ const pageNum = ref([]);
 const studentsList = ref();
 const studentResume = ref<object>({});
 
+const changePage = (pageNum) => {
+  params.value.page_num = pageNum;
+  getInfo();
+}
+
 const getInfo = () => {
   useRequest(()=>getApplyListApi(params.value,loginStore.token),{
     onSuccess(res){
@@ -252,7 +259,12 @@ const checkResume = (student_id:number) => {
       console.log(res.data);
       if(res.code === 200){
         Object.assign(studentResume.value,res.data);
-        console.log(studentResume.value)
+        // console.log(studentResume.value)
+        if(studentResume.value.sex === 1){
+          studentResume.value.sex = "男";
+        }else{
+          studentResume.value.sex = "女";
+        }
       }else{
         ElNotification({
           title: 'Warning',
@@ -269,11 +281,6 @@ const checkResume = (student_id:number) => {
       })
     }
   })
-}
-
-const changePage = (num:number) => {
-  params.value.page_num = num;
-  getInfo();
 }
 </script>
 
