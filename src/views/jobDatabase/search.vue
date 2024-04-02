@@ -108,7 +108,6 @@
       <button class="join-item btn" @click="() => switchPageNum(1)">»</button>
     </div>
   </div>
-  <info :job="modalJobData"></info>
 </template>
 
 <script setup lang="ts">
@@ -146,7 +145,17 @@ const modalJobData = ref({
 const checkDetail = (job: any) => {
   modalJobData.value = job;
   console.log(modalJobData.value.id)
-
+  useRequest(() => getCommentAPI({
+    job_id: modalJobData.value.id,
+    page_num: pageNum.value,
+    page_size: 4
+  },loginStore.token as string),{
+    onSuccess(res: any) {
+      if(res.code === 200) {
+        commentList.value = res.data.data
+      }
+    }
+  })
   showModal('job_detail_modal');
 }
 
