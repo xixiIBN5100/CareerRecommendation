@@ -28,6 +28,8 @@ import getHotAddressAPI from "@/apis/Server/hot/getHotAddress";
 import jobRequireMatchApi from "@/apis/Server/enterprise/jobRequireMatchApi";
 import getCommentAPI from "@/apis/Server/jobDatabase/getComment";
 import setCommentAPI from "@/apis/Server/jobDatabase/setComment";
+import getOldEmailConfirmAPI from "./Server/account/getOldEmailConfirmAPI";
+import getNewEmailConfirmAPI from "./Server/account/getNewEmailConfirmAPI";
 export {
   passwordLoginAPI,
   emailLoginAPI,
@@ -58,5 +60,7 @@ export {
   getHotAddressAPI,
   jobRequireMatchApi,
   getCommentAPI,
-  setCommentAPI
+  setCommentAPI,
+  getOldEmailConfirmAPI,
+  getNewEmailConfirmAPI,
 };

@@ -105,6 +105,7 @@ const loginPassword = () => {
         loginStore.setUserName(info.value.user_name);
         loginStore.setAvatarUrl(res.data.avatar);
         loginStore.setUserType(res.data.type);
+        loginStore.setUserEmail(res.data.email);
         cleanForm()
         if(res.data.type === 1) {
           router.push('/home')
@@ -134,6 +135,7 @@ const loginEmail = () => {
         loginStore.setToken(res.data.token);
         loginStore.setUserName(info.value.user_name);
         loginStore.setUserType(res.data.type);
+        loginStore.setUserEmail(res.data.email);
         if(res.data.type === 1) {
           router.push('/home')
         }else {

@@ -51,6 +51,9 @@
               <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => showModal('avatar_upload_modal')">
                 <div class="text text-primary"><el-icon><PictureRounded /></el-icon></div>头像修改
               </div>
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => jumpPage('/resetEmail')">
+                <div class="text text-amber-500"><el-icon><Refresh /></el-icon></div>重置邮箱
+              </div>
             </div>
             <div class="divider mt-15"></div>
             <div class="text-2xl font-bold">
