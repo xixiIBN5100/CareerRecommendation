@@ -28,6 +28,8 @@ import getHotAddressAPI from "@/apis/Server/hot/getHotAddress";
 import jobRequireMatchApi from "@/apis/Server/enterprise/jobRequireMatchApi";
 import getCommentAPI from "@/apis/Server/jobDatabase/getComment";
 import setCommentAPI from "@/apis/Server/jobDatabase/setComment";
+import clearMsgApi from '@/apis/Server/robot/clearMsgApi'
+
 export {
   passwordLoginAPI,
   emailLoginAPI,
@@ -58,5 +60,6 @@ export {
   getHotAddressAPI,
   jobRequireMatchApi,
   getCommentAPI,
-  setCommentAPI
+  setCommentAPI,
+  clearMsgApi,
 };
