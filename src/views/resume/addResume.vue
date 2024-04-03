@@ -74,16 +74,16 @@
   </div>
   <div v-if="uploadFile === 1">
     <label>
-      <input type="file" class="block text-sm text-slate-500 file:mr-15 file:btn file:btn-primary">
+      <input type="file" class="block text-sm text-slate-500 file:mr-15 file:btn file:btn-primary" @change="fileChange">
     </label>
-    <div :class="['btn','btn-primary', 'w-full', 'mt-40', false ? 'btn-disabled' : undefined]" @click="addResumeFile">确认提交</div>
+    <div :class="['btn btn-primary w-full mt-40', resumeUploaded ? undefined : 'btn-disabled']" @click="addResumeFile">确认提交</div>
   </div>`
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
-import { addResumeAPI } from '@/apis';
+import { addResumeAPI, addResumeDocAPI } from '@/apis';
 import { useMainStore } from '@/stores';
 import { ElNotification } from 'element-plus';
 
@@ -92,6 +92,8 @@ const emit = defineEmits(["getPageId"]);
 const uploadFile = ref(0);
 const age = ref("");
 const salary_intention = ref("");
+const resumeFile = ref();
+const resumeUploaded = ref(false);
 const resumeInfo = ref({
   name: "",
   sex: 1,
@@ -114,6 +116,23 @@ const resumeInfo = ref({
 const getPageId = (pageId: number) => {
   emit("getPageId", pageId);
 };
+
+const fileChange = (event: any) => {
+  resumeFile.value = event.target.files[0];
+  resumeUploaded.value = true;
+  if(resumeFile.value === null || resumeFile.value === undefined
+  || resumeFile.value.type !== "application/msword"
+  && resumeFile.value.type !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  && resumeFile.value.type !== "application/pdf"){
+    resumeFile.value = null;
+    resumeUploaded.value = false;
+    ElNotification({
+      title: 'Error',
+      message: '文件格式错误，请选择正确的文件格式',
+      type: 'error',
+    });
+  }
+}
 
 const addResume = () => {
   resumeInfo.value.age = parseInt(age.value, 10);
@@ -150,8 +169,18 @@ const unableSub = computed(() => {
 })
 
 const addResumeFile = () => {
-  ElNotification("上传了文件");
-  //文件api待完成
+  const formData = new FormData();
+  formData.append("file", resumeFile.value);
+  useRequest(() => addResumeDocAPI(formData, loginStore.token as string), {
+    onSuccess(res: any) {
+      console.log(res);
+      if(res.code === 200) {
+        resumeFile.value = null;
+        resumeUploaded.value = false;
+        ElNotification("上传了文件");
+      }
+    }
+  })
 }
 
 </script>
