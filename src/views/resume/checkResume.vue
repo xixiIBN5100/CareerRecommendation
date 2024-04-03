@@ -23,9 +23,9 @@
           <div class="btn btn-sm btn-neutral" v-if="!res.default" @click="() => setDefaultResume(res.resume_id)">设为默认简历</div>
           <div class="btn btn-sm btn-neutral" v-if="res.default" @click="() => setPublicResume(res.open_public)">{{ res.open_public === 1 ? "取消公开" : "公开简历" }}</div>
         </td>
-        <td class="flex flex-row gap-4">
-          <div v-if="res.default" class="leading-9 mr-8">默认简历 √</div> <!-- Display "默认简历" status -->
-          <div v-if="res.default" class="rounded bg-base-100 p-6 leading-6">{{ res.open_public === 1 ? "公开" : "非公开" }}</div> <!-- Display "公开状况" status -->
+        <td>
+          <div v-if="res.default" class="leading-9 mr-8 inline-block">默认简历 √</div> <!-- Display "默认简历" status -->
+          <div v-if="res.default" class="rounded bg-base-100 p-6 leading-6 inline-block">{{ res.open_public === 1 ? "公开" : "非公开" }}</div> <!-- Display "公开状况" status -->
         </td>
         <dialog id="delete_modal" class="modal">
           <div class="modal-box">

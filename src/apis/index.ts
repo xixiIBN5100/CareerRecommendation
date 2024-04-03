@@ -31,6 +31,7 @@ import setCommentAPI from "@/apis/Server/jobDatabase/setComment";
 import getOldEmailConfirmAPI from "./Server/account/getOldEmailConfirmAPI";
 import getNewEmailConfirmAPI from "./Server/account/getNewEmailConfirmAPI";
 import clearMsgApi from "@/apis/Server/robot/clearMsgApi";
+import addResumeDocAPI from "./Server/resume/addResumeDocAPI";
 
 export {
   passwordLoginAPI,
@@ -66,4 +67,5 @@ export {
   getOldEmailConfirmAPI,
   getNewEmailConfirmAPI,
   clearMsgApi,
+  addResumeDocAPI,
 };
