@@ -118,6 +118,7 @@ import {checkJobDatabaseAPI, getCommentAPI, setCommentAPI} from '@/apis';
 import Index from "@/views/login/index.vue";
 import {ElNotification} from "element-plus";
 import Info from "@/views/jobDatabase/info.vue";
+import router from "@/router";
 
 const loginStore = useMainStore().useLoginStore();
 const pageNum = ref(1);
@@ -144,19 +145,10 @@ const modalJobData = ref({
 
 const checkDetail = (job: any) => {
   modalJobData.value = job;
+  const id = modalJobData.value.id.toString()
+  localStorage.setItem( 'id' , id )
   console.log(modalJobData.value.id)
-  useRequest(() => getCommentAPI({
-    job_id: modalJobData.value.id,
-    page_num: pageNum.value,
-    page_size: 4
-  },loginStore.token as string),{
-    onSuccess(res: any) {
-      if(res.code === 200) {
-        commentList.value = res.data.data
-      }
-    }
-  })
-  showModal('job_detail_modal');
+  router.push('/info')
 }
 
 const checkJobDatabase = () => {

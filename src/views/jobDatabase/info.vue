@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-center gap-30 my-80">
-    <div class="bg-base-200 w-600 h-500 card p-30 shadow-lg ">
-      <div class="card-title">{{ modalJobData.title }}</div>
+  <div class="flex justify-center gap-30 my-80 items-center">
+    <div class="bg-base-200 w-600  card p-30 shadow-lg ">
+      <div class="card-title text-2xl">{{ modalJobData.title }}</div>
       <div class="flex flex-col gap-10 mt-15">
         <div class="m-3">
           <span class="font-bold text-xl">公司名称:</span>
@@ -33,44 +33,72 @@
       </div>
     </div>
     <div class="divider divider-horizontal "></div>
-    <div class="bg-base-200 w-500  card p-30 shadow-lg ">
-      <div class="card-title">评论</div>
-      <ul class="menu bg-base-200  rounded-box">
-        <div v-for="item in commentList">
-          <div class="divider my-3"></div>
-          <li><a><span class="text-xl">{{item.user_name}}</span>: &ensp;{{item.content}}</a></li>
-        </div>
-      </ul>
-      <div class="divider my-6 "></div>
-      <div class="flex justify-between mt-10">
-        <input class="input input-bordered w-9/12 shadow-lg" v-model="comment"/>
-        <button class="btn shadow-lg bg-base-100" @click="setComment" ><span>发布评论</span></button>
+    <div class="bg-base-200 w-500 h-500 card p-30 shadow-lg flex flex-col">
+    <div class="card-title">评论</div>
+    <ul class="menu bg-base-200  rounded-box">
+      <div v-for="item in commentList" :key="item.id">
+        <div class="divider my-3"></div>
+        <li><a><span class="text-xl">{{item.user_name}}</span>: &ensp;{{item.content}}</a></li>
       </div>
+      <div class="divider my-6 "></div>
+    </ul>
+      <div class="flex justify-center mt-auto" >
+        <div class="join bg-base-300">
+          <button class="join-item btn" @click="() => switchPageNum(-1)">«</button>
+          <button class="join-item btn">
+            page
+            <input class="input input-sm input-ghost w-100" v-model="pageNum">
+          </button>
+          <button class="join-item btn" @click="() => switchPageNum(1)">»</button>
+        </div>
+      </div>
+    <div class="flex justify-between mt-20">
+      <input class="input input-bordered w-9/12 shadow-lg" v-model="comment"/>
+      <button class="btn shadow-lg bg-base-100" @click="setComment" ><span>发布评论</span></button>
     </div>
+  </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {useRequest} from "vue-hooks-plus";
-import {getCommentAPI, setCommentAPI} from "@/apis";
+import {getCommentAPI, getInfoAPI, setCommentAPI} from "@/apis";
 import {ElNotification} from "element-plus";
 import {useMainStore} from "@/stores";
 const loginStore = useMainStore().useLoginStore();
 const comment = ref()
 const pageNum = ref(1)
+const id = parseInt(localStorage.getItem('id'));
+const totalPageNum = ref(1);
+
 const modalJobData = ref({
-  id: 1,
-  title: "a",
-  company: "aa",
-  salary: "aaa",
-  education: "aaaa",
-  hiring_manager: "aaaaa",
-  address: "aaaaaaa",
-  description: "xx",
-  link: "sss",
+  id: 0,
+  title: "",
+  company: "",
+  salary: "",
+  education: "",
+  hiring_manager: "",
+  address: "",
+  description: "",
+  link: "",
 })
-const commentList = ref();
+const commentList = ref([]);
+const getInfo = () => {
+  useRequest(() => getInfoAPI({
+    id: id
+  }, loginStore.token as string),{
+    onSuccess(res: any) {
+      if(res.code === 200 && res.msg === 'OK') {
+        modalJobData.value = res.data.data
+        getComment()
+      }
+    }
+  })
+}
+onMounted(() => {
+  getInfo()
+})
 const setComment = () => {
   useRequest(() => setCommentAPI({
     job_id: modalJobData.value.id,
@@ -81,18 +109,7 @@ const setComment = () => {
       if(res.code === 200 && res.msg === 'OK') {
         ElNotification.success("评论成功")
         comment.value = ''
-        useRequest(() => getCommentAPI({
-          job_id: modalJobData.value.id,
-          page_num: pageNum.value,
-          page_size: 4
-        },loginStore.token as string),{
-          onSuccess(res: any) {
-            if(res.code === 200) {
-              commentList.value = res.data
-              console.log(commentList.value)
-            }
-          }
-        })
+        getComment()
       }else{
         ElNotification.error(res.msg);
       }
@@ -111,14 +128,21 @@ const getComment = () => {
     onSuccess(res: any) {
       if(res.code === 200) {
         commentList.value = res.data.data
+        totalPageNum.value = res.data.total_page_num;
       }
     }
   })
 }
 
+const switchPageNum = (num: number) => {
+  if(typeof pageNum.value === 'string' )
+    pageNum.value = parseInt(pageNum.value, 10);
+  if(0 < pageNum.value + num && pageNum.value + num <= totalPageNum.value) {
+    pageNum.value += num;
+  }
+  getComment()
+}
 </script>
-
-
 
 <style scoped>
 

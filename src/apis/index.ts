@@ -32,7 +32,7 @@ import getOldEmailConfirmAPI from "./Server/account/getOldEmailConfirmAPI";
 import getNewEmailConfirmAPI from "./Server/account/getNewEmailConfirmAPI";
 import clearMsgApi from "@/apis/Server/robot/clearMsgApi";
 import addResumeDocAPI from "./Server/resume/addResumeDocAPI";
-
+import getInfoAPI from "@/apis/Server/jobDatabase/getInfo";
 export {
   passwordLoginAPI,
   emailLoginAPI,
@@ -68,4 +68,5 @@ export {
   getNewEmailConfirmAPI,
   clearMsgApi,
   addResumeDocAPI,
+  getInfoAPI,
 };
