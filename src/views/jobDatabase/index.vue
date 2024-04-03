@@ -12,13 +12,14 @@
           <a :class="pageId === 2 ? 'active' : undefined" @click="() => switchPage(2)">知识图谱</a>
         </li>
         <li>
-          <a :class="pageId === 3 ? 'active' : undefined" @click="() => switchPage(3)">Bot</a>
+          <a :class="pageId === 3 ? 'active' : undefined" @click="() => switchPage(3)">岗位能力评估</a>
         </li>
       </ul>
     </div>
     <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box">
       <search v-if="pageId === 1"></search>
       <knowledge-map v-if="pageId === 2"></knowledge-map>
+      <capability v-if="pageId === 3"></capability>
     </div>
   </div>
 </template>
@@ -27,6 +28,7 @@
 import { ref } from 'vue';
 import Search from "./search.vue";
 import KnowledgeMap from "./knowledgeMap.vue";
+import Capability from './capability.vue';
 
 const pageId = ref(1);
 
