@@ -8,27 +8,21 @@
             <div tabindex="0" role="button" class="btn btn-ghost m-1"><el-icon size='25' class='float-right'><MoreFilled /></el-icon></div>
             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-[200px] text-lg">
               <li><a onclick="clearDia.showModal()">清空消息记录</a></li>
-              <li><a>查找聊天记录</a></li>
+              <li><a onclick='findMsg.showModal()'>查找聊天记录</a></li>
             </ul>
           </div>
         </div>
         <div id='msgBox' class="px-4 py-16 w-[1000px] h-[650px] overflow-auto">
           <div v-for='msg in chatMsg'>
-            <div v-if='msg.user_name === loginStore.userName' class="chat chat-start">
-              <div class="chat-image avatar">
-                <div class="w-[50px] rounded-full">
-                  <img alt="Tailwind CSS chat bubble component" :src="loginStore.avatarUrl" />
+            <div :class='isDaohang[chatMsg.indexOf(msg)] ? "transition duration-2000 bg-base-300" : "bg-base-100"'>
+              <div class="chat" :class='msg.user_name===loginStore.userName ? "chat-start" : "chat-end"' :id='chatMsg.indexOf(msg)'>
+                <div class="chat-image avatar">
+                  <div class="w-[50px] rounded-full">
+                    <img alt="Tailwind CSS chat bubble component" :src='msg.user_name===loginStore.userName ? loginStore.avatarUrl : "http://phlin.top/static/d4948cef-a92a-435f-a0fd-37ad638d16b2.jpg"' />
+                  </div>
                 </div>
+                <div class="chat-bubble max-w-[500px]">{{msg.content}}</div>
               </div>
-              <div class="chat-bubble max-w-[500px]">{{msg.content}}</div>
-            </div>
-            <div v-else class="chat chat-end">
-              <div class="chat-image avatar">
-                <div class="w-[50px] rounded-full">
-                  <img alt="Tailwind CSS chat bubble component" src="http://phlin.top/static/d4948cef-a92a-435f-a0fd-37ad638d16b2.jpg" />
-                </div>
-              </div>
-              <div class="chat-bubble max-w-[500px]">{{msg.content}}</div>
             </div>
           </div>
           <div class='flex justify-center mt-[40px]' v-show='isLoadingMsg === 1'>
@@ -58,23 +52,53 @@
       <button class="btn btn-sm btn-active btn-accent" @click='clearMsg' onclick="clearDia.close()">确认</button>
       <button class="btn btn-sm btn-warning ml-[15px]" onclick="clearDia.close()">取消</button>
     </div>
-<!--    <form method="dialog" class="modal-backdrop">-->
-<!--      <button>close</button>-->
-<!--    </form>-->
+  </dialog>
+  <dialog id="findMsg" class="modal">
+    <div class="modal-box w-[500px]">
+      <label class="input input-bordered flex items-center w-[450px]">
+        <el-icon><Search /></el-icon>
+        <input type="text" class="grow ml-[5px]" placeholder="搜索" v-model='msgFind' @keydown="keyDown2" />
+      </label>
+      <button class="btn btn-sm mt-[20px] relative left-[400px]" @click='findMsg'>查找</button>
+      <div class="divider"></div>
+      <div v-for='msg in findedMsg'>
+        <div class='flex hover:bg-base-300 cursor-pointer' @click='daohang(chatMsg.indexOf(msg))' onclick='findMsg.close()'>
+          <div class="avatar">
+            <div class="w-[50px] rounded-full">
+              <img :src='msg.user_name==="bot" ? "http://phlin.top/static/d4948cef-a92a-435f-a0fd-37ad638d16b2.jpg" : loginStore.avatarUrl' />
+            </div>
+          </div>
+          <div class='ml-[15px] overflow-y-auto max-h-[100px]'>{{msg.content}}</div>
+        </div>
+        <div class="divider"></div>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
   </dialog>
 </div>
 </template>
 
 <script setup lang='ts'>
 import { useMainStore } from '@/stores';
-import { onMounted,ref,nextTick } from "vue";
+import { onMounted,ref,nextTick,watch } from "vue";
 import { useRequest } from "vue-hooks-plus";
 import { clearMsgApi } from "@/apis";
 import { ElNotification } from 'element-plus'
 
 const loginStore = useMainStore().useLoginStore();
-const sendMsg = ref("");
+const sendMsg = ref<string>("");
 const chatMsg = ref([]);
+const msgFind = ref<string>("");
+const findedMsg = ref([]);
+const isDaohang = ref([]);
+
+watch(chatMsg.value,()=>{
+  for(let i=0;i<chatMsg.value.length;i++){
+    isDaohang.value[i] = false;
+  }
+})
 
 const url = "wss://phlin.top/api/ws/" + loginStore.userName;
 let ws = new WebSocket(url);
@@ -120,6 +144,14 @@ const send = () => {
   isLoadingMsg.value = 0;
 }
 
+ws.onerror = function(error) {
+  ElNotification({
+    title: 'Error',
+    message: error,
+    type: 'error',
+  })
+};
+
 const keyDown = (e: any) => {
   if(e.keyCode == 13){
     send();
@@ -152,5 +184,34 @@ const clearMsg = () => {
     }
   })
   chatMsg.value = [];
+}
+
+const findMsg = () => {
+  // console.log(msgFind.value);
+  findedMsg.value = [];
+  for(let i=0;i<chatMsg.value.length;i++){
+    if(chatMsg.value[i].content.includes(msgFind.value)){
+      // console.log(chatMsg.value[i].content);
+      findedMsg.value.push(chatMsg.value[i]);
+    }
+  }
+  msgFind.value = "";
+}
+
+const daohang = (msgId:string) => {
+  // console.log(msgId);
+  findedMsg.value = [];
+  document.getElementById(msgId).scrollIntoView();
+  isDaohang.value[msgId] = true;
+  setTimeout(()=>{
+    isDaohang.value[msgId] = false;
+  },1000);
+  findedMsg.value = [];
+}
+
+const keyDown2 = (e) => {
+  if (!e.shiftKey && e.keyCode == 13) {
+   findMsg();
+  }
 }
 </script>
