@@ -31,6 +31,7 @@
       <div class="m-3 ">
         <a class="btn-link font-bold mt-6" :href="modalJobData.link">详情链接</a>
       </div>
+      <div class="btn shadow-lg bg-base-100 mt-10" @click="router.push('/jobDatabase')">返回岗位库</div>
     </div>
     <div class="divider divider-horizontal "></div>
     <div class="bg-base-200 w-500 h-500 card p-30 shadow-lg flex flex-col">
@@ -53,7 +54,7 @@
         </div>
       </div>
     <div class="flex justify-between mt-20">
-      <input class="input input-bordered w-9/12 shadow-lg" v-model="comment"/>
+      <input class="input input-bordered w-9/12 shadow-lg" v-model="comment" @keyup.enter="setComment"/>
       <button class="btn shadow-lg bg-base-100" @click="setComment" ><span>发布评论</span></button>
     </div>
   </div>
@@ -66,6 +67,7 @@ import {useRequest} from "vue-hooks-plus";
 import {getCommentAPI, getInfoAPI, setCommentAPI} from "@/apis";
 import {ElNotification} from "element-plus";
 import {useMainStore} from "@/stores";
+import router from "@/router";
 const loginStore = useMainStore().useLoginStore();
 const comment = ref()
 const pageNum = ref(1)
