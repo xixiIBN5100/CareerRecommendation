@@ -4,15 +4,15 @@
       <div class="text-5xl p-30 text-nowrap">
         岗位库
       </div>
-      <ul class="menu bg-base-200 rounded-box">
-        <li>
-          <a :class="pageId === 1 ? 'active' : undefined" @click="() => switchPage(1)">搜索</a>
+      <ul class="menu bg-base-200 rounded-box mt-20 p-15">
+        <li class="my-5">
+          <a :class="pageId === 1 ? 'active' : undefined" @click="() => switchPage(1)" >搜索岗位</a>
         </li>
-        <li>
+        <li class="my-5">
           <a :class="pageId === 2 ? 'active' : undefined" @click="() => switchPage(2)">知识图谱</a>
         </li>
-        <li>
-          <a :class="pageId === 3 ? 'active' : undefined" @click="() => switchPage(3)">岗位能力评估</a>
+        <li class="my-5">
+          <a :class="pageId === 3 ? 'active' : undefined" @click="() => switchPage(3)">能力评估</a>
         </li>
       </ul>
     </div>
