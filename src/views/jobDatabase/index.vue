@@ -16,7 +16,7 @@
         </li>
       </ul>
     </div>
-    <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box">
+    <div class="bg-base-200 shadow-lg basis-3/4 mx-50 my-20 p-30 rounded-box" style="width: 80%;">
       <search v-if="pageId === 1"></search>
       <knowledge-map v-if="pageId === 2"></knowledge-map>
       <capability v-if="pageId === 3"></capability>

@@ -35,6 +35,7 @@ import addResumeDocAPI from "./Server/resume/addResumeDocAPI";
 import getInfoAPI from "@/apis/Server/jobDatabase/getInfo";
 import getIntentionEvaluate from "./Server/jobDatabase/getIntentionEvaluate";
 import getAbilityEvaluate from "./Server/jobDatabase/getAbilityEvaluate";
+import setRateValueAPI from "./Server/jobDatabase/setRateValueAPI";
 export {
   passwordLoginAPI,
   emailLoginAPI,
@@ -73,4 +74,5 @@ export {
   getInfoAPI,
   getIntentionEvaluate,
   getAbilityEvaluate,
+  setRateValueAPI,
 };
