@@ -34,9 +34,10 @@
     <div class="text-xl mb-5">
       个人能力评估
     </div>
+    <div class="m-5 text-sm">以下是根据个人能力推荐的职位</div>
     <div class="carousel w-full shadow bg-base-100 rounded-lg">
       <div v-for="(job, index) in abilityData" :id="'item'+index" class="carousel-item w-full">
-        <div class="m-30 flex flex-col gap-6">
+        <div class="mt-20 mx-20">
           <div class="text-xl text-info">{{ job.job_title }}</div>
           <div class="flex gap-10">
             <div>
@@ -52,8 +53,10 @@
               <div>{{ job.job_address }}</div>
             </div>
           </div>
-          <div>
-            <a class="link-info" :href="job.job_link">详情链接</a>
+          <div><a class="link-info" :href="job.job_link">详情链接</a></div>
+          <div class="mt-6 flex gap-4 items-center">
+            评价职位匹配度
+            <el-rate @click="() => setRateValue(job.job_id, rateValue[index])" v-model="rateValue[index]" allow-half :max="5" />
           </div>
         </div>
       </div>
@@ -69,8 +72,9 @@
 <script setup lang="ts">
 import { useRequest } from 'vue-hooks-plus';
 import { useMainStore } from '@/stores';
-import { getAbilityEvaluate, getIntentionEvaluate, getResumeInfoAPI } from '@/apis';
+import { getAbilityEvaluate, getIntentionEvaluate, getResumeInfoAPI, setRateValueAPI } from '@/apis';
 import { ref } from 'vue';
+import { ElNotification } from 'element-plus';
 
 
 const loginStore = useMainStore().useLoginStore();
@@ -78,6 +82,7 @@ const abilityData = ref();
 const intentionData = ref();
 const jobRecentId = ref(0);
 const myAmid = ref();
+const rateValue = ref([0,0,0,0,0]);
 
 useRequest(() => getResumeInfoAPI({resume_id:-1}, loginStore.token as string), {
   onSuccess(res: any) {
@@ -104,5 +109,18 @@ useRequest(() => getIntentionEvaluate(loginStore.token as string), {
   }
 })
 
+const setRateValue = (job_id: number, score: number) => {
+  useRequest(() => setRateValueAPI({
+    score: score*2,
+    job_id: job_id
+  }, loginStore.token as string), {
+    onSuccess(res: any) {
+      console.log(res);
+      if(res.code === 200) {
+        ElNotification("感谢反馈");
+      }
+    }
+  })
+}
 
 </script>
