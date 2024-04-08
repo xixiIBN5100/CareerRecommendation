@@ -2,7 +2,7 @@
   <div class="bg-base-200 shadow-lg mx-100 my-60 p-50 rounded-box hover:shadow-2xl hover:-translate-y-2 transform duration-500">
     <div class="relative mb-60">
       <span class="text-4xl">邮箱重置</span>
-      <ul class="steps absolute top-0 right-0 z-0 steps-vertical" style="width: 50%;">
+      <ul class="steps absolute top-0 right-0 z-0 steps-vertical">
         <li class="step step-primary">验证旧邮箱</li>
         <li class="step" :class="[step >= 2 ? 'step-primary' : undefined]">确认新邮箱</li>
         <li class="step" :class="[step >= 3 ? 'step-primary' : undefined]">完成</li>
