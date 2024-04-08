@@ -129,5 +129,4 @@ const confirmNewEmail = () => {
     }
   })
 }
-step.value = 1
 </script>
