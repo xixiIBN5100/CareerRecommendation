@@ -29,10 +29,11 @@
     <table class="table" v-else>
       <thead>
         <tr>
-          <th>岗位名称</th>
-          <th>公司名称</th>
-          <th>薪酬</th>
-          <th>最低学历要求</th>
+          <th style="width: 25%;">岗位名称</th>
+          <th style="width: 35%;">公司名称</th>
+          <th style="width: 15%;">薪酬</th>
+          <th style="width: 15%;">最低学历要求</th>
+          <th style="width: 10%;">操作</th>
         </tr>
       </thead>
       <tbody v-for="job in jobList">
