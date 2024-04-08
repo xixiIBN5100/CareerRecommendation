@@ -10,16 +10,22 @@
       </div>
       <div class="collapse-content flex flex-col gap-4">
         <div>
-          <span>公司名称</span> <input class="input input-primary input-sm float-right" v-model="company">
+          <span>公司名称</span> <input class="input input-primary input-sm float-right w-200" v-model="company">
         </div>
         <div>
-          <span>岗位名称</span> <input class="input input-primary input-sm float-right" v-model="title">
+          <span>岗位名称</span> <input class="input input-primary input-sm float-right w-200" v-model="title">
         </div>
         <div>
-          <span>最低学历要求</span> <input class="input input-primary input-sm float-right" v-model="education">
+          <span>学历要求{{ education }}</span>
+          <select class="select select-primary select-sm float-right w-200" v-model="education">
+            <option>大专</option>
+            <option>本科</option>
+            <option>硕士</option>
+            <option>博士</option>
+          </select>
         </div>
         <div>
-          <span>地址</span> <input class="input input-primary input-sm float-right" v-model="address">
+          <span>地址</span> <input class="input input-primary input-sm float-right w-200" v-model="address">
         </div>
       </div>
     </div>
