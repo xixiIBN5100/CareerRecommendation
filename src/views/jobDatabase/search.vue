@@ -25,9 +25,9 @@
           </select>
         </div>
         <div>
-          <span>地址</span>
-          <div 
-          class="rounded-md border border-primary float-right w-200 h-32 flex justify-center items-center cursor-pointer" 
+          <span>公司地址</span>
+          <div
+          class="rounded-md border border-primary float-right w-200 h-32 flex justify-center items-center cursor-pointer"
           @click="() => showModal('adress_modal')"
           >{{ address === "" ? '点击选择' : address }}</div>
         </div>
@@ -61,21 +61,22 @@
     </table>
   </div>
   <dialog id="adress_modal" class="modal">
-    <div class="modal-box p-20 bg-base-200">
-      <div class="flex flex-row h-400">
-        <div class="overflow-y-scroll w-170">
-          <div 
-          v-for="(prov, index) in areaList.index" 
+    <div class="modal-box p-30 bg-base-200">
+      <div class="flex flex-row h-400 justify-center gap-30">
+        <div class="overflow-y-scroll  bg-base-300 rounded-lg p-20 shadow-lg">
+          <div
+          v-for="(prov, index) in areaList.index"
           :class="['cursor-pointer', provId === index as unknown as string ? 'text-accent' : undefined]"
+          class="text-lg my-6"
           @click="() => selectProv(index)"
           >{{ prov }}</div>
         </div>
-        <div class="grid grid-cols-2">
+        <div class="flex flex-wrap w-200 justify-start gap-10 bg-base-300 overflow-y-scroll p-20 rounded-lg shadow-lg items-start">
           <div v-for="city in areaList[provId]" class="btn btn-ghost" @click="() => selectCity(city)">{{ city }}</div>
         </div>
       </div>
-      <div class="modal-action">
-        <button class="btn bg-base-100" @click="showModal('adress_modal', true)">关闭</button>
+      <div class="modal-action flex justify-center">
+        <button class="btn bg-base-100 w-10/12" @click="showModal('adress_modal', true)">关闭</button>
       </div>
     </div>
   </dialog>
