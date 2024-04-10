@@ -14,9 +14,9 @@ function draw() {
     const config = {
         containerId: "viz",
         neo4j: {
-            serverUrl: "http://121.43.236.83:7474/browser/",
+            serverUrl: "neo4j+s://82c8fcea.databases.neo4j.io",
             serverUser: "neo4j",
-            serverPassword: "12345678",
+            serverPassword: "j8UBJi9twhESJ4KZjHumYRXHcYC1NnfwZZu3ItDzw4Y",
         },
         // labels: {
         //     Character: {
@@ -33,11 +33,11 @@ function draw() {
         //         }
         //     }
         // },
-        relationships: {
-            INTERACTS: {
-                value: "weight"
-            }
-        },
+        // relationships: {
+        //     INTERACTS: {
+        //         value: "weight"
+        //     }
+        // },
         initialCypher: "MATCH (n)-[r:INTERACTS]->(m) RETURN *"
     };
 
