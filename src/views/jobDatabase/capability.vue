@@ -18,7 +18,7 @@
           <el-icon :size="50"><OfficeBuilding /></el-icon>
         </div>
         <div class="stat-title">系统建议</div>
-        <div class="stat-value text-secondary">{{ myAmid === "未填写" ? "-" : intentionData.advice }}</div>
+        <div class="stat-value text-secondary">{{ myAmid === "未填写" || intentionData.hasOwnProperty('advice') ? "-" : intentionData.advice }}</div>
         <div class="stat-desc">源于ai分析 仅供参考</div>
       </div>
       <div class="stat">
@@ -83,6 +83,7 @@ const intentionData = ref();
 const jobRecentId = ref(0);
 const myAmid = ref();
 const rateValue = ref([0,0,0,0,0]);
+intentionData.value = {};
 
 useRequest(() => getResumeInfoAPI({resume_id:-1}, loginStore.token as string), {
   onSuccess(res: any) {

@@ -65,8 +65,8 @@
       <div class="flex flex-row h-400 justify-center gap-30">
         <div class="overflow-y-scroll  bg-base-300 rounded-lg p-20 shadow-lg">
           <div
-          v-for="(prov, index) in areaList.index"
-          :class="['cursor-pointer', provId === index as unknown as string ? 'text-accent' : undefined]"
+          v-for="(prov, index) in areaList[areaList.length -1]"
+          :class="['cursor-pointer', provId === index ? 'text-accent' : undefined]"
           class="text-lg my-6"
           @click="() => selectProv(index)"
           >{{ prov }}</div>
@@ -109,14 +109,14 @@ const company = ref("");
 const title = ref("");
 const education = ref("");
 const address = ref("");
-const provId = ref("0");
+const provId = ref(0);
 
 const selectCity = (city: string) => {
   address.value = city;
   showModal('adress_modal', true);
 }
 
-const selectProv = (index: any) => {
+const selectProv = (index: number) => {
   provId.value = index;
 }
 
