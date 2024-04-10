@@ -40,7 +40,10 @@
     </div>
     <div class="divider divider-horizontal "></div>
     <div class="bg-base-200 w-500 h-500 card p-30 shadow-lg flex flex-col">
-    <div class="card-title">评论</div>
+    <div class='flex'>
+      <div class="card-title">评论</div>
+      <div>{{ modalJobData.comment_num }}</div>
+    </div>
     <ul class="menu bg-base-200  rounded-box">
       <div v-for="item in commentList" :key="item.id">
         <div class="divider my-3"></div>
@@ -128,6 +131,7 @@ const setComment = () => {
       ElNotification.error("网络错误"+e)
     }
   })
+  getInfo();
 }
 const getComment = () => {
   useRequest(() => getCommentAPI({

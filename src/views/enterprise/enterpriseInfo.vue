@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="flex justify-center">
-          <div class="card max-w-[950px] bg-base-200 shadow-xl mt-50 hover:translate-y-1 hover:shadow-2xl">
+          <div class="card w-[950px] bg-base-200 shadow-xl mt-50 hover:translate-y-1 hover:shadow-2xl">
             <div class="card-body">
               <div class='text-xl mt-[10px]'>企业名称：<span class='float-right text-xl'>{{info.name}}</span></div>
               <div class="divider"></div>
@@ -27,7 +27,7 @@
               <div class="divider"></div>
               <div class='text-xl'>企业邮箱：<span class='float-right text-xl'>{{info.email}}</span></div>
               <div class="divider"></div>
-              <div class='text-xl'>企业简介：</div><span class='text-xl'>{{info.introduction}}</span>
+              <div class='text-xl'>企业简介：</div><span class='text-xl max-h-[500px] overflow-auto'>{{info.introduction}}</span>
               <div class="divider"></div>
               <div class="card-actions justify-end">
                 <button class="btn btn-outline" onclick="my_modal_1.showModal()">编辑</button>

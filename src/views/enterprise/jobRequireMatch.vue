@@ -10,12 +10,12 @@
     </div>
   </ul>
   <div class='m-[30px] ml-[100px]'>
-    <div class="card w-[1000px] bg-base-200 shadow-xl hover:translate-y-1 hover:shadow-2xl ">
+    <div class="card w-[1100px] bg-base-200 shadow-xl hover:translate-y-1 hover:shadow-2xl ">
       <div class="card-body flex flex-row items-center h-[50px]">
         <h2 class="card-title">职位需求匹配</h2>
       </div>
     </div>
-    <div class="card  max-h-[1000px] bg-base-200 shadow-xl  hover:shadow-2xl mt-50 hover:translate-y-1">
+    <div class="card bg-base-200 shadow-xl  hover:shadow-2xl mt-50 hover:translate-y-1">
       <div class="card-body">
         <div class="collapse bg-base-100">
           <input type="checkbox" class='w-[850px]'/>
@@ -34,11 +34,11 @@
             </label>
             <label class="input input-bordered flex items-center gap-4">
               <el-icon><LocationFilled /></el-icon>
-              <input type="text" class="grow" placeholder="工作地址" v-model='params.address' />
+              <input type="text" class="grow" placeholder="意向城市" v-model='params.address' />
             </label>
             <label class="input input-bordered flex items-center gap-4">
               <el-icon><WalletFilled /></el-icon>
-              <input type="text" class="grow" placeholder="薪资要求" v-model='salary' />
+              <input type="text" class="grow" placeholder="薪资要求(千)" v-model='salary' />
             </label>
           </div>
         </div>
@@ -54,7 +54,7 @@
               <th>学历</th>
               <th>求职意向</th>
               <th>意向城市</th>
-              <th>理想薪资</th>
+              <th>理想薪资(千)</th>
               <th>简历是否开放</th>
             </tr>
             </thead>
@@ -76,13 +76,11 @@
           </table>
         </div>
         <div class='flex justify-center mt-[5px]'>
-          <div class="join">
-            <button class="join-item btn bg-base-100">«</button>
-            <input id='firstPagin' class="join-item btn btn-square" type="radio" name="options" aria-label="1" @click='changePage(1)' checked/>
-            <div v-for='num in pageNum'>
-              <input class="join-item btn btn-square" type="radio" name="options" :aria-label="num" @click='changePage(num)'/>
-            </div>
-            <button class="join-item btn bg-base-100">»</button>
+          <div class="join flex items-center">
+            <button class="join-item btn" @click='pageJian'>«</button>
+            <button class="join-item btn">Page <input type="text" placeholder="" class="input input-sm w-[80px]" v-model='params.page_num'/></button>
+            <button class="join-item btn" @click='pageJia'>»</button>
+            <span class='ml-[20px] font-bold'>totalPage：{{pageInfo.page_total_num}}</span>
           </div>
         </div>
       </div>
@@ -188,7 +186,7 @@ const params = ref({
   address: "",
   salary: -1,
   page_num: 1,
-  page_size: 8,
+  page_size: 10,
 });
 const salary = ref<string>("");
 params.value.salary = computed(()=>{
@@ -200,11 +198,16 @@ const pageInfo = ref({
   page_total_num: 1,
   student_num: 1,
 })
-const pageNum = ref([]);
 
-const changePage = (pageNum) => {
-  params.value.page_num = pageNum;
-  run();
+const pageJian = () => {
+  if(params.value.page_num>1){
+    params.value.page_num--;
+  }
+}
+const pageJia = () => {
+  if(params.value.page_num<pageInfo.value.page_total_num){
+    params.value.page_num++;
+  }
 }
 
 const { run } = useRequest(()=>jobRequireMatchApi(params.value,loginStore.token),{
@@ -214,9 +217,6 @@ const { run } = useRequest(()=>jobRequireMatchApi(params.value,loginStore.token)
       pageInfo.value.page_total_num = res.data.page_total_num;
       pageInfo.value.student_num = res.data.student_num;
       studentsList.value = res.data.students;
-      for(let i=2;i<=pageInfo.value.page_total_num;i++){
-        pageNum.value.push(i);
-      }
       for(let i=0;i<studentsList.value.length;i++){
         if(studentsList.value[i].open_public === 2){
           studentsList.value[i].open_public = "不开放";
@@ -253,6 +253,11 @@ onMounted(()=>{
 })
 
 watch(params.value,()=>{
+  if(params.value.page_num>pageInfo.value.page_total_num){
+    params.value.page_num = pageInfo.value.page_total_num;
+  }else if(params.value.page_num<1){
+    params.value.page_num = 1;
+  }
   run();
   console.log("监听成功");
 })
