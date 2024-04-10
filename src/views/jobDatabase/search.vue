@@ -88,6 +88,8 @@
         <input class="input input-sm input-ghost w-100" v-model="pageNum">
       </button>
       <button class="join-item btn" @click="() => switchPageNum(1)">»</button>
+      <button class="join-item btn">总页数: {{ totalPageNum }}</button>
+      <button class="join-item btn">岗位总数: {{ totalJobNum }}</button>
     </div>
   </div>
 </template>
@@ -103,6 +105,7 @@ import areaList from "@/tool/area";
 const loginStore = useMainStore().useLoginStore();
 const pageNum = ref(1);
 const totalPageNum = ref(1);
+const totalJobNum = ref(1);
 const jobList = ref();
 const jobShowDetailIndex = ref();
 const company = ref("");
@@ -146,6 +149,7 @@ const checkJobDatabase = () => {
       if(res.code === 200) {
         jobList.value = res.data.data;
         totalPageNum.value = res.data.total_page_num;
+        totalJobNum.value = res.data.job_num;
         console.log(jobList.value);
       }
     }
