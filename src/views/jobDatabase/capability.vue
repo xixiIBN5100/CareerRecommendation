@@ -1,5 +1,10 @@
 <template>
   <div class="text-2xl mb-30">能力评估</div>
+  <div v-if="noneResume[0]" class="flex justify-center items-center text-xl">
+    <div class="text-warning pt-6"><el-icon><Warning /></el-icon></div>
+    <div>{{ noneResume[1] }}</div> 
+  </div>
+  <div v-else>
   <div class="flex flex-col justify-center px-30 mb-20">
     <div class="text-xl mb-5">
       个人意向评估
@@ -67,6 +72,7 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -83,6 +89,7 @@ const intentionData = ref();
 const jobRecentId = ref(0);
 const myAmid = ref();
 const rateValue = ref([0,0,0,0,0]);
+const noneResume = ref([false, "none"]);
 intentionData.value = {};
 
 useRequest(() => getResumeInfoAPI({resume_id:-1}, loginStore.token as string), {
@@ -98,6 +105,9 @@ useRequest(() => getAbilityEvaluate(loginStore.token as string), {
     if(res.code === 200) {
       abilityData.value = res.data;
       console.log(abilityData.value);
+    } else {
+      noneResume.value[0] = true;
+      noneResume.value[1] = res.msg;
     }
   }
 })
