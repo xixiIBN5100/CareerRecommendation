@@ -65,8 +65,8 @@
       <div class="flex flex-row h-400 justify-center gap-30">
         <div class="overflow-y-scroll  bg-base-300 rounded-lg p-20 shadow-lg">
           <div
-          v-for="(prov, index) in areaList.index"
-          :class="['cursor-pointer', provId === index as unknown as string ? 'text-accent' : undefined]"
+          v-for="(prov, index) in areaList[areaList.length -1]"
+          :class="['cursor-pointer', provId === index ? 'text-accent' : undefined]"
           class="text-lg my-6"
           @click="() => selectProv(index)"
           >{{ prov }}</div>
@@ -88,6 +88,8 @@
         <input class="input input-sm input-ghost w-100" v-model="pageNum">
       </button>
       <button class="join-item btn" @click="() => switchPageNum(1)">»</button>
+      <button class="join-item btn">总页数: {{ totalPageNum }}</button>
+      <button class="join-item btn">岗位总数: {{ totalJobNum }}</button>
     </div>
   </div>
 </template>
@@ -103,20 +105,21 @@ import areaList from "@/tool/area";
 const loginStore = useMainStore().useLoginStore();
 const pageNum = ref(1);
 const totalPageNum = ref(1);
+const totalJobNum = ref(1);
 const jobList = ref();
 const jobShowDetailIndex = ref();
 const company = ref("");
 const title = ref("");
 const education = ref("");
 const address = ref("");
-const provId = ref("0");
+const provId = ref(0);
 
 const selectCity = (city: string) => {
   address.value = city;
   showModal('adress_modal', true);
 }
 
-const selectProv = (index: any) => {
+const selectProv = (index: number) => {
   provId.value = index;
 }
 
@@ -146,6 +149,7 @@ const checkJobDatabase = () => {
       if(res.code === 200) {
         jobList.value = res.data.data;
         totalPageNum.value = res.data.total_page_num;
+        totalJobNum.value = res.data.job_num;
         console.log(jobList.value);
       }
     }

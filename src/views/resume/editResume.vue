@@ -79,8 +79,6 @@ const props = defineProps<{
   editIng: boolean
 }>();
 
-console.log(props.editIng);
-
 const age = ref("");
 const salary_intention = ref("");
 const resumeInfo = ref({
@@ -110,6 +108,7 @@ const loadResumeInfo = () => {
     onSuccess(res: any) {
       if(res.code === 200) {
         resumeInfo.value = res.data;
+        resumeInfo.value.resume_id = props.resume_id;
         age.value = resumeInfo.value.age.toString();
         salary_intention.value = resumeInfo.value.salary_intention.toString();
       }

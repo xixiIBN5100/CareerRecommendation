@@ -69,10 +69,8 @@ const setEditIng = (tf: boolean) => {
 const updataResumeList = () => {
   useRequest(() => getResumeListAPI(loginStore.token as string), {
     onSuccess(res:any){
-      console.log(res);
       if(res.code === 200) {
         resumeList.value = res.data;
-        console.log(resumeList.value);
       } else {
         ElNotification("系统数据获取失败 检查网络设置或联系管理员");
       }
@@ -83,7 +81,6 @@ updataResumeList();
 
 const editResume = (id: number) => {
   setEditIng(true);
-  console.log("debug: setEditIng");
   setRecentEditResume(id);
   getPageId(2);
 }
@@ -104,8 +101,6 @@ const setDefaultResume = (id: number) => {
 }
 
 const deleteResume = (id: number) => {
-  console.log("即将删除");
-  console.log(id);
   useRequest(() => deleteResumeAPI({
     resume_id: id
   }, loginStore.token as string), {

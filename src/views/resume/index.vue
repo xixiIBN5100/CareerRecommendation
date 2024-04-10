@@ -49,7 +49,6 @@ const switchEditResume = (resume_id: number) => {
 
 const switchEditIng = (tf: boolean) => {
   editIng.value = tf;
-  console.log(tf);
 }
 
 </script>
