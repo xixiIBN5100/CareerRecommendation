@@ -1,50 +1,59 @@
 <template>
-  <div class="bg-base-200 shadow-lg mx-100 my-60 p-50 rounded-box hover:shadow-2xl hover:-translate-y-2 transform duration-500">
-    <div class="relative mb-60">
+  <div class="flex justify-center ">
+  <div class="bg-base-200 shadow-lg mx-100 my-100 p-50 rounded-box hover:shadow-2xl hover:-translate-y-2 transform duration-500 w-8/12">
+    <div class="relative mb-30">
       <span class="text-4xl">邮箱重置</span>
-      <ul class="steps absolute top-0 right-0 z-0 steps-vertical" style="width: 50%;">
-        <li class="step step-primary">验证旧邮箱</li>
-        <li class="step" :class="[step >= 2 ? 'step-primary' : undefined]">确认新邮箱</li>
-        <li class="step" :class="[step >= 3 ? 'step-primary' : undefined]">完成</li>
-      </ul>
     </div>
-    <div v-if="step === 1" class="text-xl m-10 flex flex-col gap-36 items-left" style="margin-left: 25%;">
-      <div>当前绑定邮箱: <div class="font-bold">{{ loginStore.userEmail }}</div> </div>
+    <div class="flex gap-150 justify-center h-250 items-center">
+
+    <div v-if="step === 1" class="text-xl m-10 flex flex-col gap-36 items-left justify-center " >
+      <div>当前绑定邮箱: &ensp;<span class="font-bold">{{ loginStore.userEmail }}</span> </div>
       <div>
-        <div class="m-6">旧邮箱验证码:</div>
-        <div>
-          <input placeholder="旧邮箱验证码" class="input input-bordered w-200" required v-model="oldCode"/>
-          <button type="button"  class="btn btn-warning btn-sm ml-10 h-40 w-110" @click="() => sendCode(loginStore.userEmail)" :disabled='countdown > 0'>
+        <span>
+          <span class="m-6 ">验证码:&ensp;</span>
+          <input placeholder="旧邮箱验证码" class="input input-bordered w-200 h-40 mx-auto shadow-lg" required v-model="oldCode"/>
+          <button type="button"  class="btn btn-warning btn-sm ml-10 h-40 w-110 shadow-lg" @click="() => sendCode(loginStore.userEmail)" :disabled='countdown > 0'>
             {{ countdown > 0 ? `重新发送(${countdown})` : '发送验证码' }}
           </button>
-        </div>
+        </span>
       </div>
-      <div class="btn btn-primary btn-wide" @click="confirmOldEmail">确认</div>
+      <div class="flex justify-center">
+      <div class="btn btn-primary w-full shadow-lg" @click="confirmOldEmail">确认</div>
+      </div>
     </div>
-    <div v-if="step === 2" class="text-xl m-10 flex flex-col gap-36 items-left" style="margin-left: 25%;">
-      <div>
+    <div v-if="step === 2" class="text-xl m-10 flex flex-col gap-36 items-left justify-center">
+      <div class="flex flex-col gap-20">
         <div>
-          <div class="m-6">新邮箱:</div>
-          <div>
-            <input placeholder="新邮箱" class="input input-bordered w-200" required v-model="newEmail"/>
-          </div>
+          <span class="m-6">新邮箱:&ensp;</span>
+          <span>
+            <input placeholder="新邮箱" class="input input-bordered w-200 h-40 shadow-lg" required v-model="newEmail"/>
+          </span>
         </div>
         <div>
-          <div class="m-6">新邮箱验证码:</div>
-          <div>
-            <input placeholder="新邮箱验证码" class="input input-bordered w-200" required v-model="newCode"/>
-            <button type="button"  class="btn btn-warning btn-sm ml-10 h-40 w-110" @click="() => sendCode(newEmail)" :disabled='countdown > 0'>
+          <span class="m-6">验证码:&ensp;</span>
+          <span>
+            <input placeholder="新邮箱验证码" class="input input-bordered w-200 h-40 shadow-lg" required v-model="newCode"/>
+            <button type="button"  class="btn btn-warning btn-sm ml-10 h-40 w-110 shadow-lg" @click="() => sendCode(newEmail)" :disabled='countdown > 0'>
               {{ countdown > 0 ? `重新发送(${countdown})` : '发送验证码' }}
             </button>
-          </div>
+          </span>
         </div>
       </div>
-      <div class="btn btn-primary btn-wide" @click="confirmNewEmail">确认</div>
+      <div class="btn btn-primary w-full shadow-lg" @click="confirmNewEmail">确认</div>
     </div>
     <div v-if="step === 3" class="flex flex-col items-center">
       <div class="text-3xl font-bold">已完成邮箱更改!</div>
       <div class="text-stone-500">当前绑定: {{ loginStore.userEmail }}</div>
     </div>
+      <div>
+        <ul class="steps steps-vertical h-full">
+          <li class="step step-primary">验证旧邮箱</li>
+          <li class="step" :class="[step >= 2 ? 'step-primary' : undefined]">确认新邮箱</li>
+          <li class="step" :class="[step >= 3 ? 'step-primary' : undefined]">完成</li>
+        </ul>
+      </div>
+    </div>
+  </div>
   </div>
 </template>
 
@@ -120,5 +129,4 @@ const confirmNewEmail = () => {
     }
   })
 }
-
 </script>

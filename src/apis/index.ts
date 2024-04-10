@@ -33,6 +33,10 @@ import getNewEmailConfirmAPI from "./Server/account/getNewEmailConfirmAPI";
 import clearMsgApi from "@/apis/Server/robot/clearMsgApi";
 import addResumeDocAPI from "./Server/resume/addResumeDocAPI";
 import getInfoAPI from "@/apis/Server/jobDatabase/getInfo";
+import getIntentionEvaluate from "./Server/jobDatabase/getIntentionEvaluate";
+import getAbilityEvaluate from "./Server/jobDatabase/getAbilityEvaluate";
+import setRateValueAPI from "./Server/jobDatabase/setRateValueAPI";
+import upvoteJobAPI from '@/apis/Server/jobDatabase/upvoteJobAPI';
 export {
   passwordLoginAPI,
   emailLoginAPI,
@@ -69,4 +73,8 @@ export {
   clearMsgApi,
   addResumeDocAPI,
   getInfoAPI,
+  getIntentionEvaluate,
+  getAbilityEvaluate,
+  setRateValueAPI,
+  upvoteJobAPI,
 };

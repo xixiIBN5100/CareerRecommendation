@@ -30,6 +30,11 @@
       </div>
       <div class="m-3 ">
         <a class="btn-link font-bold mt-6" :href="modalJobData.link">详情链接</a>
+        <div class='float-right relative'>
+          <div :class='isClickUpvote ? "animate-ping absolute top-[-25px]" : "hidden"'>+1</div>
+          <el-icon class='cursor-pointer' @click='upvote'><Medal /></el-icon>
+          <span class='select-none'>{{ modalJobData.upvote }}</span>
+        </div>
       </div>
       <div class="btn shadow-lg bg-base-100 mt-10" @click="router.push('/jobDatabase')">返回岗位库</div>
     </div>
@@ -64,7 +69,7 @@
 <script setup lang="ts">
 import {onMounted, ref, watch} from "vue";
 import {useRequest} from "vue-hooks-plus";
-import {getCommentAPI, getInfoAPI, setCommentAPI} from "@/apis";
+import {getCommentAPI, getInfoAPI, setCommentAPI, upvoteJobAPI, } from "@/apis";
 import {ElNotification} from "element-plus";
 import {useMainStore} from "@/stores";
 import router from "@/router";
@@ -73,6 +78,7 @@ const comment = ref()
 const pageNum = ref(1)
 const id = parseInt(localStorage.getItem('id'));
 const totalPageNum = ref(1);
+const isClickUpvote = ref<boolean>(false);
 
 const modalJobData = ref({
   id: 0,
@@ -84,6 +90,8 @@ const modalJobData = ref({
   address: "",
   description: "",
   link: "",
+  upvote: 0,
+  comment_num: 0,
 })
 const commentList = ref([]);
 const getInfo = () => {
@@ -144,6 +152,34 @@ const switchPageNum = (num: number) => {
   }
   getComment()
 }
+
+const upvote = () => {
+  useRequest(()=>upvoteJobAPI(modalJobData.value.id,loginStore.token),{
+    onSuccess(res){
+      if(res.code === 200){
+        getInfo()
+        isClickUpvote.value = true;
+        setTimeout(()=>{
+          isClickUpvote.value = false;
+        },100)
+      }else{
+        ElNotification({
+          title: 'Warning',
+          message: res.msg,
+          type: 'warning',
+        })
+      }
+    },
+    onError(err){
+      ElNotification({
+        title: 'Error',
+        message: err,
+        type: 'error',
+      })
+    }
+  })
+}
+
 </script>
 
 <style scoped>
