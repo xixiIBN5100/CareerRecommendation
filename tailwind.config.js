@@ -13,7 +13,8 @@ export default {
       map[index] = `${index}px`;
       return map;
     }, {}),
-    extend: {},
+    extend: {
+    },
   },
   plugins: [require("daisyui")],
 }

@@ -16,7 +16,7 @@
           <h2 class="card-title">学生列表</h2>
         </div>
       </div>
-      <div class="card  max-h-[1000px] bg-base-200 shadow-xl  hover:shadow-2xl mt-50 hover:translate-y-1">
+      <div class="card bg-base-200 shadow-xl  hover:shadow-2xl mt-50 hover:translate-y-1">
         <div class="card-body">
           <div class='flex flex-row items-center'>
             <select class="select select-bordered w-[200px] max-w-xs text-base" v-model='education'>
@@ -67,13 +67,11 @@
             </table>
           </div>
           <div class='flex justify-center mt-[5px]'>
-            <div class="join">
-              <button class="join-item btn bg-base-100">«</button>
-              <input id='firstPagin' class="join-item btn btn-square" type="radio" name="options" aria-label="1" @click='changePage(1)' checked/>
-              <div v-for='num in pageNum'>
-                <input class="join-item btn btn-square" type="radio" name="options" :aria-label="num" @click='changePage(num)'/>
-              </div>
-              <button class="join-item btn bg-base-100">»</button>
+            <div class="join flex items-center">
+              <button class="join-item btn" @click='pageJian'>«</button>
+              <button class="join-item btn">Page <input type="text" placeholder="" class="input input-sm w-[80px]" v-model='params.page_num'/></button>
+              <button class="join-item btn" @click='pageJia'>»</button>
+              <span class='ml-[20px] font-bold'>totalPage：{{pageInfo.page_total_num}}</span>
             </div>
           </div>
         </div>
@@ -167,7 +165,7 @@
 
 <script setup lang='ts'>
 import router from '@/router';
-import { ref,onMounted } from "vue";
+import { ref,onMounted,watch } from "vue";
 import { getStudentsListApi,checkResumeApi,applyCheckResumeApi } from "@/apis";
 import { useRequest } from "vue-hooks-plus";
 import { useMainStore } from '@/stores';
@@ -185,25 +183,35 @@ const pageInfo = ref<object>({
   page_total_num: 10,
   student_num: 100,
 })
-const pageNum = ref([]);
 const studentsList = ref();
 const studentResume = ref<object>({});
 
-const changePage = (pageNum) => {
-  params.value.page_num = pageNum;
-  getInfo();
+const pageJia = () => {
+  if(params.value.page_num<pageInfo.value.page_total_num){
+    params.value.page_num ++;
+  }
 }
-
+const pageJian = () => {
+  if(params.value.page_num>1){
+    params.value.page_num --;
+  }
+}
+watch(()=>params.value.page_num,()=>{
+  if(params.value.page_num>pageInfo.value.page_total_num){
+    params.value.page_num = pageInfo.value.page_total_num;
+  }else if(params.value.page_num<1){
+    params.value.page_num = 1;
+  }else{
+    getInfo();
+  }
+})
 const getInfo = () => {
   useRequest(()=>getStudentsListApi(params.value,loginStore.token),{
     onSuccess(res){
       if(res.code === 200){
-        console.log(res.data)
+        // console.log(res.data)
         pageInfo.value.page_total_num = res.data.page_total_num;
         pageInfo.value.student_num = res.data.student_num;
-        for(let i=2;i<=pageInfo.value.page_total_num;i++){
-          pageNum.value.push(i);
-        }
         studentsList.value = res.data.students;
         for(let i=0;i<studentsList.value.length;i++){
           if(studentsList.value[i].open_public === 2){
@@ -246,8 +254,11 @@ const screen = () => {
     params.value.education = education.value;
   }
   params.value.open_public = Number(params.value.open_public);
-  getInfo();
-  document.getElementById("firstPagin").click()
+  if(params.value.page_num!=1){
+    params.value.page_num=1;
+  }else{
+    getInfo();
+  }
 }
 
 const reset = () => {

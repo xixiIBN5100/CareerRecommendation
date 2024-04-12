@@ -36,6 +36,7 @@ import getInfoAPI from "@/apis/Server/jobDatabase/getInfo";
 import getIntentionEvaluate from "./Server/jobDatabase/getIntentionEvaluate";
 import getAbilityEvaluate from "./Server/jobDatabase/getAbilityEvaluate";
 import setRateValueAPI from "./Server/jobDatabase/setRateValueAPI";
+import upvoteJobAPI from '@/apis/Server/jobDatabase/upvoteJobAPI';
 export {
   passwordLoginAPI,
   emailLoginAPI,
@@ -75,4 +76,5 @@ export {
   getIntentionEvaluate,
   getAbilityEvaluate,
   setRateValueAPI,
+  upvoteJobAPI,
 };
