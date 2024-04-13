@@ -18,7 +18,7 @@
               <div class="chat" :class='msg.user_name===loginStore.userName ? "chat-start" : "chat-end"' :id='chatMsg.indexOf(msg)'>
                 <div class="chat-image avatar">
                   <div class="w-[50px] rounded-full">
-                    <img alt="Tailwind CSS chat bubble component" :src='msg.user_name===loginStore.userName ? loginStore.avatarUrl : "http://phlin.top/static/d4948cef-a92a-435f-a0fd-37ad638d16b2.jpg"' />
+                    <img alt="Tailwind CSS chat bubble component" :src='msg.user_name===loginStore.userName ? loginStore.avatarUrl : "https://phlin.top/static/780e0913-6e9d-4c65-a776-194f1eb7bca3.jpg"' />
                   </div>
                 </div>
                 <div class="chat-bubble max-w-[500px]">{{msg.content}}</div>
@@ -65,7 +65,7 @@
         <div class='flex hover:bg-base-300 cursor-pointer' @click='daohang(chatMsg.indexOf(msg))' onclick='findMsg.close()'>
           <div class="avatar">
             <div class="w-[50px] rounded-full">
-              <img :src='msg.user_name==="bot" ? "http://phlin.top/static/d4948cef-a92a-435f-a0fd-37ad638d16b2.jpg" : loginStore.avatarUrl' />
+              <img :src='msg.user_name==="bot" ? "https://phlin.top/static/780e0913-6e9d-4c65-a776-194f1eb7bca3.jpg" : loginStore.avatarUrl' />
             </div>
           </div>
           <div class='ml-[15px] overflow-y-auto max-h-[100px]'>{{msg.content}}</div>
