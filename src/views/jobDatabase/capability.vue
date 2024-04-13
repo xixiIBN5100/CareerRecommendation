@@ -2,7 +2,7 @@
   <div class="text-2xl mb-30">能力评估</div>
   <div v-if="noneResume[0]" class="flex justify-center items-center text-xl">
     <div class="text-warning pt-6"><el-icon><Warning /></el-icon></div>
-    <div>{{ noneResume[1] }}</div> 
+    <div>{{ noneResume[1] }}</div>
   </div>
   <div v-else>
   <div class="flex flex-col justify-center px-30 mb-20">
@@ -23,7 +23,8 @@
           <el-icon :size="50"><OfficeBuilding /></el-icon>
         </div>
         <div class="stat-title">系统建议</div>
-        <div class="stat-value text-secondary">{{ myAmid === "未填写" || intentionData.hasOwnProperty('advice') ? "-" : intentionData.advice }}</div>
+        <div class="stat-value text-secondary">{{ myAmid === "未填写" || intentionData.hasOwnProperty('advice') ? "-" : intentionData.advice
+          }}</div>
         <div class="stat-desc">源于ai分析 仅供参考</div>
       </div>
       <div class="stat">
