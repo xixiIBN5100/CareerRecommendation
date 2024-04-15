@@ -154,9 +154,9 @@ const checkJobDatabase = () => {
         totalJobNum.value = res.data.job_num;
         console.log(jobList.value);
       }
-    }
+    },
+    debounceWait: 1500,
   })
-
 }
 checkJobDatabase();
 
