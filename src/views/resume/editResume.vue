@@ -1,62 +1,71 @@
 <template>
-  <div class="text-2xl mb-30">
+  <div class="text-4xl mb-30">
     简历修改
     <div v-if="editIng" class="btn btn-sm btn-warning btn-outline float-end" @click="cancelEdit">取消更改</div>
   </div>
   <div class="flex flex-col gap-10" v-if="editIng">
-    <label class="input input-ghost flex items-center gap-2">
+    <div class='flex justify-between'>
+    <label class="input input-bordered flex items-center gap-2 w-5/12 shadow-lg">
       姓名<el-icon class="mr-8"><User/></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="姓名" v-model="resumeInfo.name" />
     </label>
-    <label class="input input-ghost flex items-center gap-2">
+    <label class="input input-bordered flex items-center gap-2 w-5/12 shadow-lg">
       年龄<el-icon class="mr-8"><Star/></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="年龄" v-model="age"/>
     </label>
-    <label class="p-4">
-      <input type="radio" name="gender" class="radio radio-sm" value="1" v-model="resumeInfo.sex"/><span class="m-4 text-xl mr-50">男</span>
-      <input type="radio" name="gender" class="radio radio-sm" value="2" v-model="resumeInfo.sex"/><span class="m-4 text-xl">女</span>
-    </label>
-    <label class="input input-ghost flex items-center gap-2">
+    </div>
+
+    <div class="flex justify-between flex-wrap">
+    <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
       身份证<el-icon class="mr-8"><Postcard/></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="身份证" v-model="resumeInfo.id_no"/>
     </label>
-    <label class="input input-ghost flex items-center gap-2">
+    <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
       联系方式<el-icon class="mr-8"><Iphone/></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="联系方式" v-model="resumeInfo.phone"/>
     </label>
-    <label class="input input-ghost flex items-center gap-2">
+    <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
       邮箱<el-icon class="mr-8"><Message /></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="邮箱" v-model="resumeInfo.email"/>
     </label>
-    <label class="input input-ghost flex items-center gap-2">
+    <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
       家庭住址<el-icon class="mr-8"><School/></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="家庭住址" v-model="resumeInfo.address"/>
     </label>
-    <label class="input input-ghost flex items-center gap-2">
+    <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
       求职意向岗位<el-icon class="mr-8"><DocumentChecked /></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="求职意向岗位" v-model="resumeInfo.job_intention"/>
     </label>
-    <label class="input input-ghost flex items-center gap-2">
+    <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
       学历<el-icon class="mr-8"><Reading /></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="学历" v-model="resumeInfo.education"/>
     </label>
-    <label class="input input-ghost flex items-center gap-2">
+    <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
       求职意向城市<el-icon class="mr-8"><Place /></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="求职意向城市" v-model="resumeInfo.city_intention"/>
     </label>
-    <label class="input input-ghost flex items-center gap-2">
+    <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
       求职意向薪资<el-icon class="mr-8"><Money /></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="求职意向薪资" v-model="salary_intention"/>
     </label>
+    </div>
+    <label class="p-4 flex justify-between">
+      <label>
+        <input type="radio" name="gender" class="radio radio-sm shadow-lg" value="1" v-model="resumeInfo.sex"/><span class="m-4 text-xl mr-50">男</span>
+      </label>
+      <label>
+        <input type="radio" name="gender" class="radio radio-sm" value="2" v-model="resumeInfo.sex"/><span class="m-4 text-xl">女</span>
+      </label>
+    </label>
     能力特长
-    <textarea class="textarea textarea-ghost" v-model="resumeInfo.ability"></textarea>
+    <textarea class="textarea textarea-bordered" v-model="resumeInfo.ability"></textarea>
     工作经历
-    <textarea class="textarea textarea-ghost" v-model="resumeInfo.work_experience"></textarea>
+    <textarea class="textarea textarea-bordered" v-model="resumeInfo.work_experience"></textarea>
     所获荣誉
-    <textarea class="textarea textarea-ghost" v-model="resumeInfo.honor"></textarea>
+    <textarea class="textarea textarea-bordered" v-model="resumeInfo.honor"></textarea>
     自我评价
-    <textarea class="textarea textarea-ghost" v-model="resumeInfo.self_evaluation"></textarea>
-    <label class="input input-ghost flex items-center gap-2">
+    <textarea class="textarea textarea-bordered" v-model="resumeInfo.self_evaluation"></textarea>
+    <label class="input input-bordered flex items-center gap-2">
       简历简介<el-icon class="mr-8"><Promotion /></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="简历简介(仅用于用户端区分简历)" v-model="resumeInfo.remark"/>
     </label>

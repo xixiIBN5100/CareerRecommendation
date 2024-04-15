@@ -18,7 +18,7 @@
         </div>
         <div class="flex justify-center">
           <div class="card w-[950px] bg-base-200 shadow-xl mt-50 hover:translate-y-1 hover:shadow-2xl">
-            <div class="card-body">
+            <div v-if='!isLoading' class="card-body">
               <div class='text-xl mt-[10px]'>企业名称：<span class='float-right text-xl'>{{info.name}}</span></div>
               <div class="divider"></div>
               <div class='text-xl'>所在地：<span class='float-right text-xl'>{{info.location}}</span></div>
@@ -31,6 +31,20 @@
               <div class="divider"></div>
               <div class="card-actions justify-end">
                 <button class="btn btn-outline" onclick="my_modal_1.showModal()">编辑</button>
+              </div>
+            </div>
+            <div v-else class="card-body">
+              <div class="flex flex-col gap-[35px] w-[900px]">
+                <div class="flex gap-4 items-center">
+                  <div class="skeleton w-[200px] h-[200px] rounded-full shrink-0"></div>
+                  <div class="flex flex-col gap-[25px] ml-[50px]">
+                    <div class="skeleton h-[25px] w-[100px]"></div>
+                    <div class="skeleton h-[25px] w-[150px]"></div>
+                    <div class="skeleton h-[25px] w-[350px]"></div>
+                    <div class="skeleton h-[25px] w-[600px]"></div>
+                  </div>
+                </div>
+                <div class="skeleton h-[150px] w-full"></div>
               </div>
             </div>
           </div>
@@ -124,8 +138,10 @@ const submitInfo = ref({
   website: "",
   email: "",
 })
+const isLoading = ref<boolean>(false);
 
 const getInfo = () => {
+  isLoading.value = true;
   useRequest(()=>getInfoApi(<string>loginStore.token),{
     onSuccess(res){
       // console.log(res.data.name);
@@ -146,6 +162,9 @@ const getInfo = () => {
         message: err,
         type: 'error',
       })
+    },
+    onFinally(){
+      isLoading.value = false;
     }
   })
 }
