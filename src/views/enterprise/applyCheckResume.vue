@@ -40,7 +40,7 @@
             <button class="btn btn-outline ml-[10px]" @click='reset'>重置</button>
           </div>
           <div class="divider"></div>
-          <div class="overflow-x-auto">
+          <div v-if='!isLoading' class="overflow-x-auto">
             <table class="table">
               <!-- head -->
               <thead>
@@ -61,14 +61,26 @@
               </tr>
               </tbody>
             </table>
-          </div>
-          <div class='flex justify-center mt-[5px]'>
-            <div class="join flex items-center">
-              <button class="join-item btn" @click='pageJian'>«</button>
-              <button class="join-item btn">Page <input type="text" placeholder="" class="input input-sm w-[80px]" v-model='params.page_num'/></button>
-              <button class="join-item btn" @click='pageJia'>»</button>
-              <span class='ml-[20px] font-bold'>totalPage：{{pageInfo.page_total_num}}</span>
+            <div class='flex justify-center mt-[5px]'>
+              <div class="join flex items-center">
+                <button class="join-item btn" @click='pageJian'>«</button>
+                <button class="join-item btn">Page <input type="text" placeholder="" class="input input-sm w-[80px]" v-model='params.page_num'/></button>
+                <button class="join-item btn" @click='pageJia'>»</button>
+                <span class='ml-[20px] font-bold'>totalPage：{{pageInfo.page_total_num}}</span>
+              </div>
             </div>
+          </div>
+          <div v-else class="flex flex-col gap-[35px] w-[900px]">
+            <div class="flex gap-4 items-center">
+              <div class="skeleton w-[200px] h-[200px] rounded-full shrink-0"></div>
+              <div class="flex flex-col gap-[25px] ml-[50px]">
+                <div class="skeleton h-[25px] w-[100px]"></div>
+                <div class="skeleton h-[25px] w-[150px]"></div>
+                <div class="skeleton h-[25px] w-[350px]"></div>
+                <div class="skeleton h-[25px] w-[600px]"></div>
+              </div>
+            </div>
+            <div class="skeleton h-[150px] w-full"></div>
           </div>
         </div>
       </div>
@@ -79,7 +91,7 @@
       <form method="dialog">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
       </form>
-      <div class="mockup-window border bg-base-300">
+      <div v-if='!isLoading2' class="mockup-window border bg-base-300">
         <div class='bg-base-200'>
           <h3 class="font-bold text-2xl ml-[30px] mt-[30px]">学生简历信息</h3>
           <div class='flex mt-[10px] ml-[30px] text-xl'>
@@ -154,6 +166,18 @@
           <div class="divider"></div>
         </div>
       </div>
+      <div v-else class="flex flex-col gap-[35px] w-[1000px]">
+        <div class="flex gap-4 items-center">
+          <div class="skeleton w-[200px] h-[200px] rounded-full shrink-0"></div>
+          <div class="flex flex-col gap-[25px] ml-[50px]">
+            <div class="skeleton h-[25px] w-[150px]"></div>
+            <div class="skeleton h-[25px] w-[200px]"></div>
+            <div class="skeleton h-[25px] w-[300px]"></div>
+            <div class="skeleton h-[25px] w-[650px]"></div>
+          </div>
+        </div>
+        <div class="skeleton h-[150px] w-full"></div>
+      </div>
     </div>
   </dialog>
 </div>
@@ -182,6 +206,8 @@ const pageInfo = ref<object>({
 })
 const studentsList = ref();
 const studentResume = ref<object>({});
+const isLoading = ref<boolean>(false);
+const isLoading2 = ref<boolean>(false);
 
 const pageJian = () => {
   if(params.value.page_num>1){
@@ -204,9 +230,18 @@ watch(()=>params.value.page_num,()=>{
 })
 
 const getInfo = () => {
+  let loadingTime = 0;
+  let setLoading = setInterval(function(){
+    loadingTime+=0.1;
+    if(loadingTime>=0.2){
+      isLoading.value = true;
+      clearInterval(setLoading);
+    }
+  },100)
   useRequest(()=>getApplyListApi(params.value,loginStore.token),{
     onSuccess(res){
       // console.log(res.data);
+      clearInterval(setLoading);
       if(res.code === 200){
         studentsList.value = res.data.data;
         pageInfo.value.page_total_num = res.data.page_total_num;
@@ -234,6 +269,9 @@ const getInfo = () => {
         message: err,
         type: 'error',
       })
+    },
+    onFinally(){
+      isLoading.value = false;
     }
   })
 }
@@ -262,6 +300,7 @@ const reset = () => {
 }
 
 const checkResume = (student_id:number) => {
+  isLoading2.value = true;
   useRequest(()=>checkResumeApi(student_id,loginStore.token),{
     onSuccess(res){
       console.log(res.data);
@@ -287,6 +326,9 @@ const checkResume = (student_id:number) => {
         message: err,
         type: 'error',
       })
+    },
+    onFinally(){
+      isLoading2.value = false;
     }
   })
 }

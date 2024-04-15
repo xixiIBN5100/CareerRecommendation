@@ -34,11 +34,12 @@
         <div class="btn btn-sm btn-primary float-end" @click="clearFrom">清空</div>
       </div>
     </div>
-    <div v-if="totalPageNum < pageNum || totalPageNum === 0" @click="() => {pageNum = totalPageNum}" class="cursor-pointer">
-      {{ totalPageNum === 0 ? '暂无该条件数据' : '该页数过大 点击返回末页'}}
-    </div>
-    <table class="table" v-else>
-      <thead>
+    <div v-if='!isLoading'>
+      <div v-if="totalPageNum < pageNum || totalPageNum === 0" @click="() => {pageNum = totalPageNum}" class="cursor-pointer">
+        {{ totalPageNum === 0 ? '暂无该条件数据' : '该页数过大 点击返回末页'}}
+      </div>
+      <table class="table" v-else>
+        <thead>
         <tr>
           <th style="width: 25%;">岗位名称</th>
           <th style="width: 35%;">公司名称</th>
@@ -47,8 +48,8 @@
           <th style="width: 5%;">获赞数量</th>
           <th style="width: 10%;">操作</th>
         </tr>
-      </thead>
-      <tbody v-for="job in jobList">
+        </thead>
+        <tbody v-for="job in jobList">
         <tr class="border-none cursor-pointer">
           <td>{{ job.title }}</td>
           <td>{{ job.company }}</td>
@@ -59,8 +60,35 @@
             <button class="btn btn-sm btn-neutral" @click="checkDetail(job)">详情</button>
           </td>
         </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+      <div class="flex justify-center mt-16">
+        <div class="join">
+          <button class="join-item btn" @click="() => switchPageNum(-1)">«</button>
+          <button class="join-item btn">
+            page
+            <input class="input input-sm input-ghost w-100" v-model="pageNum">
+          </button>
+          <button class="join-item btn" @click="() => switchPageNum(1)">»</button>
+          <button class="join-item btn">总页数: {{ totalPageNum }}</button>
+          <button class="join-item btn">岗位总数: {{ totalJobNum }}</button>
+        </div>
+      </div>
+    </div>
+    <div v-else class="card-body">
+      <div class="flex flex-col gap-[35px] w-[900px]">
+        <div class="flex gap-4 items-center">
+          <div class="skeleton w-[200px] h-[200px] rounded-full shrink-0"></div>
+          <div class="flex flex-col gap-[25px] ml-[50px]">
+            <div class="skeleton h-[25px] w-[100px]"></div>
+            <div class="skeleton h-[25px] w-[150px]"></div>
+            <div class="skeleton h-[25px] w-[350px]"></div>
+            <div class="skeleton h-[25px] w-[600px]"></div>
+          </div>
+        </div>
+        <div class="skeleton h-[150px] w-full"></div>
+      </div>
+    </div>
   </div>
   <dialog id="adress_modal" class="modal">
     <div class="modal-box p-30 bg-base-200">
@@ -82,18 +110,6 @@
       </div>
     </div>
   </dialog>
-  <div class="flex justify-center mt-16">
-    <div class="join">
-      <button class="join-item btn" @click="() => switchPageNum(-1)">«</button>
-      <button class="join-item btn">
-        page
-        <input class="input input-sm input-ghost w-100" v-model="pageNum">
-      </button>
-      <button class="join-item btn" @click="() => switchPageNum(1)">»</button>
-      <button class="join-item btn">总页数: {{ totalPageNum }}</button>
-      <button class="join-item btn">岗位总数: {{ totalJobNum }}</button>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -115,6 +131,7 @@ const title = ref("");
 const education = ref("");
 const address = ref("");
 const provId = ref(0);
+const isLoading = ref<boolean>(false);
 
 const selectCity = (city: string) => {
   address.value = city;
@@ -139,6 +156,14 @@ const checkDetail = (job: any) => {
 }
 
 const checkJobDatabase = () => {
+  let loadingTime = 0;
+  let setLoading = setInterval(function(){
+    loadingTime+=0.1;
+    if(loadingTime>0.15){
+      isLoading.value = true;
+      clearInterval(setLoading);
+    }
+  },100)
   useRequest(() => checkJobDatabaseAPI({
     page_num: pageNum.value,
     page_size: 4,
@@ -148,12 +173,16 @@ const checkJobDatabase = () => {
     address: address.value
   }, loginStore.token as string), {
     onSuccess(res: any) {
+      clearInterval(setLoading);
       if(res.code === 200) {
         jobList.value = res.data.data;
         totalPageNum.value = res.data.total_page_num;
         totalJobNum.value = res.data.job_num;
         console.log(jobList.value);
       }
+    },
+    onFinally(){
+      isLoading.value = false;
     },
     debounceWait: 1500,
   })
