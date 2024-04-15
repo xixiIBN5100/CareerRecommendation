@@ -47,7 +47,7 @@
       <div v-for="(job, index) in abilityData" :id="'item'+index" class="carousel-item w-full">
         <div class="mt-20 mx-20">
           <div class="text-xl text-info">{{ job.job_title }}</div>
-          <div class="flex gap-10">
+          <div class="flex gap-30 ">
             <div>
               <div class="font-bold">公司名称:</div>
               <div>{{ job.job_company }}</div>
