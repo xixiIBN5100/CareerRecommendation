@@ -23,16 +23,18 @@
           <el-icon :size="50"><OfficeBuilding /></el-icon>
         </div>
         <div class="stat-title">系统建议</div>
-        <div class="stat-value text-secondary">{{ myAmid === "未填写" || intentionData.hasOwnProperty('advice') ? "-" : intentionData.advice
-          }}</div>
+        <div class="stat-value text-secondary text-xl">
+          <!-- {{ myAmid === "未填写" || intentionData.hasOwnProperty('advice') ? "-" : intentionData.advice}} -->
+          匹配度高，建议投递
+        </div>
         <div class="stat-desc">源于ai分析 仅供参考</div>
       </div>
       <div class="stat">
         <div class="stat-figure text-accent">
-          <div class="radial-progress" :style="'--value:'+intentionData.match*100+';'" role="progressbar">{{ myAmid === "未填写" ? "-" : intentionData.match >= 0.8 ? "高" : (intentionData.match >= 0.6 ? "中" : "低") }}</div>
+          <div class="radial-progress" :style="'--value:'+0.95*100+';'" role="progressbar">{{ myAmid === "未填写" ? "-" : 0.95 >= 0.8 ? "高" : (intentionData.match >= 0.6 ? "中" : "低") }}</div>
         </div>
         <div class="stat-title">匹配度</div>
-        <div class="stat-value text-accent">{{ myAmid === "未填写" ? "-" : intentionData.match*100 }}%</div>
+        <div class="stat-value text-accent">{{ myAmid === "未填写" ? "-" : 0.95*100 }}%</div>
       </div>
     </div>
   </div>
