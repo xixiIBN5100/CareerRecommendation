@@ -8,9 +8,9 @@
         <li class="my-5">
           <a :class="pageId === 1 ? 'active' : undefined" @click="() => switchPage(1)" >搜索岗位</a>
         </li>
-        <li class="my-5">
+        <!-- <li class="my-5">
           <a :class="pageId === 2 ? 'active' : undefined" @click="() => switchPage(2)">知识图谱</a>
-        </li>
+        </li> -->
         <li class="my-5">
           <a :class="pageId === 3 ? 'active' : undefined" @click="() => switchPage(3)">能力评估</a>
         </li>
@@ -29,8 +29,15 @@ import { ref } from 'vue';
 import Search from "./search.vue";
 import KnowledgeMap from "./knowledgeMap.vue";
 import Capability from './capability.vue';
+import { useMainStore } from '@/stores';
 
+const temporaryStore = useMainStore().useTemporaryStore();
 const pageId = ref(1);
+
+if(temporaryStore.jobDatabaseIsCapability) {
+  pageId.value = 3;
+  temporaryStore.setIsCapability(false);
+}
 
 const switchPage = (id: number) => {
   pageId.value = id;

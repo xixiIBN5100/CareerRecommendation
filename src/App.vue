@@ -66,7 +66,7 @@
               <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => jumpPage('/jobDatabase')">
                 <div class="text text-emerald-500"><el-icon><MessageBox /></el-icon></div>岗位库
               </div>
-              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => jumpPage('/resume')">
+              <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="gotoCapability">
                 <div class="text text-rose-500"><el-icon><Cpu /></el-icon></div>能力评估
               </div>
               <div class="cursor-pointer btn btn-sm justify-start font-medium w-300 h-45 shadow-2xl my-6 bg-base-100" @click="() => jumpPage('/robotChat')">
@@ -151,18 +151,24 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import router from "@/router";
-import useLoginStore from "@/stores/service/loginStore";
+import { useMainStore } from './stores';
 import { ElNotification } from "element-plus";
 import { useRequest } from 'vue-hooks-plus';
 import { setAvatarAPI, setPasswordAPI } from "@/apis";
 import { ref } from 'vue';
 
-const loginStore = useLoginStore()
+const loginStore = useMainStore().useLoginStore();
+const temporaryStore = useMainStore().useTemporaryStore();
 const avatarFile = ref();
 const avatarUploaded = ref(false);
 const old_password = ref("");
 const new_password = ref("");
 const confirm_password = ref("");
+
+const gotoCapability = () => {
+  temporaryStore.setIsCapability(true);
+  jumpPage("/jobDatabase");
+}
 
 const jumpPage = (url: string) => {
   (document.getElementById("homeNavbar") as any).checked = false;

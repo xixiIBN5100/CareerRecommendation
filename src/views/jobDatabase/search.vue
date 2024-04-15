@@ -183,7 +183,8 @@ const checkJobDatabase = () => {
     },
     onFinally(){
       isLoading.value = false;
-    }
+    },
+    debounceWait: 1500,
   })
 }
 checkJobDatabase();
