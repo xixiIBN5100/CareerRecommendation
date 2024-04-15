@@ -33,7 +33,7 @@
       <input type="text" class="grow text-right mr-8" placeholder="家庭住址" v-model="resumeInfo.address"/>
     </label>
     <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
-      求职意向岗位<el-icon class="mr-8"><DocumentChecked /></el-icon>
+      意向岗位<el-icon class="mr-8"><DocumentChecked /></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="求职意向岗位" v-model="resumeInfo.job_intention"/>
     </label>
     <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
@@ -41,11 +41,11 @@
       <input type="text" class="grow text-right mr-8" placeholder="学历" v-model="resumeInfo.education"/>
     </label>
     <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
-      求职意向城市<el-icon class="mr-8"><Place /></el-icon>
+      意向城市<el-icon class="mr-8"><Place /></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="求职意向城市" v-model="resumeInfo.city_intention"/>
     </label>
     <label class="input input-bordered flex items-center gap-2 w-5/12 my-10 shadow-lg">
-      求职意向薪资<el-icon class="mr-8"><Money /></el-icon>
+      意向薪资<el-icon class="mr-8"><Money /></el-icon>
       <input type="text" class="grow text-right mr-8" placeholder="求职意向薪资" v-model="salary_intention"/>
     </label>
     </div>

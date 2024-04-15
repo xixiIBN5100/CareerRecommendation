@@ -1,8 +1,8 @@
 <template>
 <div class='flex justify-center'>
-  <div class='mt-[20px]'>
-    <div class="card w-[1040px] bg-base-100 shadow-xl">
-      <div class="card-body">
+  <div class='mt-50'>
+    <div class="card w-[1040px] bg-base-100 shadow-xl" >
+      <div class="card-body " style="height: 80vh">
         <div class="dropdown dropdown-right mt-[-25px]">
           <div class='float-right'>
             <div tabindex="0" role="button" class="btn btn-ghost m-1"><el-icon size='25' class='float-right'><MoreFilled /></el-icon></div>
@@ -17,7 +17,7 @@
             <div :class='isDaohang[chatMsg.indexOf(msg)] ? "transition duration-2000 bg-base-300" : "bg-base-100"'>
               <div class="chat" :class='msg.user_name===loginStore.userName ? "chat-start" : "chat-end"' :id='chatMsg.indexOf(msg)'>
                 <div class="chat-image avatar">
-                  <div class="w-[50px] rounded-full">
+                  <div class="w-[50px] h-50 rounded-full">
                     <img alt="Tailwind CSS chat bubble component" :src='msg.user_name===loginStore.userName ? loginStore.avatarUrl : "https://phlin.top/static/780e0913-6e9d-4c65-a776-194f1eb7bca3.jpg"' />
                   </div>
                 </div>

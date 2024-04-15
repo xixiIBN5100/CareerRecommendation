@@ -19,7 +19,7 @@
               <label class="label">
                 <span class="label-text">Password</span>
               </label>
-              <input v-model="info.password" placeholder="password(至少八位数)" type="password" class="input input-bordered h-35" required />
+              <input v-model="info.password" placeholder="password(至少八位数,包含字母和数字)" type="password" class="input input-bordered h-35" required />
             </div>
             <div class="form-control">
               <label class="label">
