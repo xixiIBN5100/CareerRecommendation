@@ -11,19 +11,19 @@
           <form class="card-body">
             <div class="form-control">
               <label class="label">
-                <span class="label-text">Account</span>
+                <span class="label-text">账号</span>
               </label>
               <input v-model="info.user_name" placeholder="account" class="input input-bordered h-35" required />
             </div>
             <div class="form-control">
               <label class="label">
-                <span class="label-text">Password</span>
+                <span class="label-text">密码</span>
               </label>
               <input v-model="info.password" placeholder="password(至少八位数,包含字母和数字)" type="password" class="input input-bordered h-35" required />
             </div>
             <div class="form-control">
               <label class="label">
-                <span class="label-text">E-mail</span>
+                <span class="label-text">邮箱</span>
               </label>
               <div class="inline">
               <input v-model="info.email" placeholder="e-mail" class="input input-bordered h-35 w-[190px]" required />
@@ -37,7 +37,7 @@
             </div>
             <div class="form-control">
               <label class="label">
-                <span class="label-text">Verification code</span>
+                <span class="label-text">验证码</span>
               </label>
               <input  v-model="info.code" placeholder="verification code" class="input input-bordered h-35" required @keyup.enter="register"/>
               <label class="label">
@@ -84,7 +84,6 @@ import "vue3-slide-verify/dist/style.css";
 import { ElNotification } from "element-plus";
 import { useRequest } from "vue-hooks-plus";
 import { sendEmailCodeAPI, registerAPI } from "@/apis";
-import {root} from "postcss";
 
 const info = ref({
   user_name:"",

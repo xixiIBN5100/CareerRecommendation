@@ -10,19 +10,19 @@
         <form class="card-body">
           <div class="form-control" v-if="loginWay === 'password'">
             <label class="label">
-              <span class="label-text">Account</span>
+              <span class="label-text">账号</span>
             </label>
             <input v-model="info.user_name" placeholder="account" class="input input-bordered" required />
           </div>
           <div class="form-control" v-if="loginWay === 'password'">
             <label class="label">
-              <span class="label-text">Password</span>
+              <span class="label-text">密码</span>
             </label>
             <input  v-model="info.password" type="password" placeholder="password" class="input input-bordered" required @keyup.enter="loginPassword"/>
           </div>
           <div class="form-control" v-if="loginWay === 'email'">
             <label class="label">
-              <span class="label-text">E-mail</span>
+              <span class="label-text">邮箱</span>
             </label>
             <div class="inline">
               <input v-model="info.email" placeholder="e-mail" class="input input-bordered w-200" required />
@@ -33,7 +33,7 @@
           </div>
           <div class="form-control" v-if="loginWay === 'email'">
             <label class="label">
-              <span class="label-text">Verification code</span>
+              <span class="label-text">验证码</span>
             </label>
             <input  v-model="info.code"  placeholder="Verification code" class="input input-bordered" required @keyup.enter="loginEmail"/>
           </div>
