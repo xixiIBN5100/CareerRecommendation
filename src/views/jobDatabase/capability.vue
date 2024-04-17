@@ -18,23 +18,24 @@
           <div class="stat-value text-primary">{{ myAmid }}</div>
           <div class="stat-desc">源自于你的默认简历意向</div>
         </div>
-        <div class="stat">
+        <div class="stat cursor-pointer" @click="showModal('jobMatch_modal')">
           <div class="stat-figure text-secondary">
             <el-icon :size="50"><OfficeBuilding /></el-icon>
           </div>
           <div class="stat-title">系统建议</div>
-          <div class="stat-value text-secondary text-xl">
-            <!-- {{ myAmid === "未填写" || intentionData.hasOwnProperty('advice') ? "-" : intentionData.advice}} -->
-            匹配度高，建议投递
+          <div class="stat-value text-secondary text-2xl">
+            点击查看
           </div>
           <div class="stat-desc">源于ai分析 仅供参考</div>
         </div>
         <div class="stat">
           <div class="stat-figure text-accent">
-            <div class="radial-progress" :style="'--value:'+0.95*100+';'" role="progressbar">{{ myAmid === "未填写" ? "-" : 0.95 >= 0.8 ? "高" : (intentionData.match >= 0.6 ? "中" : "低") }}</div>
+            <div class="radial-progress" :style="'--value:'+intentionData.match*100+';'" role="progressbar">{{ myAmid === "未填写" ? "-" : intentionData.match >= 0.8 ? "高" : (intentionData.match >= 0.6 ? "中" : "低") }}</div>
           </div>
           <div class="stat-title">匹配度</div>
-          <div class="stat-value text-accent">{{ myAmid === "未填写" ? "-" : 0.95*100 }}%</div>
+          <div class="stat-value text-accent" :class="intentionData.match === undefined ? 'text-xl' : undefined">
+            {{ myAmid === "未填写" ? "-" : ( intentionData.match === undefined ? 'loading...' : intentionData.match*100) }}%
+          </div>
         </div>
       </div>
     </div>
@@ -76,15 +77,23 @@
       </div>
     </div>
   </div>
+  <dialog id="jobMatch_modal" class="modal">
+    <div class="modal-box p-30 bg-base-200">
+      <div v-html="adviceHTML"></div>
+      <div class="modal-action flex justify-center">
+        <button class="btn bg-base-100 w-10/12" @click="showModal('jobMatch_modal', true)">关闭</button>
+      </div>
+    </div>
+  </dialog>
 </template>
 
 <script setup lang="ts">
 import { useRequest } from 'vue-hooks-plus';
 import { useMainStore } from '@/stores';
-import { getAbilityEvaluate, getIntentionEvaluate, getResumeInfoAPI, setRateValueAPI } from '@/apis';
+import { getAbilityEvaluate, getIntentionEvaluate, getResumeInfoAPI, setRateValueAPI, jobMatchAPI } from '@/apis';
 import { ref } from 'vue';
 import { ElNotification } from 'element-plus';
-
+import { marked } from 'marked';
 
 const loginStore = useMainStore().useLoginStore();
 const abilityData = ref();
@@ -93,6 +102,7 @@ const jobRecentId = ref(0);
 const myAmid = ref();
 const rateValue = ref([0,0,0,0,0]);
 const noneResume = ref([false, "none"]);
+const adviceHTML = ref();
 intentionData.value = {};
 
 useRequest(() => getResumeInfoAPI({resume_id:-1}, loginStore.token as string), {
@@ -107,7 +117,6 @@ useRequest(() => getAbilityEvaluate(loginStore.token as string), {
   onSuccess(res: any) {
     if(res.code === 200) {
       abilityData.value = res.data;
-      console.log(abilityData.value);
     } else {
       noneResume.value[0] = true;
       noneResume.value[1] = res.msg;
@@ -118,7 +127,17 @@ useRequest(() => getAbilityEvaluate(loginStore.token as string), {
 useRequest(() => getIntentionEvaluate(loginStore.token as string), {
   onSuccess(res: any) {
     if(res.code === 200) {
-      intentionData.value = res.data;
+      useRequest(() => jobMatchAPI({
+        keyword: res.data.keyword,
+        skills: res.data.skills
+      }), {
+        onSuccess(res: any) {
+          if(res.code === 200) {
+            intentionData.value = res.data;
+            adviceHTML.value = marked(res.data.advice);
+          }
+        }
+      })
     }
   }
 })
@@ -135,6 +154,14 @@ const setRateValue = (job_id: number, score: number) => {
       }
     }
   })
+}
+
+const showModal = (id: string, unshow:boolean = false) => {
+  if(unshow){
+    (document.getElementById(id) as any).close();
+  } else {
+    (document.getElementById(id) as any).showModal();
+  }
 }
 
 </script>

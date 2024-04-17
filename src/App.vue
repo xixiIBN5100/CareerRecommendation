@@ -156,6 +156,7 @@ import { ElNotification } from "element-plus";
 import { useRequest } from 'vue-hooks-plus';
 import { setAvatarAPI, setPasswordAPI } from "@/apis";
 import { ref } from 'vue';
+import marked from 'marked';
 
 const loginStore = useMainStore().useLoginStore();
 const temporaryStore = useMainStore().useTemporaryStore();
