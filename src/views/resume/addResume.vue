@@ -59,7 +59,7 @@
       </label>
     </label>
     能力特长
-    <textarea class="textarea textarea-bordered" v-model="resumeInfo.ability"></textarea>
+    <textarea class="textarea textarea-bordered" placeholder="请尽可能详细列举技术栈" v-model="resumeInfo.ability"></textarea>
     工作经历
     <textarea class="textarea textarea-bordered" v-model="resumeInfo.work_experience"></textarea>
     所获荣誉
