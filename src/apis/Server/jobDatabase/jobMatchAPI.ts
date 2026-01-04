@@ -1,9 +1,13 @@
 import axios, { type AxiosRequestConfig } from "axios";
+import { setupMockInterceptor } from "@/apis/mock/mockInterceptor";
 
 const axiosInstance = axios.create({
   baseURL:"http://phlin.top:8000",
   timeout: 80000,
 });
+
+// 设置mock拦截器
+setupMockInterceptor(axiosInstance);
 
 const request = <ResponseType = unknown>(
   url: string,
