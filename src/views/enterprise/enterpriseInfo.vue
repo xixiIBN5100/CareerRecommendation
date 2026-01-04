@@ -183,7 +183,7 @@ const submit = () => {
           title: 'Success',
           message: '编辑成功',
           type: 'success',
-        })
+           })
         getInfo();
       }else{
         ElNotification({

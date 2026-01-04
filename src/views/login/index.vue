@@ -75,7 +75,7 @@ if(localStorage.getItem("way") !== null){
   loginWay.value = 'password'
   console.log(loginWay.value)
 }
-const info = ref({
+   const info = ref({
   user_name: '',
   password: '',
   email: '',

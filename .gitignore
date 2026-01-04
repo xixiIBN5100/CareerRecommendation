@@ -28,3 +28,9 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# ESLint cache
+.eslintcache
+
+# Build archives
+*.zip
